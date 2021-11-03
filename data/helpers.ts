@@ -72,7 +72,6 @@ export interface RGBColor {
 }
 
 export interface AttributeSelection {
-	name?: string;
 	color?: RGBColor | RGBColor[];
 }
 interface BlemishSelection extends AttributeSelection {
