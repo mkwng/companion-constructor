@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { colors } from "../data/colors";
 import { AttributeSelection, Companion, Layer, RGBColor } from "../data/types";
-import { getColor, getLayers } from "../data/helpers";
+import { getColor, getLayers, getPath } from "../data/helpers";
 
 const loadAllImages = (paths: string[], callback: (img: HTMLImageElement[]) => void): void => {
 	let count: number = 0;
@@ -53,13 +53,9 @@ export default function Renderer({
 		const ctx = canvas.getContext("2d");
 		const layers: [Layer, AttributeSelection?][] = getLayers(companion);
 
-		const imagePaths: string[] = layers.map(([layer]) => {
-			if (typeof layer.path == "string") {
-				return "/attributes/" + layer.path;
-			} else {
-				return "/attributes/" + layer.path[companion.properties.pose];
-			}
-		});
+		const imagePaths: string[] = layers.map(([layer]) =>
+			getPath(layer, companion.properties.pose)
+		);
 
 		loadAllImages(imagePaths, (imgs) => {
 			let color: RGBColor | undefined;

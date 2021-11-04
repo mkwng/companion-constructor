@@ -1,6 +1,6 @@
 import { colors } from "./colors";
 import { poses } from "./poses";
-import { AttributeSelection, Companion, Layer, RGBColor } from "./types";
+import { AttributeSelection, Companion, Layer, Pose, RGBColor } from "./types";
 
 export const getLayers = (companion) => {
 	const pose = poses[companion.properties.pose];
@@ -64,5 +64,13 @@ export const getColor = (layer: Layer, companion?: Companion, color?: RGBColor[]
 			return temp;
 		default:
 			return colors.default.black;
+	}
+};
+
+export const getPath = (layer: Layer, pose?: Pose) => {
+	if (typeof layer.path == "string") {
+		return "/attributes/" + layer.path;
+	} else {
+		return "/attributes/" + layer.path[pose];
 	}
 };
