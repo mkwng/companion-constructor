@@ -20,7 +20,7 @@ import {
 
 export const getLayers = (companion) => {
 	const pose = poses[companion.properties.pose];
-	let layers: [Layer, AttributeSelection?][] = [];
+	let layers: [Layer, AttributeSelection?, boolean?][] = [];
 	pose.forEach((attribute) => {
 		let selection: AttributeSelection | undefined;
 		let match = attribute.variants.find((variant) => {
@@ -45,10 +45,11 @@ export const getLayers = (companion) => {
 		});
 		if (match) {
 			match.layers.forEach((layer) => {
-				let result: [Layer, AttributeSelection?] = [layer];
-				if (selection) {
-					result.push(selection);
-				}
+				let result: [Layer, AttributeSelection?, boolean?] = [
+					layer,
+					selection,
+					attribute.needsTranslation,
+				];
 				layers.push(result);
 			});
 		}
@@ -180,6 +181,7 @@ export const randomCompanion = (): Companion => {
 		);
 
 		// Add to attributes
+		// @ts-ignore
 		companionAttributes[key] = { name: randomVariant.name };
 
 		// Get colors if necessary
