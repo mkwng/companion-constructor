@@ -101,7 +101,7 @@ export const eyewear: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/09-eyewear/eyepatch.png",
-					colorType: "static",
+					color: colors.default.black,
 					order: 1,
 				},
 			],
@@ -117,7 +117,7 @@ export const eyewear: AttributeDictionary = {
 				},
 				{
 					path: "face/09-eyewear/f_2-v_clothing.png",
-					color: colors.default.black,
+					colorType: "clothing",
 					order: 2,
 				},
 			],

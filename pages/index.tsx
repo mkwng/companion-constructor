@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useState } from "react";
 import Renderer from "../components/renderer";
-import { blemish, blemishVariants } from "../data/attributes/blemish";
+import { blemish } from "../data/attributes/blemish";
 import { brows } from "../data/attributes/brows";
 import { eyes } from "../data/attributes/eyes";
 import { eyewear } from "../data/attributes/eyewear";
@@ -30,20 +30,24 @@ var randomProperty = function (obj) {
 	return obj[keys[(keys.length * Math.random()) << 0]];
 };
 
+const colorsRequired = (name, value) => {
+	let attrMatch = attributes.find((attribute) => attribute.name === name);
+	let variantMatch = attrMatch.variants.find((variant) => variant.name === value);
+	return variantMatch?.layers.filter((layer) => {
+		if ("colorType" in layer) {
+			return layer.colorType === "clothing";
+		}
+		return false;
+	}).length;
+};
+
 export default function Home() {
 	const [companion, setCompanion] = useState(companionExample);
 
 	const handleAttributeChange = (e) => {
 		const { name, value } = e.target;
 		let color = companion.attributes[name]?.color || [];
-		let attrMatch = attributes.find((attribute) => attribute.name === name);
-		let variantMatch = attrMatch.variants.find((variant) => variant.name === value);
-		let requiredColors = variantMatch?.layers.filter((layer) => {
-			if ("colorType" in layer) {
-				return layer.colorType === "clothing";
-			}
-			return false;
-		}).length;
+		let requiredColors = colorsRequired(name, value);
 
 		while (color.length < requiredColors) {
 			color.push(randomProperty(colors.clothing));
@@ -98,6 +102,7 @@ export default function Home() {
 	const skinOptions = [];
 	const hairOptions = [];
 	const backgroundOptions = [];
+	const clothingOptions = [];
 	for (const key in colors.skin) {
 		skinOptions.push(
 			<option key={key} value={key}>
@@ -114,6 +119,13 @@ export default function Home() {
 	}
 	for (const key in colors.background) {
 		backgroundOptions.push(
+			<option key={key} value={key}>
+				{key}
+			</option>
+		);
+	}
+	for (const key in colors.clothing) {
+		clothingOptions.push(
 			<option key={key} value={key}>
 				{key}
 			</option>
@@ -162,21 +174,57 @@ export default function Home() {
 			</div>
 			<div>
 				{attributes.map((attribute) => (
-					<select
-						key={attribute.name}
-						name={attribute.name}
-						value={companion.attributes[attribute.name]?.name}
-						onChange={handleAttributeChange}
-					>
-						{attribute.isOptional && <option value="">none</option>}
-						{attribute.variants.map((variant) => {
-							return (
-								<option value={variant.name} key={variant.name}>
-									{variant.name}
-								</option>
-							);
-						})}
-					</select>
+					<div>
+						<select
+							key={attribute.name}
+							name={attribute.name}
+							value={companion.attributes[attribute.name]?.name}
+							onChange={handleAttributeChange}
+						>
+							{attribute.isOptional && <option value="">none</option>}
+							{attribute.variants.map((variant) => {
+								return (
+									<option value={variant.name} key={variant.name}>
+										{variant.name}
+									</option>
+								);
+							})}
+						</select>
+						{colorsRequired(attribute.name, companion.attributes[attribute.name]?.name) ? (
+							<>
+								{[
+									...Array(
+										colorsRequired(attribute.name, companion.attributes[attribute.name]?.name)
+									),
+								].map((x, i) => (
+									<select
+										name={`${attribute.name}-${i}`}
+										value={colorToKey(
+											companion.attributes[attribute.name]?.color[i],
+											"clothing"
+										)}
+										onChange={(e) => {
+											const { name, value } = e.target;
+											let color = [...companion.attributes[attribute.name].color];
+											color[i] = colors.clothing[value];
+											setCompanion({
+												...companion,
+												attributes: {
+													...companion.attributes,
+													[attribute.name]: {
+														...companion.attributes[attribute.name],
+														color,
+													},
+												},
+											});
+										}}
+									>
+										{clothingOptions}
+									</select>
+								))}
+							</>
+						) : null}
+					</div>
 				))}
 			</div>
 		</>
