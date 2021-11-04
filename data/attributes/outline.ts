@@ -1,5 +1,5 @@
 import { colors } from "../colors";
-import { AttributeDictionary } from "../helpers";
+import { AttributeDictionary } from "../types";
 
 export const outline: AttributeDictionary = {
 	name: "outline",

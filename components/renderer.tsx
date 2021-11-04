@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { colors } from "../data/colors";
-import { AttributeSelection, Companion, Layer, RGBColor } from "../data/helpers";
-import { poses } from "../data/poses";
+import { AttributeSelection, Companion, Layer, RGBColor } from "../data/types";
+import { getLayers } from "../data/helpers";
 
 const loadAllImages = (paths: string[], callback: (img: HTMLImageElement[]) => void): void => {
 	let count: number = 0;
@@ -33,44 +33,12 @@ export default function Renderer({
 }) {
 	if (!companion) return null;
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const pose = useMemo(() => poses[companion.properties.pose], [companion]);
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		const ctx = canvas.getContext("2d");
-		let layers: [Layer, AttributeSelection?][] = [];
-		pose.forEach((attribute) => {
-			let selection: AttributeSelection | undefined;
-			let match = attribute.variants.find((variant) => {
-				if (companion.attributes[attribute.name]?.name) {
-					let isMatch = variant.name === companion.attributes[attribute.name].name;
-					if (isMatch) {
-						selection = companion.attributes[attribute.name];
-					}
-					return isMatch;
-				}
-				if (variant.restrictions?.gender) {
-					if (variant.restrictions.gender != companion.properties.gender) {
-						return false;
-					}
-				}
-				if (variant.restrictions?.pose) {
-					if (variant.restrictions.pose != companion.properties.pose) {
-						return false;
-					}
-				}
-				return !attribute.isOptional;
-			});
-			if (match) {
-				match.layers.forEach((layer) => {
-					let result: [Layer, AttributeSelection?] = [layer];
-					if (selection) {
-						result.push(selection);
-					}
-					layers.push(result);
-				});
-			}
-		});
+		let layers: [Layer, AttributeSelection?][] = getLayers(companion);
+
 		let imagePaths: string[] = layers.map(([layer]) => {
 			if (typeof layer.path == "string") {
 				return "/attributes/" + layer.path;

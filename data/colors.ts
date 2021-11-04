@@ -1,4 +1,4 @@
-import { RGBColor } from "./helpers";
+import { RGBColor } from "./types";
 
 export const colors: {
 	[key: string]: { [key: string]: RGBColor };

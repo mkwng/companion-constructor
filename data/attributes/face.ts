@@ -1,4 +1,4 @@
-import { AttributeDictionary } from "../helpers";
+import { AttributeDictionary } from "../types";
 
 export const face: AttributeDictionary = {
 	name: "face",

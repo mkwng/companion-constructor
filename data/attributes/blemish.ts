@@ -1,5 +1,5 @@
 import { colors } from "../colors";
-import { AttributeDictionary, AttributeSelection, Variant } from "../helpers";
+import { AttributeDictionary, AttributeSelection, Variant } from "../types";
 
 export const blemish: AttributeDictionary = {
 	name: "blemish",
@@ -102,7 +102,7 @@ export const blemish: AttributeDictionary = {
 	],
 };
 
-let blemishVariants = [
+export const blemishVariants = [
 	"bandage",
 	"beautyeye",
 	"beautymouth",

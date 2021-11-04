@@ -1,11 +1,11 @@
 import { colors } from "./colors";
-import { Companion } from "./helpers";
+import { Companion } from "./types";
 
 export const companionExample: Companion = {
 	name: "Companion 1",
 	properties: {
-		gender: "m",
-		pose: "2",
+		gender: 0,
+		pose: 2,
 		skin: colors.skin["3"],
 		hair: colors.hair.purple,
 		background: colors.background.bga,
@@ -16,6 +16,5 @@ export const companionExample: Companion = {
 		brows: { name: "bushy" },
 		mouth: { name: "handlebars" },
 		nose: { name: "hook" },
-		headwear: { name: "cap", color: [colors.clothing.red, colors.clothing.black] },
 	},
 };

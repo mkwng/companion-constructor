@@ -11,7 +11,7 @@ import { mouth } from "./attributes/mouth";
 import { eyewear } from "./attributes/eyewear";
 import { headwear } from "./attributes/headwear";
 import { nose } from "./attributes/nose";
-import { AttributeDictionary, AttributeType } from "./helpers";
+import { AttributeDictionary, AttributeType } from "./types";
 
 export const attributes: {
 	[attribute in AttributeType]: AttributeDictionary;
