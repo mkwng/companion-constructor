@@ -146,7 +146,7 @@ export const headwear: AttributeDictionary = {
 
 		{
 			name: "turban",
-			restrictions: { headShape: "flat" },
+			restrictions: { headShape: "flat", gender: "m" },
 			layers: [
 				{
 					path: "face/10-accessories/turban_1-v_clothing-g_m-a_1.png",

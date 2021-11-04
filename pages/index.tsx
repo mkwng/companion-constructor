@@ -1,48 +1,22 @@
-import Head from "next/head";
-import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Renderer from "../components/renderer";
-import { blemish } from "../data/attributes/blemish";
-import { brows } from "../data/attributes/brows";
-import { eyes } from "../data/attributes/eyes";
-import { eyewear } from "../data/attributes/eyewear";
-import { hair } from "../data/attributes/hair";
-import { headwear } from "../data/attributes/headwear";
-import { mouth } from "../data/attributes/mouth";
-import { nose } from "../data/attributes/nose";
 import { colors } from "../data/colors";
-import { companionExample } from "../data/example";
-import { AttributeDictionary, RGBColor } from "../data/types";
-
-const attributes: AttributeDictionary[] = [
-	blemish,
-	hair,
-	eyes,
-	brows,
-	mouth,
-	eyewear,
-	headwear,
-	nose,
-];
-
-var randomProperty = function (obj) {
-	var keys = Object.keys(obj);
-	return obj[keys[(keys.length * Math.random()) << 0]];
-};
-
-const colorsRequired = (name, value) => {
-	let attrMatch = attributes.find((attribute) => attribute.name === name);
-	let variantMatch = attrMatch.variants.find((variant) => variant.name === value);
-	return variantMatch?.layers.filter((layer) => {
-		if ("colorType" in layer) {
-			return layer.colorType === "clothing";
-		}
-		return false;
-	}).length;
-};
+import {
+	colorsRequired,
+	colorToKey,
+	companionToUrl,
+	randomCompanion,
+	randomProperty,
+	selectableAttributesArray,
+} from "../data/helpers";
+import { RGBColor } from "../data/types";
 
 export default function Home() {
-	const [companion, setCompanion] = useState(companionExample);
+	const [companion, setCompanion] = useState(null);
+
+	useEffect(() => {
+		setCompanion(randomCompanion());
+	}, []);
 
 	const handleAttributeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const { name, value } = e.target;
@@ -86,18 +60,6 @@ export default function Home() {
 			},
 		});
 	};
-	const colorToKey = (color: RGBColor, colorObject: { [key: string]: RGBColor }): string => {
-		for (const key in colorObject) {
-			if (
-				colorObject[key].r === color.r &&
-				colorObject[key].g === color.g &&
-				colorObject[key].b === color.b
-			) {
-				return key;
-			}
-		}
-		return "";
-	};
 
 	const skinOptions = [];
 	const hairOptions = [];
@@ -130,6 +92,10 @@ export default function Home() {
 				{key}
 			</option>
 		);
+	}
+
+	if (!companion) {
+		return <>Loading..</>;
 	}
 
 	return (
@@ -173,7 +139,7 @@ export default function Home() {
 				</select>
 			</div>
 			<div>
-				{attributes.map((attribute) => (
+				{selectableAttributesArray.map((attribute) => (
 					<div key={attribute.name}>
 						<select
 							name={attribute.name}
@@ -227,6 +193,7 @@ export default function Home() {
 					</div>
 				))}
 			</div>
+			<a href={"/api/companion.png?" + companionToUrl(companion)}>Permalink</a>
 		</>
 	);
 }

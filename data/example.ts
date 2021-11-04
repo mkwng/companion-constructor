@@ -6,8 +6,8 @@ export const companionExample: Companion = {
 	properties: {
 		gender: "m",
 		pose: 2,
-		skin: colors.skin["3"],
-		hair: colors.hair.purple,
+		skin: colors.skin["2"],
+		hair: colors.hair.black,
 		background: colors.background.bga,
 	},
 	attributes: {

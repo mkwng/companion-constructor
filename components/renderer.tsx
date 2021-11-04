@@ -58,8 +58,8 @@ export default function Renderer({
 		);
 
 		loadAllImages(imagePaths, (imgs) => {
-			let color: RGBColor | undefined;
 			layers.forEach(([layer, selection], i) => {
+				let color: RGBColor | undefined;
 				if ("color" in layer) {
 					color = layer.color;
 				} else if ("colorType" in layer) {

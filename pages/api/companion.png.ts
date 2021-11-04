@@ -1,32 +1,12 @@
 import axios from "axios";
 import sharp from "sharp";
-import { blemish } from "../../data/attributes/blemish";
-import { brows } from "../../data/attributes/brows";
-import { eyes } from "../../data/attributes/eyes";
-import { eyewear } from "../../data/attributes/eyewear";
-import { hair } from "../../data/attributes/hair";
-import { headwear } from "../../data/attributes/headwear";
-import { mouth } from "../../data/attributes/mouth";
-import { nose } from "../../data/attributes/nose";
 import { colors } from "../../data/colors";
 import { companionExample } from "../../data/example";
-import { getColor, getLayers, getPath } from "../../data/helpers";
-import { AttributeDictionary, Pose, RGBColor } from "../../data/types";
-
-const attributes: { [key: string]: AttributeDictionary } = {
-	blemish,
-	hair,
-	eyes,
-	brows,
-	mouth,
-	eyewear,
-	headwear,
-	nose,
-};
+import { getColor, getLayers, getPath, selectableAttributes } from "../../data/helpers";
+import { Pose, RGBColor } from "../../data/types";
 
 const colorRegEx = /Color\d/g;
 
-// Returns the
 export default async function handler(req, res) {
 	// Example url query:
 	// http://localhost:3000/api/companion.png?pose=2&gender=m&skinColor=0&hairColor=purple&backgroundColor=yellow&hair=crop&eyes=open&brows=bushy&mouth=handlebars&nose=hook&headwear=cap&headwearColor1=red&headwearColor2=blue
@@ -60,10 +40,10 @@ export default async function handler(req, res) {
 				if (key.match(colorRegEx)) {
 					continue;
 				}
-				if (!(key in attributes)) {
+				if (!(key in selectableAttributes)) {
 					throw new Error(`${key} not valid`);
 				}
-				const match = attributes[key].variants.find(
+				const match = selectableAttributes[key].variants.find(
 					(variant) => variant.name === req.query[key]
 				);
 				if (!match) {
@@ -144,10 +124,14 @@ export default async function handler(req, res) {
 	const optimized = await sharp(final)
 		.resize({ width: 960 })
 		.flatten()
-		.png({ compressionLevel: 9, quality: 50 })
+		.png({ compressionLevel: 9, quality: 75 })
 		.toBuffer();
+
+	// respond 200 OK with image
+	res.status(200);
 
 	res.setHeader("Content-Type", "image/jpg");
 	res.setHeader("Content-Length", optimized.length);
+	res.setHeader("Cache-Control", "public, max-age=31536000");
 	res.end(optimized);
 }
