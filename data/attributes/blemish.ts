@@ -2,6 +2,7 @@ import { colors } from "../colors";
 import { AttributeDictionary, AttributeSelection, Variant } from "../helpers";
 
 export const blemish: AttributeDictionary = {
+	name: "blemish",
 	needsTranslation: true,
 	isOptional: true,
 	variants: [

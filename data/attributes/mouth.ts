@@ -2,6 +2,7 @@ import { colors } from "../colors";
 import { AttributeDictionary } from "../helpers";
 
 export const mouth: AttributeDictionary = {
+	name: "mouth",
 	needsTranslation: true,
 	variants: [
 		{

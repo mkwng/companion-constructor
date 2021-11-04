@@ -23,25 +23,32 @@ export type AttributeType =
 	| "nose"
 	| "bodyFront";
 
-type Pose = 1 | 2 | 3 | 4;
+type Pose = "1" | "2" | "3" | "4";
 type Gender = "m" | "f";
 type HeadShape = "big" | "flat";
 
 export interface Variant {
 	name?: string;
 	restrictions?: Restrictions;
-	layers: (LayerDynamic | LayerStatic)[];
+	layers: Layer[];
 }
 interface Restrictions {
 	gender?: Gender;
 	pose?: Pose;
 	headShape?: HeadShape;
 }
-interface Layer {
+interface LayerBase {
 	order?: number;
-	path: string | [string, string, string, string];
+	path:
+		| string
+		| {
+				"1": string;
+				"2": string;
+				"3": string;
+				"4": string;
+		  };
 }
-interface LayerDynamic extends Layer {
+interface LayerDynamic extends LayerBase {
 	colorType:
 		| "hair"
 		| "skin"
@@ -51,16 +58,14 @@ interface LayerDynamic extends Layer {
 		| "background"
 		| "static";
 }
-interface LayerStatic extends Layer {
+interface LayerStatic extends LayerBase {
 	color: RGBColor;
 }
-export interface Composition {
-	name: string;
-	restrictions?: Restrictions;
-	attributes: AttributeDictionary[];
-}
+
+export type Layer = LayerDynamic | LayerStatic;
 
 export interface AttributeDictionary {
+	name: string;
 	needsTranslation?: boolean;
 	isOptional?: boolean;
 	variants: Variant[];
@@ -71,33 +76,44 @@ export interface RGBColor {
 	b: number;
 }
 
-export interface AttributeSelection {
+export interface AttributeSelectionBase {
 	color?: RGBColor | RGBColor[];
 }
-interface BlemishSelection extends AttributeSelection {
+interface BlemishSelection extends AttributeSelectionBase {
 	name: BlemishVariant;
 }
-interface HairAttributeSelection extends AttributeSelection {
+interface HairSelection extends AttributeSelectionBase {
 	name: HairVariant;
 }
-interface EyesAttributeSelection extends AttributeSelection {
+interface EyesSelection extends AttributeSelectionBase {
 	name: EyesVariant;
 }
-interface BrowsAttributeSelection extends AttributeSelection {
+interface BrowsSelection extends AttributeSelectionBase {
 	name: BrowsVariant;
 }
-interface MouthAttributeSelection extends AttributeSelection {
+interface MouthSelection extends AttributeSelectionBase {
 	name: MouthVariant;
 }
-interface EyewearAttributeSelection extends AttributeSelection {
+interface EyewearSelection extends AttributeSelectionBase {
 	name: EyewearVariant;
 }
-interface HeadwearAttributeSelection extends AttributeSelection {
+interface HeadwearSelection extends AttributeSelectionBase {
 	name: HeadwearVariant;
 }
-interface NoseAttributeSelection extends AttributeSelection {
+interface NoseSelection extends AttributeSelectionBase {
 	name: NoseVariant;
 }
+
+export type AttributeSelection =
+	| AttributeSelectionBase
+	| BlemishSelection
+	| HairSelection
+	| EyesSelection
+	| BrowsSelection
+	| MouthSelection
+	| EyewearSelection
+	| HeadwearSelection
+	| NoseSelection;
 
 export interface Companion {
 	name: string;
@@ -106,16 +122,16 @@ export interface Companion {
 		pose: Pose;
 		skin: RGBColor;
 		hair: RGBColor;
+		background: RGBColor;
 	};
 	attributes: {
-		background: AttributeSelection;
 		blemish?: BlemishSelection;
-		hair: HairAttributeSelection;
-		eyes: EyesAttributeSelection;
-		brows: BrowsAttributeSelection;
-		mouth: MouthAttributeSelection;
-		eyewear?: EyewearAttributeSelection;
-		headwear?: HeadwearAttributeSelection;
-		nose: NoseAttributeSelection;
+		hair: HairSelection;
+		eyes: EyesSelection;
+		brows: BrowsSelection;
+		mouth: MouthSelection;
+		eyewear?: EyewearSelection;
+		headwear?: HeadwearSelection;
+		nose: NoseSelection;
 	};
 }

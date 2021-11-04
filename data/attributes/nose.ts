@@ -2,6 +2,7 @@ import { colors } from "../colors";
 import { AttributeDictionary } from "../helpers";
 
 export const nose: AttributeDictionary = {
+	name: "nose",
 	needsTranslation: true,
 	variants: [
 		{

@@ -2,6 +2,7 @@ import { colors } from "../colors";
 import { AttributeDictionary } from "../helpers";
 
 export const eyes: AttributeDictionary = {
+	name: "eyes",
 	needsTranslation: true,
 	variants: [
 		{

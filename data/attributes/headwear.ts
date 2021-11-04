@@ -2,6 +2,7 @@ import { colors } from "../colors";
 import { AttributeDictionary } from "../helpers";
 
 export const headwear: AttributeDictionary = {
+	name: "headwear",
 	needsTranslation: true,
 	isOptional: true,
 	variants: [
@@ -34,27 +35,27 @@ export const headwear: AttributeDictionary = {
 				{
 					path: "face/10-accessories/cap_2-v_clothing.png",
 					colorType: "clothing",
-					order: 1,
+					order: 2,
 				},
 				{
 					path: "face/10-accessories/cap_3-c_outline.png",
 					color: colors.default.black,
-					order: 1,
+					order: 3,
 				},
 				{
 					path: "face/10-accessories/cap_4_v_clothing.png",
 					colorType: "clothing",
-					order: 1,
+					order: 4,
 				},
 				{
 					path: "face/10-accessories/cap_5-c_outline.png",
 					color: colors.default.black,
-					order: 1,
+					order: 5,
 				},
 				{
 					path: "face/10-accessories/cap_6-c_outline.png",
 					color: colors.default.black,
-					order: 1,
+					order: 6,
 				},
 			],
 		},
@@ -70,12 +71,12 @@ export const headwear: AttributeDictionary = {
 				{
 					path: "face/10-accessories/goggles_2-v_clothing-b_multiply.png",
 					colorType: "clothing",
-					order: 1,
+					order: 2,
 				},
 				{
 					path: "face/10-accessories/goggles_3-c_outline.png",
 					color: colors.default.black,
-					order: 1,
+					order: 3,
 				},
 			],
 		},
@@ -86,7 +87,6 @@ export const headwear: AttributeDictionary = {
 				{
 					path: "face/10-accessories/halo-c_yellow.png",
 					color: colors.default.yellow,
-					order: 1,
 				},
 			],
 		},
