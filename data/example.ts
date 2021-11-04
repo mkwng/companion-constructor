@@ -4,7 +4,7 @@ import { Companion } from "./types";
 export const companionExample: Companion = {
 	name: "Companion 1",
 	properties: {
-		gender: 0,
+		gender: "m",
 		pose: 2,
 		skin: colors.skin["3"],
 		hair: colors.hair.purple,

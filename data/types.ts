@@ -30,11 +30,7 @@ export type AttributeType =
 	| "nose"
 	| "bodyFront";
 
-export enum Gender {
-	m,
-	f,
-}
-
+type Gender = "m" | "f";
 type HeadShape = "big" | "flat";
 
 export interface Variant {
@@ -87,7 +83,7 @@ export interface RGBColor {
 }
 
 export interface AttributeSelectionBase {
-	color?: RGBColor | RGBColor[];
+	color?: RGBColor[];
 }
 interface BlemishSelection extends AttributeSelectionBase {
 	name: BlemishVariant;

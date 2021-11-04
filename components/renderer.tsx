@@ -69,17 +69,13 @@ export default function Renderer({
 									return colors.skin["2"];
 								case "clothing":
 									if (!selection.color) {
-										throw new Error("No color selected");
+										throw new Error("No colors set");
 									}
-									if (Array.isArray(selection.color)) {
-										let temp = selection.color[colorCount++];
-										if (colorCount >= selection.color.length) {
-											colorCount = 0;
-										}
-										return temp;
-									} else {
-										return selection.color;
+									let temp = selection.color[colorCount++];
+									if (colorCount >= selection.color.length) {
+										colorCount = 0;
 									}
+									return temp;
 								default:
 									return colors.default.black;
 							}

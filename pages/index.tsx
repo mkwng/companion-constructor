@@ -25,17 +25,37 @@ const attributes: AttributeDictionary[] = [
 	nose,
 ];
 
+var randomProperty = function (obj) {
+	var keys = Object.keys(obj);
+	return obj[keys[(keys.length * Math.random()) << 0]];
+};
+
 export default function Home() {
 	const [companion, setCompanion] = useState(companionExample);
 
 	const handleAttributeChange = (e) => {
 		const { name, value } = e.target;
+		let color = companion.attributes[name]?.color || [];
+		let attrMatch = attributes.find((attribute) => attribute.name === name);
+		let variantMatch = attrMatch.variants.find((variant) => variant.name === value);
+		let requiredColors = variantMatch?.layers.filter((layer) => {
+			if ("colorType" in layer) {
+				return layer.colorType === "clothing";
+			}
+			return false;
+		}).length;
+
+		while (color.length < requiredColors) {
+			color.push(randomProperty(colors.clothing));
+		}
+
 		setCompanion({
 			...companion,
 			attributes: {
 				...companion.attributes,
 				[name]: {
 					name: value,
+					color,
 				},
 			},
 		});
@@ -54,7 +74,6 @@ export default function Home() {
 
 	const handleColorChange = (e) => {
 		const { name, value } = e.target;
-		console.log(name, value);
 		setCompanion({
 			...companion,
 			properties: {
@@ -78,6 +97,7 @@ export default function Home() {
 
 	const skinOptions = [];
 	const hairOptions = [];
+	const backgroundOptions = [];
 	for (const key in colors.skin) {
 		skinOptions.push(
 			<option key={key} value={key}>
@@ -92,16 +112,38 @@ export default function Home() {
 			</option>
 		);
 	}
+	for (const key in colors.background) {
+		backgroundOptions.push(
+			<option key={key} value={key}>
+				{key}
+			</option>
+		);
+	}
 
 	return (
 		<>
 			<Renderer companion={companion} />
 			<div>
+				<select
+					name="background"
+					value={colorToKey(companion.properties.background, "background")}
+					onChange={handleColorChange}
+				>
+					{backgroundOptions}
+				</select>
 				<select name="pose" value={companion.properties.pose} onChange={handlePropertyChange}>
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
 					<option value="4">4</option>
+				</select>
+				<select
+					name="gender"
+					value={companion.properties.gender}
+					onChange={handlePropertyChange}
+				>
+					<option value="m">m</option>
+					<option value="f">f</option>
 				</select>
 				<select
 					name="skin"
