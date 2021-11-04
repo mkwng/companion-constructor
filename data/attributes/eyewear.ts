@@ -12,12 +12,10 @@ export const eyewear: AttributeDictionary = {
 				{
 					path: "face/09-eyewear/a_1-c_white.png",
 					color: colors.default.white,
-					order: 1,
 				},
 				{
 					path: "face/09-eyewear/a_2-c_outline.png",
 					color: colors.default.black,
-					order: 2,
 				},
 			],
 		},
@@ -28,12 +26,10 @@ export const eyewear: AttributeDictionary = {
 				{
 					path: "face/09-eyewear/b_1-c_white.png",
 					color: colors.default.white,
-					order: 1,
 				},
 				{
 					path: "face/09-eyewear/b_2-c_outline.png",
 					color: colors.default.black,
-					order: 2,
 				},
 			],
 		},
@@ -44,17 +40,14 @@ export const eyewear: AttributeDictionary = {
 				{
 					path: "face/09-eyewear/c_1-v_clothing.png",
 					colorType: "clothing",
-					order: 1,
 				},
 				{
 					path: "face/09-eyewear/c_2-c_white.png",
 					color: colors.default.white,
-					order: 2,
 				},
 				{
 					path: "face/09-eyewear/c_3-c_outline.png",
 					color: colors.default.black,
-					order: 3,
 				},
 			],
 		},
@@ -65,17 +58,14 @@ export const eyewear: AttributeDictionary = {
 				{
 					path: "face/09-eyewear/d_1-v_clothing.png",
 					colorType: "clothing",
-					order: 1,
 				},
 				{
 					path: "face/09-eyewear/d_2-c_white.png",
 					color: colors.default.white,
-					order: 2,
 				},
 				{
 					path: "face/09-eyewear/d_3-c_outline.png",
 					color: colors.default.black,
-					order: 3,
 				},
 			],
 		},
@@ -86,12 +76,10 @@ export const eyewear: AttributeDictionary = {
 				{
 					path: "face/09-eyewear/e_1-c_white.png",
 					color: colors.default.white,
-					order: 1,
 				},
 				{
 					path: "face/09-eyewear/e_2-c_outline.png",
 					color: colors.default.black,
-					order: 2,
 				},
 			],
 		},
@@ -102,7 +90,6 @@ export const eyewear: AttributeDictionary = {
 				{
 					path: "face/09-eyewear/eyepatch.png",
 					color: colors.default.black,
-					order: 1,
 				},
 			],
 		},
@@ -113,12 +100,10 @@ export const eyewear: AttributeDictionary = {
 				{
 					path: "face/09-eyewear/f_1-c_white.png",
 					color: colors.default.white,
-					order: 1,
 				},
 				{
 					path: "face/09-eyewear/f_2-v_clothing.png",
 					colorType: "clothing",
-					order: 2,
 				},
 			],
 		},
@@ -128,13 +113,11 @@ export const eyewear: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/09-eyewear/vr_1-c_skin-b_multiply.png",
-					colorType: "skinShadow",
-					order: 1,
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/09-eyewear/vr_2.png",
-					colorType: "static",
-					order: 2,
 				},
 			],
 		},

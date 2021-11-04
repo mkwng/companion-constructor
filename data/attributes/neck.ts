@@ -1,3 +1,4 @@
+import { colors } from "../colors";
 import { AttributeDictionary } from "../types";
 
 export const neck: AttributeDictionary = {
@@ -10,12 +11,11 @@ export const neck: AttributeDictionary = {
 				{
 					path: "pose2/02-neck/fneck_1-g_f-v_skin.png",
 					colorType: "skin",
-					order: 1,
 				},
 				{
 					path: "pose2/02-neck/fneck_2-c_skin-b_multiply.png",
-					colorType: "skinShadow",
-					order: 2,
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 			],
 		},
@@ -26,12 +26,11 @@ export const neck: AttributeDictionary = {
 				{
 					path: "pose2/02-neck/mneck_1-g_m-v_skin.png",
 					colorType: "skin",
-					order: 1,
 				},
 				{
 					path: "pose2/02-neck/mneck_2-c_skin-b_multiply.png",
-					colorType: "skinShadow",
-					order: 1,
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 			],
 		},

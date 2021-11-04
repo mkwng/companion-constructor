@@ -20,7 +20,8 @@ export const blemish: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/02-blemish/beautyeye-c_skindark-b_multiply.png",
-					colorType: "skinShadowDark",
+					color: colors.skin["2"],
+					blendMode: "multiply",
 				},
 			],
 		},
@@ -29,7 +30,8 @@ export const blemish: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/02-blemish/beautymouth-c_skindark-b_multiply.png",
-					colorType: "skinShadowDark",
+					color: colors.skin["2"],
+					blendMode: "multiply",
 				},
 			],
 		},
@@ -47,7 +49,8 @@ export const blemish: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/02-blemish/eyescar-c_skin-b_multiply.png",
-					colorType: "skinShadowDark",
+					color: colors.skin["2"],
+					blendMode: "multiply",
 				},
 			],
 		},
@@ -56,7 +59,8 @@ export const blemish: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/02-blemish/freckles-c_skin-b_multiply.png",
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 			],
 		},
@@ -95,7 +99,8 @@ export const blemish: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/02-blemish/tattoos-c_skindark-b_multiply.png",
-					colorType: "skinShadowDark",
+					color: colors.skin["2"],
+					blendMode: "multiply",
 				},
 			],
 		},

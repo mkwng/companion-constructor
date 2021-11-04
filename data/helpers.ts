@@ -1,5 +1,6 @@
+import { colors } from "./colors";
 import { poses } from "./poses";
-import { AttributeSelection, Layer } from "./types";
+import { AttributeSelection, Companion, Layer, RGBColor } from "./types";
 
 export const getLayers = (companion) => {
 	const pose = poses[companion.properties.pose];
@@ -37,4 +38,31 @@ export const getLayers = (companion) => {
 		}
 	});
 	return layers;
+};
+
+let colorCount = 0;
+export const getColor = (layer: Layer, companion?: Companion, color?: RGBColor[]): RGBColor => {
+	if (!("colorType" in layer)) {
+		throw new Error(`Can't get color for layer: ${layer.path}`);
+	}
+	switch (layer.colorType) {
+		case "hair":
+		case "skin":
+		case "background":
+			if (!companion) {
+				throw new Error(`No Companion was specified for layer: ${layer.path}`);
+			}
+			return companion.properties[layer.colorType];
+		case "clothing":
+			if (!color) {
+				throw new Error(`No colors were specified for layer: ${layer.path}`);
+			}
+			const temp = color[colorCount++];
+			if (colorCount >= color.length) {
+				colorCount = 0;
+			}
+			return temp;
+		default:
+			return colors.default.black;
+	}
 };

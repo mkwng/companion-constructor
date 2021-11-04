@@ -10,13 +10,14 @@ export const eyes: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/06-eyes/bags_1-c_outline.png",
-					order: 1,
+
 					color: colors.default.black,
 				},
 				{
 					path: "face/06-eyes/bags_2-c_skin-b_multiply.png",
-					order: 2,
-					colorType: "skinShadow",
+
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 			],
 		},
@@ -25,13 +26,14 @@ export const eyes: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/06-eyes/closed_1-c_outline.png",
-					order: 1,
+
 					color: colors.default.black,
 				},
 				{
 					path: "face/06-eyes/closed_2-c_skin-b_multiply.png",
-					order: 2,
-					colorType: "skinShadow",
+
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 			],
 		},
@@ -68,12 +70,12 @@ export const eyes: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/06-eyes/open_1-c_white.png",
-					order: 1,
+
 					color: colors.default.white,
 				},
 				{
 					path: "face/06-eyes/open_2-c_outline.png",
-					order: 2,
+
 					color: colors.default.black,
 				},
 			],
@@ -92,13 +94,14 @@ export const eyes: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/06-eyes/squint_1-c_outline.png",
-					order: 1,
+
 					color: colors.default.black,
 				},
 				{
 					path: "face/06-eyes/squint_2-c_skin-b_multiply.png",
-					order: 2,
-					colorType: "skinShadow",
+
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 			],
 		},
@@ -107,12 +110,13 @@ export const eyes: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/06-eyes/tired_1-c_skin-b_multiply.png",
-					order: 1,
-					colorType: "skinShadow",
+
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/06-eyes/tired_2-c_outline.png",
-					order: 2,
+
 					color: colors.default.black,
 				},
 			],

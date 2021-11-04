@@ -44,7 +44,7 @@ interface Restrictions {
 	headShape?: HeadShape;
 }
 interface LayerBase {
-	order?: number;
+	blendMode?: "multiply";
 	path:
 		| string
 		| {
@@ -55,20 +55,13 @@ interface LayerBase {
 		  };
 }
 interface LayerDynamic extends LayerBase {
-	colorType:
-		| "hair"
-		| "skin"
-		| "skinShadow"
-		| "skinShadowDark"
-		| "clothing"
-		| "background"
-		| "static";
+	colorType: "hair" | "skin" | "clothing" | "background";
 }
 interface LayerStatic extends LayerBase {
 	color: RGBColor;
 }
 
-export type Layer = LayerDynamic | LayerStatic;
+export type Layer = LayerBase | LayerDynamic | LayerStatic;
 
 export interface AttributeDictionary {
 	name: string;

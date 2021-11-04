@@ -44,7 +44,7 @@ const colorsRequired = (name, value) => {
 export default function Home() {
 	const [companion, setCompanion] = useState(companionExample);
 
-	const handleAttributeChange = (e) => {
+	const handleAttributeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const { name, value } = e.target;
 		let color = companion.attributes[name]?.color || [];
 		let requiredColors = colorsRequired(name, value);
@@ -65,7 +65,7 @@ export default function Home() {
 		});
 	};
 
-	const handlePropertyChange = (e) => {
+	const handlePropertyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const { name, value } = e.target;
 		setCompanion({
 			...companion,
@@ -76,7 +76,7 @@ export default function Home() {
 		});
 	};
 
-	const handleColorChange = (e) => {
+	const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const { name, value } = e.target;
 		setCompanion({
 			...companion,
@@ -86,12 +86,12 @@ export default function Home() {
 			},
 		});
 	};
-	const colorToKey = (color: RGBColor, name: string): string => {
-		for (const key in colors[name]) {
+	const colorToKey = (color: RGBColor, colorObject: { [key: string]: RGBColor }): string => {
+		for (const key in colorObject) {
 			if (
-				colors[name][key].r === color.r &&
-				colors[name][key].g === color.g &&
-				colors[name][key].b === color.b
+				colorObject[key].r === color.r &&
+				colorObject[key].g === color.g &&
+				colorObject[key].b === color.b
 			) {
 				return key;
 			}
@@ -138,7 +138,7 @@ export default function Home() {
 			<div>
 				<select
 					name="background"
-					value={colorToKey(companion.properties.background, "background")}
+					value={colorToKey(companion.properties.background, colors.background)}
 					onChange={handleColorChange}
 				>
 					{backgroundOptions}
@@ -159,14 +159,14 @@ export default function Home() {
 				</select>
 				<select
 					name="skin"
-					value={colorToKey(companion.properties.skin, "skin")}
+					value={colorToKey(companion.properties.skin, colors.skin)}
 					onChange={handleColorChange}
 				>
 					{skinOptions}
 				</select>
 				<select
 					name="hair"
-					value={colorToKey(companion.properties.hair, "hair")}
+					value={colorToKey(companion.properties.hair, colors.hair)}
 					onChange={handleColorChange}
 				>
 					{hairOptions}
@@ -174,9 +174,8 @@ export default function Home() {
 			</div>
 			<div>
 				{attributes.map((attribute) => (
-					<div>
+					<div key={attribute.name}>
 						<select
-							key={attribute.name}
 							name={attribute.name}
 							value={companion.attributes[attribute.name]?.name}
 							onChange={handleAttributeChange}
@@ -198,10 +197,11 @@ export default function Home() {
 									),
 								].map((x, i) => (
 									<select
+										key={`${attribute.name}-${i}`}
 										name={`${attribute.name}-${i}`}
 										value={colorToKey(
 											companion.attributes[attribute.name]?.color[i],
-											"clothing"
+											colors.clothing
 										)}
 										onChange={(e) => {
 											const { name, value } = e.target;

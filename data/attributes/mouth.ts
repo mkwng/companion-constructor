@@ -10,12 +10,11 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/aged_1-c_skin-b_multiply-g_m.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/aged_2-c_outline.png",
-					order: 2,
 					color: colors.default.black,
 				},
 			],
@@ -37,17 +36,15 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/bigsmile_1-c_skin-b_multiply.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/bigsmile_2-c_white.png",
-					order: 2,
 					color: colors.default.white,
 				},
 				{
 					path: "face/08-mouth/bigsmile_3-c_outline.png",
-					order: 3,
 					color: colors.default.black,
 				},
 			],
@@ -59,13 +56,12 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/fumanchu_1-v_hair-g_m.png",
-					order: 1,
 					colorType: "hair",
 				},
 				{
 					path: "face/08-mouth/fumanchu_2-c_skin-b_multiply.png",
-					order: 2,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 			],
 		},
@@ -75,17 +71,15 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/grimace_1-c_skin-b_multiply.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/grimace_2-c_white.png",
-					order: 2,
 					color: colors.default.white,
 				},
 				{
 					path: "face/08-mouth/grimace_3-c_outline.png",
-					order: 3,
 					color: colors.default.black,
 				},
 			],
@@ -97,13 +91,12 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/handlebars_1-v_hair-g_m.png",
-					order: 1,
 					colorType: "hair",
 				},
 				{
 					path: "face/08-mouth/handlebars_2-c_skin-b_multiply.png",
-					order: 2,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 			],
 		},
@@ -113,12 +106,11 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/neutral_1-c_skin-b_multiply.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/neutral_2-c_outline.png",
-					order: 2,
 					color: colors.default.black,
 				},
 			],
@@ -130,12 +122,11 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/neutrallips_1-c_skin-b_multiply-g_f.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/neutrallips_2-c_outline.png",
-					order: 2,
 					color: colors.default.black,
 				},
 			],
@@ -157,12 +148,11 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/openfrown_1-c_skin-b_multiply-g_m.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/openfrown_2-c_outline.png",
-					order: 2,
 					color: colors.default.black,
 				},
 			],
@@ -173,12 +163,11 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/opensmile_1-c_skin-b_multiply.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/opensmile_2-c_outline.png",
-					order: 2,
 					color: colors.default.black,
 				},
 			],
@@ -189,12 +178,11 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/pout_1-c_skin-b_multiply.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/pout_2-c_outline.png",
-					order: 2,
 					color: colors.default.black,
 				},
 			],
@@ -205,12 +193,11 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/slightfrown_1-c_skin-b_multiply.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/slightfrown_2-c_outline.png",
-					order: 2,
 					color: colors.default.black,
 				},
 			],
@@ -221,12 +208,11 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/slightsmile_1-c_skin-b_multiply.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/slightsmile_2-c_outline.png",
-					order: 2,
 					color: colors.default.black,
 				},
 			],
@@ -237,12 +223,11 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/slighttilt_1-c_skin-b_multiply.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/slighttilt_2-c_outline.png",
-					order: 2,
 					color: colors.default.black,
 				},
 			],
@@ -254,12 +239,11 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/smilelips_1-c_skin-b_multiply-g_f.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/smilelips_2-c_outline.png",
-					order: 2,
 					color: colors.default.black,
 				},
 			],
@@ -269,17 +253,15 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/smileside_1-c_skin-b_multiply.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/smileside_2-c_white.png",
-					order: 2,
 					color: colors.default.white,
 				},
 				{
 					path: "face/08-mouth/smileside_3-c_outline.png",
-					order: 3,
 					color: colors.default.black,
 				},
 			],
@@ -290,12 +272,11 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/subtlesmile_1-c_skin-b_multiply.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/subtlesmile_2-c_outline.png",
-					order: 2,
 					color: colors.default.black,
 				},
 			],
@@ -306,17 +287,15 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/teethy_1-c_skin-b_multiply.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/teethy_2-c_white.png",
-					order: 2,
 					color: colors.default.white,
 				},
 				{
 					path: "face/08-mouth/teethy_3-c_outline.png",
-					order: 3,
 					color: colors.default.black,
 				},
 			],
@@ -327,17 +306,14 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/tongue_1-c_skin-b_multiply.png",
-					order: 1,
-					colorType: "skinShadow",
+					color: colors.skin["1"],
+					blendMode: "multiply",
 				},
 				{
 					path: "face/08-mouth/tongue_2.png",
-					order: 2,
-					colorType: "static",
 				},
 				{
 					path: "face/08-mouth/tongue_3-c_outline.png",
-					order: 3,
 					color: colors.default.black,
 				},
 			],
