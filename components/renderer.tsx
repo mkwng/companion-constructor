@@ -157,7 +157,12 @@ export default function Renderer({
 	return (
 		<div className={className} {...props}>
 			{companion && (
-				<canvas width="2048" height="2048" ref={canvasRef} style={{ width: "100%" }} />
+				<canvas
+					width="2048"
+					height="2048"
+					ref={canvasRef}
+					style={{ width: "100%", maxWidth: "960px" }}
+				/>
 			)}
 		</div>
 	);
