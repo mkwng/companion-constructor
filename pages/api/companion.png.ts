@@ -67,7 +67,10 @@ export default async function handler(req, res) {
 	const imageBuffers = layers.map(async ([layer]) => {
 		return (
 			await axios({
-				url: process.env.RAILWAY_STATIC_URL + getPath(layer, companion.properties.pose),
+				url:
+					"https://" +
+					process.env.RAILWAY_STATIC_URL +
+					getPath(layer, companion.properties.pose),
 				responseType: "arraybuffer",
 			})
 		).data as Buffer;
