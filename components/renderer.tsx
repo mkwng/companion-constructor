@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { colors } from "../data/colors";
 import { AttributeSelection, Companion, Layer, Pose, RGBColor } from "../data/types";
 import { getColor, getLayers, getPath } from "../data/helpers";
 
@@ -122,7 +121,6 @@ export default function Renderer({
 	className?: string;
 	companion: Companion;
 }) {
-	if (!companion) return null;
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	useEffect(() => {
@@ -158,7 +156,9 @@ export default function Renderer({
 
 	return (
 		<div className={className} {...props}>
-			<canvas width="2048" height="2048" ref={canvasRef} style={{ width: "100%" }} />
+			{companion && (
+				<canvas width="2048" height="2048" ref={canvasRef} style={{ width: "100%" }} />
+			)}
 		</div>
 	);
 }
