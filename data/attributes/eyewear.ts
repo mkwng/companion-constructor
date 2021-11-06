@@ -8,6 +8,7 @@ export const eyewear: AttributeDictionary = {
 	variants: [
 		{
 			name: "rectangularHalf",
+			restrictions: { profileShape: "encroached" },
 			layers: [
 				{
 					path: "face/09-eyewear/a_1-c_white.png",
@@ -22,6 +23,7 @@ export const eyewear: AttributeDictionary = {
 
 		{
 			name: "rectangular",
+			restrictions: { profileShape: "encroached" },
 			layers: [
 				{
 					path: "face/09-eyewear/b_1-c_white.png",
@@ -36,6 +38,7 @@ export const eyewear: AttributeDictionary = {
 
 		{
 			name: "thin",
+			restrictions: { profileShape: "encroached" },
 			layers: [
 				{
 					path: "face/09-eyewear/c_1-v_clothing.png",
@@ -54,6 +57,7 @@ export const eyewear: AttributeDictionary = {
 
 		{
 			name: "roundedColorLens",
+			restrictions: { profileShape: "encroached" },
 			layers: [
 				{
 					path: "face/09-eyewear/d_1-v_clothing.png",
@@ -72,6 +76,7 @@ export const eyewear: AttributeDictionary = {
 
 		{
 			name: "rounded",
+			restrictions: { profileShape: "encroached" },
 			layers: [
 				{
 					path: "face/09-eyewear/e_1-c_white.png",
@@ -86,6 +91,7 @@ export const eyewear: AttributeDictionary = {
 
 		{
 			name: "eyepatch",
+			restrictions: { profileShape: "encroached" },
 			layers: [
 				{
 					path: "face/09-eyewear/eyepatch.png",
@@ -96,6 +102,7 @@ export const eyewear: AttributeDictionary = {
 
 		{
 			name: "roundedColorFrames",
+			restrictions: { profileShape: "encroached" },
 			layers: [
 				{
 					path: "face/09-eyewear/f_1-c_white.png",
@@ -110,6 +117,7 @@ export const eyewear: AttributeDictionary = {
 
 		{
 			name: "vr",
+			restrictions: { profileShape: "encroached" },
 			layers: [
 				{
 					path: "face/09-eyewear/vr_1-c_skin-b_multiply.png",

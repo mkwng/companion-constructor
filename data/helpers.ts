@@ -17,6 +17,7 @@ import {
 	RGBColor,
 	Variant,
 } from "./types";
+import { top } from "./attributes/top";
 
 export const getLayers = (companion) => {
 	const pose = poses[companion.properties.pose];
@@ -109,6 +110,7 @@ export const selectableAttributes: { [key: string]: AttributeDictionary } = {
 	eyewear,
 	headwear,
 	nose,
+	top,
 };
 export const selectableAttributesArray: AttributeDictionary[] = [
 	blemish,
@@ -119,6 +121,7 @@ export const selectableAttributesArray: AttributeDictionary[] = [
 	eyewear,
 	headwear,
 	nose,
+	top,
 ];
 
 export const colorsRequired = (attributeName: string, variantName: string): number => {
@@ -181,6 +184,7 @@ export const randomCompanion = (): Companion => {
 		);
 
 		// Add to attributes
+		if (!randomVariant) return;
 		// @ts-ignore
 		companionAttributes[key] = { name: randomVariant.name };
 

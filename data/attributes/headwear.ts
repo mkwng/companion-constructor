@@ -98,7 +98,7 @@ export const headwear: AttributeDictionary = {
 
 		{
 			name: "hijab",
-			restrictions: { headShape: "flat" },
+			restrictions: { headShape: "flat", profileShape: "flat" },
 			layers: [
 				{
 					path: "face/10-accessories/hijab_1-v_clothing-g_f-a_1.png",

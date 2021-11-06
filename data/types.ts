@@ -6,6 +6,7 @@ import { HairVariant } from "./attributes/hair";
 import { HeadwearVariant } from "./attributes/headwear";
 import { MouthVariant } from "./attributes/mouth";
 import { NoseVariant } from "./attributes/nose";
+import { TopVariant } from "./attributes/top";
 
 export enum Pose {
 	Lookback = 1,
@@ -28,10 +29,12 @@ export type AttributeType =
 	| "eyewear"
 	| "headwear"
 	| "nose"
-	| "bodyFront";
+	| "bodyFront"
+	| "top";
 
 type Gender = "m" | "f";
 type HeadShape = "big" | "flat";
+type ProfileShape = "flat" | "encroached";
 
 export interface Variant {
 	name?: string;
@@ -42,6 +45,7 @@ interface Restrictions {
 	gender?: Gender;
 	pose?: Pose;
 	headShape?: HeadShape;
+	profileShape?: ProfileShape;
 }
 interface LayerBase {
 	blendMode?: "multiply";
@@ -102,6 +106,9 @@ interface HeadwearSelection extends AttributeSelectionBase {
 interface NoseSelection extends AttributeSelectionBase {
 	name: NoseVariant;
 }
+interface TopSelection extends AttributeSelectionBase {
+	name: TopVariant;
+}
 
 export type AttributeSelection =
 	| AttributeSelectionBase
@@ -112,7 +119,8 @@ export type AttributeSelection =
 	| MouthSelection
 	| EyewearSelection
 	| HeadwearSelection
-	| NoseSelection;
+	| NoseSelection
+	| TopSelection;
 
 export interface Companion {
 	name: string;
@@ -132,5 +140,6 @@ export interface Companion {
 		eyewear?: EyewearSelection;
 		headwear?: HeadwearSelection;
 		nose: NoseSelection;
+		top?: TopSelection;
 	};
 }

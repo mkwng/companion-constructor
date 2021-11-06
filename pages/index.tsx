@@ -193,7 +193,20 @@ export default function Home() {
 					</div>
 				))}
 			</div>
-			<a href={"/api/companion.png?" + companionToUrl(companion)}>Permalink</a>
+			<button
+				onClick={() => {
+					setCompanion(randomCompanion());
+				}}
+			>
+				Random Companion
+			</button>
+			<button
+				onClick={() => {
+					window.location.href = "/api/companion.png?" + companionToUrl(companion);
+				}}
+			>
+				Permalink
+			</button>
 		</>
 	);
 }
