@@ -104,6 +104,15 @@ export const blemish: AttributeDictionary = {
 				},
 			],
 		},
+		{
+			name: "blushsoft",
+			layers: [
+				{
+					path: "face/02-blemish/blushsoft-c_red.png",
+					color: colors.default.red,
+				},
+			],
+		},
 	],
 };
 
@@ -118,5 +127,6 @@ export const blemishVariants = [
 	"stubblemd",
 	"stubblesm",
 	"tattoos",
+	"blushsoft",
 ] as const;
 export type BlemishVariant = typeof blemishVariants[number];

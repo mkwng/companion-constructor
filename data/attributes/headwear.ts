@@ -158,6 +158,35 @@ export const headwear: AttributeDictionary = {
 				},
 			],
 		},
+
+		{
+			name: "bucket",
+			restrictions: { headShape: "flat" },
+			layers: [
+				{
+					path: "face/10-accessories/bucket_1-v_skin-b_multiply.png",
+					color: colors.skin["1"],
+					blendMode: "multiply",
+				},
+				{
+					path: "face/10-accessories/bucket_2-v_clothing.png",
+					colorType: "clothing",
+				},
+				{
+					path: "face/10-accessories/bucket_3-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{
+					path: "face/10-accessories/bucket_4-c_white.png",
+					color: colors.default.white,
+				},
+				{
+					path: "face/10-accessories/bucket_5-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
 	],
 };
 
@@ -171,5 +200,6 @@ let headwearVariants = [
 	"horns",
 	"ranger",
 	"turban",
+	"bucket",
 ] as const;
 export type HeadwearVariant = typeof headwearVariants[number];

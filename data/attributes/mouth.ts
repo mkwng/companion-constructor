@@ -318,6 +318,37 @@ export const mouth: AttributeDictionary = {
 				},
 			],
 		},
+
+		{
+			name: "thinpatch",
+			restrictions: { gender: "m" },
+			layers: [
+				{
+					path: "face/08-mouth/thinpatch_1-v_hair.png",
+					colorType: "hair",
+				},
+				{
+					path: "face/08-mouth/thinpatch_2-c_skin-b_multiply.png",
+					color: colors.skin["1"],
+					blendMode: "multiply",
+				},
+			],
+		},
+
+		{
+			name: "widesmile",
+			layers: [
+				{
+					path: "face/08-mouth/widesmile_1-c_outline.png",
+					color: colors.default.black,
+				},
+				{
+					path: "face/08-mouth/widesmile_2-c_skin-b_multiply.png",
+					color: colors.skin["1"],
+					blendMode: "multiply",
+				},
+			],
+		},
 	],
 };
 
@@ -342,5 +373,7 @@ let mouthVariants = [
 	"subtlesmile",
 	"teethy",
 	"tongue",
+	"thinpatch",
+	"widesmile",
 ] as const;
 export type MouthVariant = typeof mouthVariants[number];

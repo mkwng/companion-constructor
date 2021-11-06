@@ -130,6 +130,19 @@ export const eyes: AttributeDictionary = {
 				},
 			],
 		},
+		{
+			name: "shady",
+			layers: [
+				{
+					path: "face/06-eyes/shady_1-c_white.png",
+					color: colors.default.white,
+				},
+				{
+					path: "face/06-eyes/shady_2-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
 	],
 };
 
@@ -144,5 +157,6 @@ let eyesVariants = [
 	"squint",
 	"tired",
 	"x",
+	"shady",
 ] as const;
 export type EyesVariant = typeof eyesVariants[number];

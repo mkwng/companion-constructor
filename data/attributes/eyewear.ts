@@ -117,7 +117,21 @@ export const eyewear: AttributeDictionary = {
 					blendMode: "multiply",
 				},
 				{
-					path: "face/09-eyewear/vr_2.png",
+					path: "face/09-eyewear/vr_2-c_black.png",
+					color: colors.clothing.black,
+				},
+				{
+					path: "face/09-eyewear/vr_3-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{
+					path: "face/09-eyewear/vr_4-v_clothing.png",
+					colorType: "clothing",
+				},
+				{
+					path: "face/09-eyewear/vr_5-c_outline.png",
+					color: colors.default.black,
 				},
 			],
 		},
