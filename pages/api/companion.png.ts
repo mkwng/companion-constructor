@@ -15,7 +15,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	// Example url query:
 	// http://localhost:3000/api/companion.png?pose=2&gender=m&skinColor=0&hairColor=purple&backgroundColor=yellow&hair=crop&eyes=open&brows=bushy&mouth=handlebars&nose=hook&headwear=cap&headwearColor1=red&headwearColor2=blue
 	// http://localhost:3000/api/companion.png?pose=2&gender=f&skinColor=0&hairColor=purple&backgroundColor=bga&hair=crop&eyes=dart&brows=bushy&mouth=handlebars&nose=hook&headwear=cap&headwearColor1=red&headwearColor2=blue
-	let optimized: Buffer = imageCache.get(req.url);
+	let optimized: Buffer = await imageCache.get(req.url);
+
+	if (optimized) {
+		console.log(`Successfully used cache for ${req.url}`);
+	}
 
 	if (!optimized) {
 		const companion = companionExample;
