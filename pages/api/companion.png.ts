@@ -73,7 +73,10 @@ export default async function handler(req, res) {
 		if (!imageBuffer) {
 			imageBuffer = (
 				await axios({
-					url: process.env.NEXT_PUBLIC_URL + getPath(layer, companion.properties.pose),
+					url:
+						"https://" +
+						process.env.RAILWAY_STATIC_URL +
+						getPath(layer, companion.properties.pose),
 					responseType: "arraybuffer",
 				})
 			).data as Buffer;
