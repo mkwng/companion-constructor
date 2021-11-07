@@ -1,9 +1,12 @@
 import axios from "axios";
+import NodeCache from "node-cache";
 import sharp from "sharp";
 import { colors } from "../../data/colors";
 import { companionExample } from "../../data/example";
 import { getColor, getLayers, getPath, selectableAttributes } from "../../data/helpers";
 import { Pose, RGBColor } from "../../data/types";
+
+const imageCache = new NodeCache();
 
 const colorRegEx = /Color\d/g;
 
@@ -65,12 +68,18 @@ export default async function handler(req, res) {
 	const layers = getLayers(companion);
 
 	const imageBuffers = layers.map(async ([layer]) => {
-		return (
-			await axios({
-				url: process.env.NEXT_PUBLIC_URL + getPath(layer, companion.properties.pose),
-				responseType: "arraybuffer",
-			})
-		).data as Buffer;
+		const path = getPath(layer, companion.properties.pose);
+		let imageBuffer = await imageCache.get(path);
+		if (!imageBuffer) {
+			imageBuffer = (
+				await axios({
+					url: process.env.NEXT_PUBLIC_URL + getPath(layer, companion.properties.pose),
+					responseType: "arraybuffer",
+				})
+			).data as Buffer;
+			imageCache.set(path, imageBuffer);
+		}
+		return imageBuffer;
 	});
 	const results = await Promise.all(imageBuffers);
 
