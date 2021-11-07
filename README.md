@@ -1,34 +1,25 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Playbooks
 
-## Getting Started
+### Adding a new attribute
 
-First, run the development server:
+Define it...
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+- Create AttributeDictionary describing the attribute and its variants
+- The path assumes you are already in the "public/attributes" folder...
+- Create a const array of variant string names
+- Export the list as a type
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+In type.ts...
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+- At types.ts, add it to AttributeType
+- If it's a selectable one, extend AttributeSelectionBase for it
+- Add it to AttributeSelection and the Companion interface
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+In poses.ts...
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- Import it and add it to attributes
+- Add it to the AttributeDictionary array for the relevant poses
 
-## Learn More
+In helper.ts...
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- If it's selectable, add it to selectableAttributes and selectableAttributesArray

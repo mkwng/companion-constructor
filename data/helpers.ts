@@ -18,6 +18,7 @@ import {
 	Variant,
 } from "./types";
 import { top } from "./attributes/top";
+import { bottom } from "./attributes/bottom";
 
 export const getLayers = (companion) => {
 	const pose = poses[companion.properties.pose];
@@ -73,6 +74,7 @@ export const getColor = (layer: Layer, companion?: Companion, color?: RGBColor[]
 			return companion.properties[layer.colorType];
 		case "clothing":
 			if (!color) {
+				console.log(companion);
 				throw new Error(`No colors were specified for layer: ${layer.path}`);
 			}
 			const temp = color[colorCount++];
@@ -111,6 +113,7 @@ export const selectableAttributes: { [key: string]: AttributeDictionary } = {
 	headwear,
 	nose,
 	top,
+	bottom,
 };
 export const selectableAttributesArray: AttributeDictionary[] = [
 	blemish,
@@ -122,6 +125,7 @@ export const selectableAttributesArray: AttributeDictionary[] = [
 	headwear,
 	nose,
 	top,
+	bottom,
 ];
 
 export const colorsRequired = (attributeName: string, variantName: string): number => {
@@ -147,7 +151,7 @@ function shuffleArray(array) {
 
 export const randomCompanion = (): Companion => {
 	const companionProps: Companion["properties"] = {
-		pose: Math.floor(Math.random() * 4) + 1,
+		pose: 2, //Math.floor(Math.random() * 4) + 1,
 		gender: Math.random() < 0.5 ? "m" : "f",
 		skin: randomProperty(colors.skin),
 		hair: randomProperty(colors.hair),
@@ -177,6 +181,11 @@ export const randomCompanion = (): Companion => {
 			}
 			listOfPossibles.push(variant.name);
 		});
+		if (selectableAttributes[key].isOptional) {
+			for (let i = 0; i < 15; i++) {
+				listOfPossibles.push(undefined);
+			}
+		}
 
 		const randomName = randomElementFromArray(listOfPossibles);
 		const randomVariant = selectableAttributes[key].variants.find(

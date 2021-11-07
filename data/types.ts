@@ -1,4 +1,5 @@
 import { BlemishVariant } from "./attributes/blemish";
+import { BottomVariant } from "./attributes/bottom";
 import { BrowsVariant } from "./attributes/brows";
 import { EyesVariant } from "./attributes/eyes";
 import { EyewearVariant } from "./attributes/eyewear";
@@ -30,7 +31,8 @@ export type AttributeType =
 	| "headwear"
 	| "nose"
 	| "bodyFront"
-	| "top";
+	| "top"
+	| "bottom";
 
 type Gender = "m" | "f";
 type HeadShape = "big" | "flat";
@@ -109,6 +111,9 @@ interface NoseSelection extends AttributeSelectionBase {
 interface TopSelection extends AttributeSelectionBase {
 	name: TopVariant;
 }
+interface BottomSelection extends AttributeSelectionBase {
+	name: BottomVariant;
+}
 
 export type AttributeSelection =
 	| AttributeSelectionBase
@@ -120,7 +125,8 @@ export type AttributeSelection =
 	| EyewearSelection
 	| HeadwearSelection
 	| NoseSelection
-	| TopSelection;
+	| TopSelection
+	| BottomSelection;
 
 export interface Companion {
 	name: string;
@@ -141,5 +147,6 @@ export interface Companion {
 		headwear?: HeadwearSelection;
 		nose: NoseSelection;
 		top?: TopSelection;
+		bottom?: BottomSelection;
 	};
 }

@@ -3,7 +3,7 @@ import { AttributeDictionary } from "../types";
 
 export const top: AttributeDictionary = {
 	name: "top",
-	isOptional: true,
+	// isOptional: true,
 	variants: [
 		{
 			name: "fishnet",

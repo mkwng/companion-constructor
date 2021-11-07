@@ -47,6 +47,6 @@ export const colors: {
 		yellow: { r: 238, g: 197, b: 82 },
 		green: { r: 75, g: 164, b: 103 },
 		blue: { r: 60, g: 81, b: 207 },
-		gray: { r: 191, g: 186, b: 172 },
+		gray: { r: 248, g: 241, b: 230 },
 	},
 };

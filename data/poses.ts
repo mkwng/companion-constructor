@@ -12,6 +12,7 @@ import { eyewear } from "./attributes/eyewear";
 import { headwear } from "./attributes/headwear";
 import { nose } from "./attributes/nose";
 import { top } from "./attributes/top";
+import { bottom } from "./attributes/bottom";
 import { AttributeDictionary, AttributeType } from "./types";
 
 export const attributes: {
@@ -32,6 +33,7 @@ export const attributes: {
 	nose,
 	bodyFront,
 	top,
+	bottom,
 };
 
 export const poses: { [key: string]: AttributeDictionary[] } = {
@@ -54,6 +56,7 @@ export const poses: { [key: string]: AttributeDictionary[] } = {
 	"2": [
 		attributes.background,
 		attributes.bodyBack,
+		attributes.bottom,
 		attributes.neck,
 		attributes.face,
 		attributes.blemish,
