@@ -63,7 +63,8 @@ export const bottom: AttributeDictionary = {
 			layers: [
 				{
 					path: "pose2/02-bottoms/skirt_1-v_skin-b_multiply-g_f.png",
-					color: colors.default.black,
+					color: colors.default.gray,
+					blendMode: "multiply",
 				},
 				{
 					path: "pose2/02-bottoms/skirt_2-v_clothing.png",

@@ -65,11 +65,11 @@ export const poses: { [key: string]: AttributeDictionary[] } = {
 		attributes.eyes,
 		attributes.brows,
 		attributes.mouth,
+		attributes.bodyFront,
+		attributes.top,
 		attributes.eyewear,
 		attributes.headwear,
 		attributes.nose,
-		attributes.bodyFront,
-		attributes.top,
 	],
 	"3": [
 		attributes.background,
