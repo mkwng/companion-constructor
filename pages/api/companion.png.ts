@@ -69,7 +69,7 @@ export default async function handler(req, res) {
 
 	const imageBuffers = layers.map(async ([layer]) => {
 		const path = getPath(layer, companion.properties.pose);
-		let imageBuffer = await imageCache.get(path);
+		let imageBuffer: Buffer = await imageCache.get(path);
 		if (!imageBuffer) {
 			imageBuffer = (
 				await axios({
@@ -94,7 +94,7 @@ export default async function handler(req, res) {
 				color = getColor(layer, companion, selection?.color);
 			}
 
-			let input = next;
+			let input: Buffer = next;
 
 			if (color) {
 				input = await sharp(input)
