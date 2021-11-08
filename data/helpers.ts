@@ -1,8 +1,7 @@
-import { allAttributes, selectableAttributes, selectableAttributesArray } from "./attributes";
+import { selectableAttributes, selectableAttributesArray } from "./attributes";
 import { colors } from "./colors";
 import { poses } from "./poses";
 import {
-	AttributeDictionary,
 	AttributeSelection,
 	AttributeType,
 	Companion,
@@ -163,17 +162,17 @@ export const colorToKey = (
 };
 
 export const isCompatible = (
-	variant: Variant,
+	restrictions: Restrictions,
 	companionRestrictions: Restrictions[]
 ): boolean => {
-	if (!variant) {
+	if (!restrictions) {
 		return true;
 	}
-	if (variant.restrictions) {
+	if (restrictions) {
 		if (
 			companionRestrictions.some((restriction) => {
 				for (const rkey in restriction) {
-					if (variant.restrictions[rkey] && variant.restrictions[rkey] !== restriction[rkey]) {
+					if (restrictions[rkey] && restrictions[rkey] !== restriction[rkey]) {
 						return true;
 					}
 				}
@@ -200,7 +199,7 @@ export const getRestrictions = (companion: Companion): Restrictions[] => {
 		const match = selectableAttributes[key].variants.find((variant) => {
 			return variant.name === companion.attributes[key].name;
 		});
-		if (match?.restrictions) {
+		if (match?.restrictions && isCompatible(match.restrictions, restrictions)) {
 			restrictions.push(match.restrictions);
 		}
 	}

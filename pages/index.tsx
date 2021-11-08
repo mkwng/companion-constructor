@@ -159,7 +159,7 @@ export default function Home() {
 						{!isCompatible(
 							attribute.variants.find((variant) => {
 								return companion.attributes[attribute.name]?.name === variant.name;
-							}),
+							})?.restrictions,
 							companionRestrictions
 						) && <>⚠️</>}
 						{attribute.name}:
@@ -179,11 +179,8 @@ export default function Home() {
 								);
 
 								return (
-									<option
-										value={variant.name}
-										key={variant.name}
-										disabled={!isCompatible(variant, newRestrictions)}
-									>
+									<option value={variant.name} key={variant.name}>
+										{!isCompatible(variant.restrictions, newRestrictions) && "⚠️"}{" "}
 										{variant.name}
 									</option>
 								);

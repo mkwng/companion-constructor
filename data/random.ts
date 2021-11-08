@@ -44,7 +44,7 @@ export const randomCompanion = (): Companion => {
 		const listOfPossibles = [];
 		selectableAttributes[key].variants.forEach((variant) => {
 			// Check if the restrictions are met
-			if (!isCompatible(variant, restrictions)) return;
+			if (!isCompatible(variant.restrictions, restrictions)) return;
 			let quantity = variant.rarity
 				? (() => {
 						switch (variant.rarity) {
