@@ -165,7 +165,7 @@ export default function Home() {
 						{attribute.name}:
 						<select
 							name={attribute.name}
-							value={companion.attributes[attribute.name]?.name}
+							value={companion.attributes[attribute.name]?.name || ""}
 							onChange={handleAttributeChange}
 						>
 							{attribute.isOptional && <option value="">none</option>}

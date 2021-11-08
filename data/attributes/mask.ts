@@ -6,11 +6,11 @@ export const mask: AttributeDictionary = {
 	needsTranslation: true,
 	isOptional: true,
 	appearsIn: 0.05,
-	hides: ["nose", "mouth"],
 	variants: [
 		{
 			attribute: "mask",
 			name: "facemask",
+			hides: ["nose", "mouth"],
 			layers: [
 				{
 					path: "face/11-nose/fullmask_1-v_clothing.png",
@@ -30,6 +30,7 @@ export const mask: AttributeDictionary = {
 		{
 			attribute: "mask",
 			name: "warrior",
+			hides: ["nose", "mouth"],
 			layers: [
 				{
 					path: "face/11-nose/warrior_1-v_clothing.png",
@@ -54,6 +55,7 @@ export const mask: AttributeDictionary = {
 		{
 			attribute: "mask",
 			name: "medical",
+			hides: ["nose", "mouth"],
 			layers: [
 				{
 					path: "face/11-nose/mask_1-v_clothing.png",

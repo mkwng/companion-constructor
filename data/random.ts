@@ -45,7 +45,28 @@ export const randomCompanion = (): Companion => {
 		selectableAttributes[key].variants.forEach((variant) => {
 			// Check if the restrictions are met
 			if (!isCompatible(variant, restrictions)) return;
-			listOfPossibles.push(variant.name);
+			let quantity = variant.rarity
+				? (() => {
+						switch (variant.rarity) {
+							case "mythic":
+								return 1;
+								break;
+							case "rare":
+								return 5;
+								break;
+							case "uncommon":
+								return 10;
+								break;
+							case "common":
+							default:
+								return 15;
+								break;
+						}
+				  })()
+				: 15;
+			for (let i = 0; i < quantity; i++) {
+				listOfPossibles.push(variant.name);
+			}
 		});
 		if (selectableAttributes[key].isOptional) {
 			if (selectableAttributes[key].appearsIn === 0) {

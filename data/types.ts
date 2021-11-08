@@ -47,6 +47,7 @@ export interface Variant {
 	restrictions?: Restrictions;
 	layers: Layer[];
 	rarity?: Rarity;
+	hides?: AttributeType[];
 }
 
 export interface Restrictions {
@@ -76,11 +77,10 @@ interface LayerStatic extends LayerBase {
 export type Layer = LayerBase | LayerDynamic | LayerStatic;
 
 export interface AttributeDictionary {
-	name: string;
+	name: AttributeType;
 	needsTranslation?: boolean;
 	isOptional?: boolean;
 	appearsIn?: number;
-	hides?: AttributeType[];
 	variants: Variant[];
 }
 export interface RGBColor {

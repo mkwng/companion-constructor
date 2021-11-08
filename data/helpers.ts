@@ -4,6 +4,7 @@ import { poses } from "./poses";
 import {
 	AttributeDictionary,
 	AttributeSelection,
+	AttributeType,
 	Companion,
 	Layer,
 	Pose,
@@ -45,13 +46,9 @@ export const getLayers = (companion: Companion) => {
 
 	const variants = getVariants(companion);
 
-	const notRendered = variants.reduce((prev, curr) => {
-		if (
-			curr?.attribute &&
-			allAttributes?.[curr.attribute]?.hides &&
-			allAttributes[curr.attribute].hides.length
-		) {
-			prev.push(...allAttributes[curr.attribute].hides);
+	const notRendered = variants.reduce((prev: AttributeType[], curr): AttributeType[] => {
+		if (curr?.hides && curr.hides.length) {
+			prev.push(...curr.hides);
 		}
 		return prev;
 	}, []);

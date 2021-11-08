@@ -9,6 +9,7 @@ export const top: AttributeDictionary = {
 			attribute: "top",
 			name: "fishnet",
 			restrictions: { gender: "f", pose: 2 },
+			rarity: "rare",
 			layers: [
 				{ path: "pose2/05-tops/fishnet_1-c_black-g_f.png", color: colors.clothing.black },
 				{
@@ -22,7 +23,9 @@ export const top: AttributeDictionary = {
 		{
 			attribute: "top",
 			name: "hoodie",
-			restrictions: { headShape: "flat", pose: 2, remove: "headwear" },
+			restrictions: { headShape: "flat", pose: 2 },
+			hides: ["headwear", "hair"],
+			rarity: "mythic",
 			layers: [
 				{
 					path: "pose2/05-tops/hoodie_1-v_skin-b_multiply.png",
@@ -56,6 +59,7 @@ export const top: AttributeDictionary = {
 		{
 			attribute: "top",
 			name: "motorcyclejacketm",
+			rarity: "rare",
 			restrictions: { pose: 2 },
 			layers: [
 				{
@@ -100,6 +104,7 @@ export const top: AttributeDictionary = {
 			attribute: "top",
 			name: "schoolgirl",
 			restrictions: { gender: "f", pose: 2 },
+			rarity: "uncommon",
 			layers: [
 				{
 					path: "pose2/05-tops/schoolgirl_1-v_skin-b_multiply-g_f.png",
@@ -121,6 +126,7 @@ export const top: AttributeDictionary = {
 			attribute: "top",
 			name: "tattoos",
 			restrictions: { gender: "m", pose: 2 },
+			rarity: "mythic",
 			layers: [
 				{ path: "pose2/05-tops/tattoos_1-c_red-g_m.png", color: colors.default.red },
 				{ path: "pose2/05-tops/tattoos_2-c_outline.png", color: colors.default.black },
@@ -130,6 +136,7 @@ export const top: AttributeDictionary = {
 			attribute: "top",
 			name: "tattooshirt",
 			restrictions: { gender: "m", pose: 2 },
+			rarity: "mythic",
 			layers: [
 				{ path: "pose2/05-tops/tattooshirt_1-c_red-g_m.png", color: colors.default.red },
 				{ path: "pose2/05-tops/tattooshirt_2-c_white.png", color: colors.clothing.white },
