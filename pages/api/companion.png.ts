@@ -2,9 +2,10 @@ import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import NodeCache from "node-cache";
 import sharp from "sharp";
+import { selectableAttributes } from "../../data/attributes";
 import { colors } from "../../data/colors";
 import { companionExample } from "../../data/example";
-import { getColor, getLayers, getPath, selectableAttributes } from "../../data/helpers";
+import { getColor, getLayers, getPath } from "../../data/helpers";
 import { Pose, RGBColor } from "../../data/types";
 
 const imageCache = new NodeCache();
