@@ -54,7 +54,6 @@ export interface Restrictions {
 	pose?: Pose;
 	headShape?: HeadShape;
 	profileShape?: ProfileShape;
-	remove?: AttributeType;
 }
 interface LayerBase {
 	blendMode?: "multiply";
@@ -81,6 +80,7 @@ export interface AttributeDictionary {
 	needsTranslation?: boolean;
 	isOptional?: boolean;
 	appearsIn?: number;
+	hides?: AttributeType[];
 	variants: Variant[];
 }
 export interface RGBColor {

@@ -6,6 +6,7 @@ export const mask: AttributeDictionary = {
 	needsTranslation: true,
 	isOptional: true,
 	appearsIn: 0.05,
+	hides: ["nose", "mouth"],
 	variants: [
 		{
 			attribute: "mask",

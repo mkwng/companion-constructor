@@ -1,7 +1,8 @@
-import { selectableAttributes, selectableAttributesArray } from "./attributes";
+import { allAttributes, selectableAttributes, selectableAttributesArray } from "./attributes";
 import { colors } from "./colors";
 import { poses } from "./poses";
 import {
+	AttributeDictionary,
 	AttributeSelection,
 	Companion,
 	Layer,
@@ -11,10 +12,9 @@ import {
 	Variant,
 } from "./types";
 
-export const getLayers = (companion) => {
+const getVariants = (companion: Companion): Variant[] => {
 	const pose = poses[companion.properties.pose];
-	let layers: [Layer, AttributeSelection?, boolean?][] = [];
-	pose.forEach((attribute) => {
+	return pose.map((attribute) => {
 		let selection: AttributeSelection | undefined;
 		let match = attribute.variants.find((variant) => {
 			if (companion.attributes[attribute.name]?.name) {
@@ -36,17 +36,65 @@ export const getLayers = (companion) => {
 			}
 			return !attribute.isOptional;
 		});
-		if (match) {
-			match.layers.forEach((layer) => {
-				let result: [Layer, AttributeSelection?, boolean?] = [
-					layer,
-					selection,
-					attribute.needsTranslation,
-				];
-				layers.push(result);
-			});
-		}
+		return match;
 	});
+};
+
+export const getLayers = (companion: Companion) => {
+	const pose = poses[companion.properties.pose];
+
+	const variants = getVariants(companion);
+
+	const notRendered = variants.reduce((prev, curr) => {
+		if (
+			curr?.attribute &&
+			allAttributes?.[curr.attribute]?.hides &&
+			allAttributes[curr.attribute].hides.length
+		) {
+			prev.push(...allAttributes[curr.attribute].hides);
+		}
+		return prev;
+	}, []);
+
+	let layers: [Layer, AttributeSelection?, boolean?][] = [];
+	pose
+		.filter((attribute) => {
+			console.log(notRendered);
+			return !notRendered.includes(attribute.name);
+		})
+		.forEach((attribute) => {
+			let selection: AttributeSelection | undefined;
+			let match = attribute.variants.find((variant) => {
+				if (companion.attributes[attribute.name]?.name) {
+					let isMatch = variant.name === companion.attributes[attribute.name].name;
+					if (isMatch) {
+						selection = companion.attributes[attribute.name];
+					}
+					return isMatch;
+				}
+				if (variant.restrictions?.gender) {
+					if (variant.restrictions.gender != companion.properties.gender) {
+						return false;
+					}
+				}
+				if (variant.restrictions?.pose) {
+					if (variant.restrictions.pose != companion.properties.pose) {
+						return false;
+					}
+				}
+				return !attribute.isOptional;
+			});
+			if (match) {
+				match.layers.forEach((layer) => {
+					let result: [Layer, AttributeSelection?, boolean?] = [
+						layer,
+						selection,
+						attribute.needsTranslation,
+					];
+					layers.push(result);
+				});
+			}
+		});
 	return layers;
 };
 
