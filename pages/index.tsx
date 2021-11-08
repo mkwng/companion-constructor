@@ -10,7 +10,7 @@ import {
 	isCompatible,
 } from "../data/helpers";
 import { randomCompanion, randomProperty } from "../data/random";
-import { Companion, Restrictions } from "../data/types";
+import { Companion, Pose, Restrictions } from "../data/types";
 
 const findFirstIdenticalObject = (array: any[], object: any) => {
 	for (let i = 0; i < array.length; i++) {
@@ -56,13 +56,23 @@ export default function Home() {
 
 	const handlePropertyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const { name, value } = e.target;
-		setCompanion({
-			...companion,
-			properties: {
-				...companion.properties,
-				[name]: value,
-			},
-		});
+		if (name === "pose") {
+			setCompanion({
+				...companion,
+				properties: {
+					...companion.properties,
+					pose: parseInt(value) as Pose,
+				},
+			});
+		} else {
+			setCompanion({
+				...companion,
+				properties: {
+					...companion.properties,
+					[name]: value,
+				},
+			});
+		}
 	};
 
 	const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -125,10 +135,10 @@ export default function Home() {
 					{backgroundOptions}
 				</select>
 				<select name="pose" value={companion.properties.pose} onChange={handlePropertyChange}>
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
+					<option value={1}>1</option>
+					<option value={2}>2</option>
+					<option value={3}>3</option>
+					<option value={4}>4</option>
 				</select>
 				<select
 					name="gender"

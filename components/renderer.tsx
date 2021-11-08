@@ -95,20 +95,12 @@ const applyTransform = (
 ): HTMLCanvasElement | HTMLImageElement => {
 	switch (pose) {
 		case 1:
-		//@ts-ignore
-		case "1":
 			return translateImage(flipHorizontal(source), -261, -15);
 		case 2:
-		//@ts-ignore
-		case "2":
 			return source;
 		case 3:
-		//@ts-ignore
-		case "3":
 			return translateImage(source, 521, -313);
 		case 4:
-		//@ts-ignore
-		case "4":
 			return translateImage(rotateImage(flipVertical(source), -90), 246, 0);
 	}
 };
@@ -147,7 +139,7 @@ export default function Renderer({
 				imageToDraw = needsTranslation
 					? applyTransform(imageToDraw, companion.properties.pose)
 					: imageToDraw;
-				if (!imageToDraw) debugger;
+				if (!imageToDraw) throw new Error("No image returned");
 				ctx.drawImage(imageToDraw, 0, 0);
 				ctx.globalCompositeOperation = "source-over";
 			});

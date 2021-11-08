@@ -161,6 +161,20 @@ export const colorToKey = (
 	return "";
 };
 
+const hasConflict = (
+	sourceRestriction: Restrictions,
+	companionRestrictions: Restrictions[]
+): boolean => {
+	return companionRestrictions.some((cRestriction) => {
+		for (const rkey in cRestriction) {
+			if (sourceRestriction[rkey] && sourceRestriction[rkey] !== cRestriction[rkey]) {
+				return true;
+			}
+		}
+		return false;
+	});
+};
+
 export const isCompatible = (
 	restrictions: Restrictions,
 	companionRestrictions: Restrictions[]
@@ -169,16 +183,7 @@ export const isCompatible = (
 		return true;
 	}
 	if (restrictions) {
-		if (
-			companionRestrictions.some((restriction) => {
-				for (const rkey in restriction) {
-					if (restrictions[rkey] && restrictions[rkey] !== restriction[rkey]) {
-						return true;
-					}
-				}
-				return false;
-			})
-		) {
+		if (hasConflict(restrictions, companionRestrictions)) {
 			return false;
 		}
 	}
