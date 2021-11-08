@@ -153,6 +153,129 @@ export const top: AttributeDictionary = {
 				{ path: "pose2/05-tops/wifebeater_2-c_outline.png", color: colors.default.black },
 			],
 		},
+
+		{
+			attribute: "top",
+			name: "buttonup",
+			restrictions: { gender: "m" },
+			layers: [
+				{ path: "pose2/05-tops/buttonup_1-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/buttonup_2-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/buttonup_3-c_outline.png", color: colors.default.black },
+			],
+		},
+		{
+			attribute: "top",
+			name: "jacket",
+			restrictions: { pose: 2 },
+			layers: [
+				{ path: "pose2/05-tops/jacket_1-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/jacket_2-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/jacket_3-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/jacket_4-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/jacket_5-c_outline.png", color: colors.default.black },
+			],
+		},
+		{
+			attribute: "top",
+			name: "longt",
+			restrictions: { pose: 2 },
+			layers: [
+				{ path: "pose2/05-tops/longt_1-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/longt_2-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/longt_3-c_outline.png", color: colors.default.black },
+			],
+		},
+		{
+			attribute: "top",
+			name: "longtstripe",
+			restrictions: { pose: 2 },
+			layers: [
+				{ path: "pose2/05-tops/longtstripe_1-v_clothing.png", colorType: "clothing" },
+				{ path: "pose2/05-tops/longtstripe_2-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/longtstripe_3-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/longtstripe_4-c_outline.png", color: colors.default.black },
+			],
+		},
+		{
+			attribute: "top",
+			name: "tshirt",
+			restrictions: { pose: 2 },
+			layers: [
+				{ path: "pose2/05-tops/tshirt_01-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/tshirt_02-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/tshirt_03-c_outline.png", color: colors.default.black },
+			],
+		},
+		{
+			attribute: "top",
+			name: "tshirtdot",
+			restrictions: { pose: 2 },
+			layers: [
+				{ path: "pose2/05-tops/tshirtdot_01-v_clothing.png", colorType: "clothing" },
+				{ path: "pose2/05-tops/tshirtdot_02-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/tshirtdot_03-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/tshirtdot_04-c_outline.png", color: colors.default.black },
+			],
+		},
+		{
+			attribute: "top",
+			name: "tshirtsquiggle",
+			restrictions: { pose: 2 },
+			layers: [
+				{ path: "pose2/05-tops/tshirtsquiggle_01-v_clothing.png", colorType: "clothing" },
+				{ path: "pose2/05-tops/tshirtsquiggle_02-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/tshirtsquiggle_03-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/tshirtsquiggle_04-c_outline.png", color: colors.default.black },
+			],
+		},
+		{
+			attribute: "top",
+			name: "tshirtwaves",
+			restrictions: { pose: 2 },
+			layers: [
+				{ path: "pose2/05-tops/tshirtwaves_01-v_clothing.png", colorType: "clothing" },
+				{ path: "pose2/05-tops/tshirtwaves_02-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/tshirtwaves_03-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/tshirtwaves_04-c_outline.png", color: colors.default.black },
+			],
+		},
 	],
 };
 
@@ -164,5 +287,13 @@ let topVariants = [
 	"tattoos",
 	"tattooshirt",
 	"wifebeater",
+	"buttonup",
+	"jacket",
+	"longt",
+	"longtstripe",
+	"tshirt",
+	"tshirtdot",
+	"tshirtsquiggle",
+	"tshirtwaves",
 ] as const;
 export type TopVariant = typeof topVariants[number];
