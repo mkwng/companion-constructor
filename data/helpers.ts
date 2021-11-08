@@ -56,7 +56,6 @@ export const getLayers = (companion: Companion) => {
 	let layers: [Layer, AttributeSelection?, boolean?][] = [];
 	pose
 		.filter((attribute) => {
-			console.log(notRendered);
 			return !notRendered.includes(attribute.name);
 		})
 		.forEach((attribute) => {
