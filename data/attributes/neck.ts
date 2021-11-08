@@ -6,6 +6,7 @@ export const neck: AttributeDictionary = {
 	needsTranslation: true,
 	variants: [
 		{
+			attribute: "neck",
 			restrictions: { gender: "f" },
 			layers: [
 				{
@@ -21,6 +22,7 @@ export const neck: AttributeDictionary = {
 		},
 
 		{
+			attribute: "neck",
 			restrictions: { gender: "m" },
 			layers: [
 				{

@@ -1,18 +1,33 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Renderer from "../components/renderer";
+import { selectableAttributesArray } from "../data/attributes";
 import { colors } from "../data/colors";
 import {
 	colorsRequired,
 	colorToKey,
 	companionToUrl,
-	randomCompanion,
-	randomProperty,
-	selectableAttributesArray,
+	getRestrictions,
+	isCompatible,
 } from "../data/helpers";
-import { RGBColor } from "../data/types";
+import { randomCompanion, randomProperty } from "../data/random";
+import { Companion, Restrictions } from "../data/types";
+
+const findFirstIdenticalObject = (array: any[], object: any) => {
+	for (let i = 0; i < array.length; i++) {
+		if (JSON.stringify(array[i]) === JSON.stringify(object)) {
+			return i;
+		}
+	}
+	return -1;
+};
 
 export default function Home() {
-	const [companion, setCompanion] = useState(null);
+	const [companion, setCompanion] = useState<Companion | null>(null);
+
+	const companionRestrictions = useMemo<Restrictions[]>(
+		() => getRestrictions(companion),
+		[companion]
+	);
 
 	useEffect(() => {
 		setCompanion(randomCompanion());
@@ -141,6 +156,13 @@ export default function Home() {
 			<div>
 				{selectableAttributesArray.map((attribute) => (
 					<div key={attribute.name}>
+						{!isCompatible(
+							attribute.variants.find((variant) => {
+								return companion.attributes[attribute.name]?.name === variant.name;
+							}),
+							companionRestrictions
+						) && <>⚠️</>}
+						{attribute.name}:
 						<select
 							name={attribute.name}
 							value={companion.attributes[attribute.name]?.name}
@@ -148,8 +170,20 @@ export default function Home() {
 						>
 							{attribute.isOptional && <option value="">none</option>}
 							{attribute.variants.map((variant) => {
+								const matchIndex = findFirstIdenticalObject(
+									companionRestrictions,
+									variant.restrictions
+								);
+								const newRestrictions = companionRestrictions.filter(
+									(_, i) => i !== matchIndex
+								);
+
 								return (
-									<option value={variant.name} key={variant.name}>
+									<option
+										value={variant.name}
+										key={variant.name}
+										disabled={!isCompatible(variant, newRestrictions)}
+									>
 										{variant.name}
 									</option>
 								);

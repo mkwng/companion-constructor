@@ -1,40 +1,5 @@
-import { background } from "./attributes/background";
-import { bodyBack, bodyFront } from "./attributes/body";
-import { neck } from "./attributes/neck";
-import { face } from "./attributes/face";
-import { blemish } from "./attributes/blemish";
-import { outline } from "./attributes/outline";
-import { hair } from "./attributes/hair";
-import { eyes } from "./attributes/eyes";
-import { brows } from "./attributes/brows";
-import { mouth } from "./attributes/mouth";
-import { eyewear } from "./attributes/eyewear";
-import { headwear } from "./attributes/headwear";
-import { nose } from "./attributes/nose";
-import { top } from "./attributes/top";
-import { bottom } from "./attributes/bottom";
-import { AttributeDictionary, AttributeType } from "./types";
-
-export const attributes: {
-	[attribute in AttributeType]: AttributeDictionary;
-} = {
-	background,
-	bodyBack,
-	neck,
-	face,
-	blemish,
-	outline,
-	hair,
-	eyes,
-	brows,
-	mouth,
-	eyewear,
-	headwear,
-	nose,
-	bodyFront,
-	top,
-	bottom,
-};
+import { allAttributes as attributes } from "./attributes";
+import { AttributeDictionary } from "./types";
 
 export const poses: { [key: string]: AttributeDictionary[] } = {
 	"1": [
@@ -65,10 +30,11 @@ export const poses: { [key: string]: AttributeDictionary[] } = {
 		attributes.eyes,
 		attributes.brows,
 		attributes.mouth,
+		attributes.headwear,
+		attributes.mask,
 		attributes.bodyFront,
 		attributes.top,
 		attributes.eyewear,
-		attributes.headwear,
 		attributes.nose,
 	],
 	"3": [

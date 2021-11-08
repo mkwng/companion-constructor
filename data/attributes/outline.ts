@@ -6,6 +6,7 @@ export const outline: AttributeDictionary = {
 	needsTranslation: true,
 	variants: [
 		{
+			attribute: "outline",
 			restrictions: { gender: "f" },
 			layers: [
 				{
@@ -15,6 +16,7 @@ export const outline: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "outline",
 			restrictions: { gender: "m" },
 			layers: [
 				{

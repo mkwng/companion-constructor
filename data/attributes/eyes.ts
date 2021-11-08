@@ -6,7 +6,9 @@ export const eyes: AttributeDictionary = {
 	needsTranslation: true,
 	variants: [
 		{
+			attribute: "eyes",
 			name: "bags",
+			rarity: "uncommon",
 			layers: [
 				{
 					path: "face/06-eyes/bags_1-c_outline.png",
@@ -22,7 +24,9 @@ export const eyes: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "eyes",
 			name: "closed",
+			rarity: "rare",
 			layers: [
 				{
 					path: "face/06-eyes/closed_1-c_outline.png",
@@ -38,7 +42,9 @@ export const eyes: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "eyes",
 			name: "dart",
+			rarity: "common",
 			restrictions: { gender: "f" },
 			layers: [
 				{
@@ -48,7 +54,9 @@ export const eyes: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "eyes",
 			name: "default",
+			rarity: "common",
 			layers: [
 				{
 					path: "face/06-eyes/default-c_outline.png",
@@ -57,7 +65,9 @@ export const eyes: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "eyes",
 			name: "heart",
+			rarity: "rare",
 			layers: [
 				{
 					path: "face/06-eyes/heart-c_red.png",
@@ -66,7 +76,9 @@ export const eyes: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "eyes",
 			name: "open",
+			rarity: "rare",
 			layers: [
 				{
 					path: "face/06-eyes/open_1-c_white.png",
@@ -81,7 +93,9 @@ export const eyes: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "eyes",
 			name: "smile",
+			rarity: "common",
 			layers: [
 				{
 					path: "face/06-eyes/smile-c_outline.png",
@@ -90,7 +104,9 @@ export const eyes: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "eyes",
 			name: "squint",
+			rarity: "common",
 			layers: [
 				{
 					path: "face/06-eyes/squint_1-c_outline.png",
@@ -106,7 +122,9 @@ export const eyes: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "eyes",
 			name: "tired",
+			rarity: "uncommon",
 			layers: [
 				{
 					path: "face/06-eyes/tired_1-c_skin-b_multiply.png",
@@ -122,7 +140,9 @@ export const eyes: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "eyes",
 			name: "x",
+			rarity: "rare",
 			layers: [
 				{
 					path: "face/06-eyes/x-c_outline.png",
@@ -131,7 +151,9 @@ export const eyes: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "eyes",
 			name: "shady",
+			rarity: "uncommon",
 			layers: [
 				{
 					path: "face/06-eyes/shady_1-c_white.png",

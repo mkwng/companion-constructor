@@ -6,6 +6,7 @@ export const nose: AttributeDictionary = {
 	needsTranslation: true,
 	variants: [
 		{
+			attribute: "nose",
 			name: "button",
 			layers: [
 				{
@@ -16,6 +17,7 @@ export const nose: AttributeDictionary = {
 		},
 
 		{
+			attribute: "nose",
 			name: "dotline",
 			layers: [
 				{
@@ -31,6 +33,7 @@ export const nose: AttributeDictionary = {
 		},
 
 		{
+			attribute: "nose",
 			name: "dotshadow",
 			layers: [
 				{
@@ -46,6 +49,7 @@ export const nose: AttributeDictionary = {
 		},
 
 		{
+			attribute: "nose",
 			name: "freckly",
 			layers: [
 				{
@@ -61,6 +65,7 @@ export const nose: AttributeDictionary = {
 		},
 
 		{
+			attribute: "nose",
 			name: "hook",
 			layers: [
 				{
@@ -80,6 +85,7 @@ export const nose: AttributeDictionary = {
 		},
 
 		{
+			attribute: "nose",
 			name: "longdown",
 			layers: [
 				{
@@ -99,6 +105,7 @@ export const nose: AttributeDictionary = {
 		},
 
 		{
+			attribute: "nose",
 			name: "longstraight",
 			layers: [
 				{
@@ -118,6 +125,7 @@ export const nose: AttributeDictionary = {
 		},
 
 		{
+			attribute: "nose",
 			name: "longup",
 			layers: [
 				{
@@ -137,21 +145,7 @@ export const nose: AttributeDictionary = {
 		},
 
 		{
-			name: "mask",
-			layers: [
-				{
-					path: "face/11-nose/mask_1-v_clothing.png",
-					colorType: "clothing",
-				},
-				{ path: "face/11-nose/mask_2.png", color: colors.skin["1"], blendMode: "multiply" },
-				{
-					path: "face/11-nose/mask_3-c_outline.png",
-					color: colors.default.black,
-				},
-			],
-		},
-
-		{
+			attribute: "nose",
 			name: "nostrils",
 			layers: [
 				{
@@ -162,6 +156,7 @@ export const nose: AttributeDictionary = {
 		},
 
 		{
+			attribute: "nose",
 			name: "pointed",
 			layers: [
 				{
@@ -177,6 +172,7 @@ export const nose: AttributeDictionary = {
 		},
 
 		{
+			attribute: "nose",
 			name: "wavenarrow",
 			layers: [
 				{
@@ -192,6 +188,7 @@ export const nose: AttributeDictionary = {
 		},
 
 		{
+			attribute: "nose",
 			name: "wavewide",
 			layers: [
 				{
@@ -207,6 +204,7 @@ export const nose: AttributeDictionary = {
 		},
 
 		{
+			attribute: "nose",
 			name: "wobble",
 			layers: [
 				{
@@ -216,47 +214,6 @@ export const nose: AttributeDictionary = {
 				},
 				{
 					path: "face/11-nose/wobble_2-c_outline.png",
-					color: colors.default.black,
-				},
-			],
-		},
-
-		{
-			name: "fullmask",
-			layers: [
-				{
-					path: "face/11-nose/fullmask_1-v_clothing.png",
-					colorType: "clothing",
-				},
-				{
-					path: "face/11-nose/fullmask_2-v_clothing-b_multiply.png",
-					color: colors.default.gray,
-					blendMode: "multiply",
-				},
-				{
-					path: "face/11-nose/fullmask_3-c_outline.png",
-					color: colors.default.black,
-				},
-			],
-		},
-		{
-			name: "warrior",
-			layers: [
-				{
-					path: "face/11-nose/warrior_1-v_clothing.png",
-					colorType: "clothing",
-				},
-				{
-					path: "face/11-nose/warrior_2-c_white.png",
-					color: colors.default.white,
-				},
-				{
-					path: "face/11-nose/warrior_3-c_black-b_multiply.png",
-					color: colors.default.gray,
-					blendMode: "multiply",
-				},
-				{
-					path: "face/11-nose/warrior_4-c_white.png",
 					color: colors.default.black,
 				},
 			],
@@ -272,13 +229,10 @@ let noseVariants = [
 	"longdown",
 	"longstraight",
 	"longup",
-	"mask",
 	"nostrils",
 	"pointed",
 	"wavenarrow",
 	"wavewide",
 	"wobble",
-	"fullmask",
-	"warrior",
 ] as const;
 export type NoseVariant = typeof noseVariants[number];

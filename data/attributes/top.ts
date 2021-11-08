@@ -6,6 +6,7 @@ export const top: AttributeDictionary = {
 	// isOptional: true,
 	variants: [
 		{
+			attribute: "top",
 			name: "fishnet",
 			restrictions: { gender: "f", pose: 2 },
 			layers: [
@@ -19,8 +20,9 @@ export const top: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "top",
 			name: "hoodie",
-			restrictions: { headShape: "flat", pose: 2 },
+			restrictions: { headShape: "flat", pose: 2, remove: "headwear" },
 			layers: [
 				{
 					path: "pose2/05-tops/hoodie_1-v_skin-b_multiply.png",
@@ -38,6 +40,7 @@ export const top: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "top",
 			name: "midriff",
 			restrictions: { gender: "f", pose: 2 },
 			layers: [
@@ -51,6 +54,7 @@ export const top: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "top",
 			name: "motorcyclejacketm",
 			restrictions: { pose: 2 },
 			layers: [
@@ -78,6 +82,7 @@ export const top: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "top",
 			name: "openshirt",
 			restrictions: { gender: "m", pose: 2 },
 			layers: [
@@ -92,6 +97,7 @@ export const top: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "top",
 			name: "schoolgirl",
 			restrictions: { gender: "f", pose: 2 },
 			layers: [
@@ -112,6 +118,7 @@ export const top: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "top",
 			name: "tattoos",
 			restrictions: { gender: "m", pose: 2 },
 			layers: [
@@ -120,6 +127,7 @@ export const top: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "top",
 			name: "tattooshirt",
 			restrictions: { gender: "m", pose: 2 },
 			layers: [
@@ -130,6 +138,7 @@ export const top: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "top",
 			name: "wifebeater",
 			restrictions: { gender: "m", pose: 2 },
 			layers: [

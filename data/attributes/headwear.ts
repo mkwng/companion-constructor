@@ -5,8 +5,10 @@ export const headwear: AttributeDictionary = {
 	name: "headwear",
 	needsTranslation: true,
 	isOptional: true,
+	appearsIn: 0.125,
 	variants: [
 		{
+			attribute: "headwear",
 			name: "beanie",
 			restrictions: { headShape: "flat" },
 			layers: [
@@ -22,6 +24,7 @@ export const headwear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "headwear",
 			name: "cap",
 			restrictions: { headShape: "flat" },
 			layers: [
@@ -54,6 +57,7 @@ export const headwear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "headwear",
 			name: "goggles",
 			layers: [
 				{
@@ -72,6 +76,7 @@ export const headwear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "headwear",
 			name: "halo",
 			layers: [
 				{
@@ -82,6 +87,7 @@ export const headwear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "headwear",
 			name: "headphones",
 			restrictions: { headShape: "big" },
 			layers: [
@@ -97,6 +103,7 @@ export const headwear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "headwear",
 			name: "hijab",
 			restrictions: { headShape: "flat", profileShape: "flat", gender: "f" },
 			layers: [
@@ -112,6 +119,7 @@ export const headwear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "headwear",
 			name: "horns",
 			layers: [
 				{
@@ -126,6 +134,7 @@ export const headwear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "headwear",
 			name: "ranger",
 			restrictions: { headShape: "flat" },
 			layers: [
@@ -145,6 +154,7 @@ export const headwear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "headwear",
 			name: "turban",
 			restrictions: { headShape: "flat", gender: "m" },
 			layers: [
@@ -160,6 +170,7 @@ export const headwear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "headwear",
 			name: "bucket",
 			restrictions: { headShape: "flat" },
 			layers: [

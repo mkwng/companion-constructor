@@ -9,6 +9,11 @@ Define it...
 - Create a const array of variant string names
 - Export the list as a type
 
+In attributes/index.ts...
+
+- Import it and add it to attributes
+- If it's selectable, add it to selectableAttributes and selectableAttributesArray
+
 In type.ts...
 
 - At types.ts, add it to AttributeType
@@ -17,9 +22,4 @@ In type.ts...
 
 In poses.ts...
 
-- Import it and add it to attributes
 - Add it to the AttributeDictionary array for the relevant poses
-
-In helper.ts...
-
-- If it's selectable, add it to selectableAttributes and selectableAttributesArray

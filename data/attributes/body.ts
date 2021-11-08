@@ -5,6 +5,7 @@ export const bodyBack: AttributeDictionary = {
 	name: "bodyBack",
 	variants: [
 		{
+			attribute: "bodyBack",
 			restrictions: { pose: 1 },
 			layers: [
 				{
@@ -25,6 +26,7 @@ export const bodyBack: AttributeDictionary = {
 		},
 
 		{
+			attribute: "bodyBack",
 			restrictions: { pose: 2 },
 			layers: [
 				{
@@ -44,6 +46,7 @@ export const bodyBack: AttributeDictionary = {
 		},
 
 		{
+			attribute: "bodyBack",
 			restrictions: { pose: 3 },
 			layers: [
 				{
@@ -59,6 +62,7 @@ export const bodyBack: AttributeDictionary = {
 		},
 
 		{
+			attribute: "bodyBack",
 			restrictions: { pose: 4 },
 			layers: [
 				{
@@ -82,6 +86,7 @@ export const bodyFront: AttributeDictionary = {
 	name: "bodyFront",
 	variants: [
 		{
+			attribute: "bodyFront",
 			restrictions: { pose: 1 },
 			layers: [
 				{
@@ -101,6 +106,7 @@ export const bodyFront: AttributeDictionary = {
 		},
 
 		{
+			attribute: "bodyFront",
 			restrictions: { pose: 2 },
 			layers: [
 				{
@@ -115,6 +121,7 @@ export const bodyFront: AttributeDictionary = {
 		},
 
 		{
+			attribute: "bodyFront",
 			restrictions: { pose: 3 },
 			layers: [
 				{

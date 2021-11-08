@@ -6,6 +6,7 @@ export const mouth: AttributeDictionary = {
 	needsTranslation: true,
 	variants: [
 		{
+			attribute: "mouth",
 			name: "aged",
 			layers: [
 				{
@@ -21,6 +22,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "beard",
 			restrictions: { gender: "m" },
 			layers: [
@@ -32,6 +34,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "bigsmile",
 			layers: [
 				{
@@ -51,6 +54,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "fumanchu",
 			restrictions: { gender: "m" },
 			layers: [
@@ -67,6 +71,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "grimace",
 			layers: [
 				{
@@ -86,6 +91,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "handlebars",
 			restrictions: { gender: "m" },
 			layers: [
@@ -102,6 +108,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "neutral",
 			layers: [
 				{
@@ -117,6 +124,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "neutrallips",
 			restrictions: { gender: "f" },
 			layers: [
@@ -133,6 +141,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "nyan",
 			restrictions: { gender: "f" },
 			layers: [
@@ -144,6 +153,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "openfrown",
 			layers: [
 				{
@@ -159,6 +169,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "opensmile",
 			layers: [
 				{
@@ -174,6 +185,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "pout",
 			layers: [
 				{
@@ -189,6 +201,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "slightfrown",
 			layers: [
 				{
@@ -204,6 +217,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "slightsmile",
 			layers: [
 				{
@@ -219,6 +233,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "slighttilt",
 			layers: [
 				{
@@ -234,6 +249,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "smilelips",
 			restrictions: { gender: "f" },
 			layers: [
@@ -249,6 +265,7 @@ export const mouth: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "mouth",
 			name: "smileside",
 			layers: [
 				{
@@ -268,6 +285,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "subtlesmile",
 			layers: [
 				{
@@ -283,6 +301,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "teethy",
 			layers: [
 				{
@@ -302,6 +321,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "tongue",
 			layers: [
 				{
@@ -320,6 +340,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "thinpatch",
 			restrictions: { gender: "m" },
 			layers: [
@@ -336,6 +357,7 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
+			attribute: "mouth",
 			name: "widesmile",
 			layers: [
 				{

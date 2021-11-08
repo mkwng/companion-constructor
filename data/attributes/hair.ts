@@ -6,6 +6,7 @@ export const hair: AttributeDictionary = {
 	needsTranslation: true,
 	variants: [
 		{
+			attribute: "hair",
 			name: "alfalfa",
 			restrictions: { gender: "m" },
 			layers: [
@@ -22,6 +23,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "anime",
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
@@ -39,6 +41,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "balding",
 			restrictions: { gender: "m", headShape: "flat" },
 			layers: [
@@ -55,6 +58,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "braided",
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
@@ -76,6 +80,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "braids",
 			restrictions: { gender: "f", headShape: "flat" },
 			layers: [
@@ -86,6 +91,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "crew",
 			restrictions: { gender: "m", headShape: "flat" },
 			layers: [
@@ -96,6 +102,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "crop",
 			restrictions: { gender: "m", headShape: "flat" },
 			layers: [
@@ -106,6 +113,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "dreads",
 			restrictions: { gender: "m", headShape: "big" },
 			layers: [
@@ -128,6 +136,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "fade",
 			restrictions: { gender: "m", headShape: "flat" },
 			layers: [
@@ -144,6 +153,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "flip",
 			restrictions: { headShape: "big" },
 			layers: [
@@ -162,6 +172,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "frizzlong",
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
@@ -178,6 +189,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "frizzshort",
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
@@ -194,6 +206,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "fuzz",
 			restrictions: { headShape: "flat" },
 			layers: [
@@ -210,6 +223,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "kpop",
 			restrictions: { gender: "m", headShape: "big" },
 			layers: [
@@ -223,6 +237,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "kunoichi",
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
@@ -245,6 +260,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "kunoichilong",
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
@@ -267,6 +283,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "locks",
 			restrictions: { gender: "m" },
 			layers: [
@@ -288,6 +305,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "long",
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
@@ -304,6 +322,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "longstraight",
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
@@ -326,8 +345,9 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "mickey",
-			restrictions: { gender: "f" },
+			restrictions: { gender: "f", headShape: "big" },
 			layers: [
 				{
 					path: "face/05-hair/mickey_1-v_hair-g_f-a_0.png",
@@ -342,6 +362,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "mohawk",
 			layers: [
 				{
@@ -357,6 +378,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "ponylong",
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
@@ -379,6 +401,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "samurai",
 			restrictions: { gender: "m" },
 			layers: [
@@ -395,6 +418,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "samurailong",
 			restrictions: { gender: "m" },
 			layers: [
@@ -411,6 +435,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "shiny",
 			restrictions: { headShape: "big" },
 			layers: [
@@ -432,6 +457,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "short",
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
@@ -448,6 +474,7 @@ export const hair: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "hair",
 			name: "waveshort",
 			restrictions: { gender: "f" },
 			layers: [

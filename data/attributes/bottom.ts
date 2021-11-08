@@ -6,7 +6,9 @@ export const bottom: AttributeDictionary = {
 	// isOptional: true,
 	variants: [
 		{
+			attribute: "bottom",
 			name: "cropped",
+			rarity: "uncommon",
 			restrictions: { pose: 2 },
 			layers: [
 				{
@@ -25,12 +27,14 @@ export const bottom: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "bottom",
 			name: "panties",
+			rarity: "rare",
 			restrictions: { gender: "f", pose: 2 },
 			layers: [
 				{
 					path: "pose2/02-bottoms/panties_1-g_f.png",
-					color: colors.default.black,
+					colorType: "clothing",
 				},
 				{
 					path: "pose2/02-bottoms/panties_2-c_outline.png",
@@ -39,7 +43,9 @@ export const bottom: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "bottom",
 			name: "shortshorts",
+			rarity: "uncommon",
 			restrictions: { gender: "f", pose: 2 },
 			layers: [
 				{
@@ -58,7 +64,9 @@ export const bottom: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "bottom",
 			name: "skirt",
+			rarity: "uncommon",
 			restrictions: { gender: "f", pose: 2 },
 			layers: [
 				{
@@ -82,7 +90,9 @@ export const bottom: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "bottom",
 			name: "waist",
+			rarity: "uncommon",
 			restrictions: { pose: 2 },
 			layers: [
 				{

@@ -5,9 +5,12 @@ export const blemish: AttributeDictionary = {
 	name: "blemish",
 	needsTranslation: true,
 	isOptional: true,
+	appearsIn: 0.125,
 	variants: [
 		{
+			attribute: "blemish",
 			name: "bandage",
+			rarity: "uncommon",
 			layers: [
 				{
 					path: "face/02-blemish/bandage-c_white.png",
@@ -16,7 +19,9 @@ export const blemish: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "blemish",
 			name: "beautyeye",
+			rarity: "common",
 			layers: [
 				{
 					path: "face/02-blemish/beautyeye-c_skindark-b_multiply.png",
@@ -26,7 +31,9 @@ export const blemish: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "blemish",
 			name: "beautymouth",
+			rarity: "common",
 			layers: [
 				{
 					path: "face/02-blemish/beautymouth-c_skindark-b_multiply.png",
@@ -36,7 +43,9 @@ export const blemish: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "blemish",
 			name: "blush",
+			rarity: "common",
 			layers: [
 				{
 					path: "face/02-blemish/blush-c_red.png",
@@ -45,7 +54,9 @@ export const blemish: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "blemish",
 			name: "eyescar",
+			rarity: "rare",
 			layers: [
 				{
 					path: "face/02-blemish/eyescar-c_skin-b_multiply.png",
@@ -55,7 +66,9 @@ export const blemish: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "blemish",
 			name: "freckles",
+			rarity: "common",
 			layers: [
 				{
 					path: "face/02-blemish/freckles-c_skin-b_multiply.png",
@@ -65,7 +78,9 @@ export const blemish: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "blemish",
 			name: "stubblelg",
+			rarity: "common",
 			restrictions: { gender: "m" },
 			layers: [
 				{
@@ -75,7 +90,9 @@ export const blemish: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "blemish",
 			name: "stubblemd",
+			rarity: "common",
 			restrictions: { gender: "m" },
 			layers: [
 				{
@@ -85,7 +102,9 @@ export const blemish: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "blemish",
 			name: "stubblesm",
+			rarity: "common",
 			restrictions: { gender: "m" },
 			layers: [
 				{
@@ -95,7 +114,9 @@ export const blemish: AttributeDictionary = {
 			],
 		},
 		{
+			attribute: "blemish",
 			name: "tattoos",
+			rarity: "uncommon",
 			layers: [
 				{
 					path: "face/02-blemish/tattoos-c_skindark-b_multiply.png",
@@ -103,15 +124,15 @@ export const blemish: AttributeDictionary = {
 					blendMode: "multiply",
 				},
 			],
-		},
-		{
-			name: "blushsoft",
-			layers: [
-				{
-					path: "face/02-blemish/blushsoft-c_red.png",
-					color: colors.default.red,
-				},
-			],
+			// },
+			// {
+			// 	name: "blushsoft",
+			// 	layers: [
+			// 		{
+			// 			path: "face/02-blemish/blushsoft-c_red.png",
+			// 			color: colors.default.red,
+			// 		},
+			// 	],
 		},
 	],
 };

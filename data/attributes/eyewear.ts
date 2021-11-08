@@ -5,9 +5,12 @@ export const eyewear: AttributeDictionary = {
 	name: "eyewear",
 	needsTranslation: true,
 	isOptional: true,
+	appearsIn: 0.125,
 	variants: [
 		{
+			attribute: "eyewear",
 			name: "rectangularHalf",
+			rarity: "rare",
 			restrictions: { profileShape: "encroached" },
 			layers: [
 				{
@@ -22,7 +25,9 @@ export const eyewear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "eyewear",
 			name: "rectangular",
+			rarity: "uncommon",
 			restrictions: { profileShape: "encroached" },
 			layers: [
 				{
@@ -37,7 +42,9 @@ export const eyewear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "eyewear",
 			name: "thin",
+			rarity: "rare",
 			restrictions: { profileShape: "encroached" },
 			layers: [
 				{
@@ -56,6 +63,7 @@ export const eyewear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "eyewear",
 			name: "roundedColorLens",
 			restrictions: { profileShape: "encroached" },
 			layers: [
@@ -75,6 +83,7 @@ export const eyewear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "eyewear",
 			name: "rounded",
 			restrictions: { profileShape: "encroached" },
 			layers: [
@@ -90,6 +99,7 @@ export const eyewear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "eyewear",
 			name: "eyepatch",
 			restrictions: { profileShape: "encroached" },
 			layers: [
@@ -101,6 +111,7 @@ export const eyewear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "eyewear",
 			name: "roundedColorFrames",
 			restrictions: { profileShape: "encroached" },
 			layers: [
@@ -116,7 +127,9 @@ export const eyewear: AttributeDictionary = {
 		},
 
 		{
+			attribute: "eyewear",
 			name: "vr",
+			rarity: "mythic",
 			restrictions: { profileShape: "encroached" },
 			layers: [
 				{
