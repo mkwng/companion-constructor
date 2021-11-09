@@ -157,7 +157,7 @@ export const top: AttributeDictionary = {
 		{
 			attribute: "top",
 			name: "buttonup",
-			restrictions: { gender: "m" },
+			restrictions: { gender: "m", pose: 2 },
 			layers: [
 				{ path: "pose2/05-tops/buttonup_1-v_clothing.png", colorType: "clothing" },
 				{
@@ -276,6 +276,69 @@ export const top: AttributeDictionary = {
 				{ path: "pose2/05-tops/tshirtwaves_04-c_outline.png", color: colors.default.black },
 			],
 		},
+
+		{
+			attribute: "top",
+			name: "bra",
+			restrictions: { pose: 2, gender: "f" },
+			layers: [
+				{ path: "pose2/05-tops/bra_1-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/bra_2-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/bra_3-c_outline.png", color: colors.default.black },
+			],
+		},
+		{
+			attribute: "top",
+			name: "puffer",
+			restrictions: { pose: 2, gender: "f" },
+			layers: [
+				{ path: "pose2/05-tops/puffer_1-v_clothing.png", colorType: "clothing" },
+				{ path: "pose2/05-tops/puffer_2-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/puffer_3-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{
+					path: "pose2/05-tops/puffer_4-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/puffer_5-c_outline.png", color: colors.default.black },
+			],
+		},
+		{
+			attribute: "top",
+			name: "tank",
+			restrictions: { pose: 2, gender: "f" },
+			layers: [
+				{ path: "pose2/05-tops/tank_1-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/tank_2-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/tank_3-c_outline.png", color: colors.default.black },
+			],
+		},
+		{
+			attribute: "top",
+			name: "turtle",
+			restrictions: { pose: 2, gender: "f" },
+			layers: [
+				{ path: "pose2/05-tops/turtle_1-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/turtle_2-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/turtle_3-c_outline.png", color: colors.default.black },
+			],
+		},
 	],
 };
 
@@ -295,5 +358,9 @@ let topVariants = [
 	"tshirtdot",
 	"tshirtsquiggle",
 	"tshirtwaves",
+	"bra",
+	"puffer",
+	"tank",
+	"turtle",
 ] as const;
 export type TopVariant = typeof topVariants[number];

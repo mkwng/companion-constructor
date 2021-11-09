@@ -110,8 +110,22 @@ export const bottom: AttributeDictionary = {
 				},
 			],
 		},
+		{
+			attribute: "bottom",
+			name: "pants",
+			restrictions: { pose: 2 },
+			layers: [
+				{ path: "pose2/02-bottoms/pants_1-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/02-bottoms/pants_2-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/02-bottoms/pants_3-c_outline.png", color: colors.default.black },
+			],
+		},
 	],
 };
 
-let bottomVariants = ["cropped", "panties", "shortshorts", "skirt", "waist"] as const;
+let bottomVariants = ["cropped", "panties", "shortshorts", "skirt", "waist", "pants"] as const;
 export type BottomVariant = typeof bottomVariants[number];

@@ -21,6 +21,7 @@ export const poses: { [key: string]: AttributeDictionary[] } = {
 	"2": [
 		attributes.background,
 		attributes.bodyBack,
+		attributes.shoes,
 		attributes.bottom,
 		attributes.neck,
 		attributes.face,

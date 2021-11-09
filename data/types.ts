@@ -8,6 +8,7 @@ import { HeadwearVariant } from "./attributes/headwear";
 import { MaskVariant } from "./attributes/mask";
 import { MouthVariant } from "./attributes/mouth";
 import { NoseVariant } from "./attributes/nose";
+import { ShoesVariant } from "./attributes/shoes";
 import { TopVariant } from "./attributes/top";
 
 export enum Pose {
@@ -34,7 +35,8 @@ export type AttributeType =
 	| "bodyFront"
 	| "top"
 	| "bottom"
-	| "mask";
+	| "mask"
+	| "shoes";
 
 type Gender = "m" | "f";
 type HeadShape = "big" | "flat";
@@ -125,6 +127,9 @@ interface BottomSelection extends AttributeSelectionBase {
 interface MaskSelection extends AttributeSelectionBase {
 	name: MaskVariant;
 }
+interface ShoesSelection extends AttributeSelectionBase {
+	name: ShoesVariant;
+}
 
 export type AttributeSelection =
 	| AttributeSelectionBase
@@ -138,7 +143,8 @@ export type AttributeSelection =
 	| NoseSelection
 	| TopSelection
 	| BottomSelection
-	| MaskSelection;
+	| MaskSelection
+	| ShoesSelection;
 
 export interface Companion {
 	name: string;
@@ -161,5 +167,6 @@ export interface Companion {
 		top?: TopSelection;
 		bottom?: BottomSelection;
 		mask?: MaskSelection;
+		shoes?: ShoesSelection;
 	};
 }
