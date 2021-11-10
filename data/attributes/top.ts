@@ -3,7 +3,8 @@ import { AttributeDictionary } from "../types";
 
 export const top: AttributeDictionary = {
 	name: "top",
-	// isOptional: true,
+	isOptional: true,
+	appearsIn: 1,
 	variants: [
 		{
 			attribute: "top",
@@ -339,6 +340,89 @@ export const top: AttributeDictionary = {
 				{ path: "pose2/05-tops/turtle_3-c_outline.png", color: colors.default.black },
 			],
 		},
+		{
+			attribute: "top",
+			name: "northstar",
+			rarity: "mythic",
+			restrictions: { pose: 2, gender: "m" },
+			layers: [
+				{
+					path: "pose2/05-tops/northstar_1-v_clothing-g_m.png",
+					colorType: "clothing",
+				},
+				{
+					path: "pose2/05-tops/northstar_2-v_clothing.png",
+					colorType: "clothing",
+				},
+				{
+					path: "pose2/05-tops/northstar_3-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{
+					path: "pose2/05-tops/northstar_4-c_black.png",
+					color: colors.clothing.black,
+				},
+				{
+					path: "pose2/05-tops/northstar_5-c_outline.png",
+					color: colors.default.black,
+				},
+				{
+					path: "pose2/05-tops/northstar_6-c_skinshadow.png",
+					color: colors.skin["1"],
+					blendMode: "multiply",
+				},
+				{
+					path: "pose2/05-tops/northstar_7-c_gray.png",
+					color: colors.hair.gray,
+				},
+				{
+					path: "pose2/05-tops/northstar_8-c_black.png",
+					color: colors.clothing.black,
+				},
+				{
+					path: "pose2/05-tops/northstar_9-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{
+					path: "pose2/05-tops/northstar_10-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
+		{
+			attribute: "top",
+			name: "leatherjacket",
+			restrictions: { pose: 2 },
+			layers: [
+				{ path: "pose2/05-tops/leatherjacket_1-v_clothing.png", colorType: "clothing" },
+				{ path: "pose2/05-tops/leatherjacket_2-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/leatherjacket_3-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/leatherjacket_4-c_outline.png", color: colors.default.black },
+			],
+		},
+		{
+			attribute: "top",
+			name: "beach",
+			restrictions: { pose: 2, gender: "f" },
+			rarity: "rare",
+			hides: ["bottom"],
+			layers: [
+				{ path: "pose2/05-tops/beach_1-v_clothing.png", colorType: "clothing" },
+				{
+					path: "pose2/05-tops/beach_2-c_shadow.png",
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{ path: "pose2/05-tops/beach_3-c_outline.png", color: colors.default.black },
+				{ path: "pose2/05-tops/beach_4-v_clothing.png", colorType: "clothing" },
+			],
+		},
 	],
 };
 
@@ -362,5 +446,6 @@ let topVariants = [
 	"puffer",
 	"tank",
 	"turtle",
+	"northstar",
 ] as const;
 export type TopVariant = typeof topVariants[number];

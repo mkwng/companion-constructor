@@ -491,6 +491,22 @@ export const hair: AttributeDictionary = {
 				},
 			],
 		},
+		{
+			attribute: "hair",
+			name: "headband",
+			restrictions: { gender: "m" },
+			layers: [
+				{
+					path: "face/05-hair/headband_1-v_clothing-g_m.png",
+					colorType: "clothing",
+				},
+				{ path: "face/05-hair/headband_2-v_hair.png", colorType: "hair" },
+				{
+					path: "face/05-hair/headband_3-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
 	],
 };
 
@@ -522,5 +538,6 @@ let hairVariants = [
 	"shiny",
 	"short",
 	"waveshort",
+	"headband",
 ] as const;
 export type HairVariant = typeof hairVariants[number];

@@ -106,6 +106,7 @@ export const headwear: AttributeDictionary = {
 			attribute: "headwear",
 			name: "hijab",
 			restrictions: { headShape: "flat", profileShape: "flat", gender: "f" },
+			hides: ["hair"],
 			layers: [
 				{
 					path: "face/10-accessories/hijab_1-v_clothing-g_f-a_1.png",
@@ -157,6 +158,7 @@ export const headwear: AttributeDictionary = {
 			attribute: "headwear",
 			name: "turban",
 			restrictions: { headShape: "flat", gender: "m" },
+			hides: ["hair"],
 			layers: [
 				{
 					path: "face/10-accessories/turban_1-v_clothing-g_m-a_1.png",

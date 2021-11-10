@@ -46,6 +46,19 @@ export const brows: AttributeDictionary = {
 			name: "unismooth",
 			layers: [{ path: "face/07-brows/unismooth-v_hair.png", colorType: "hair" }],
 		},
+		{
+			name: "angry",
+			layers: [{ path: "face/07-brows/angry-v_hair.png", colorType: "hair" }],
+		},
+		{
+			name: "neutral",
+			layers: [
+				{
+					path: "face/07-brows/neutral-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
 	],
 };
 let browsVariants = [
@@ -58,5 +71,7 @@ let browsVariants = [
 	"triangle",
 	"unifuzz",
 	"unismooth",
+	"angry",
+	"neutral",
 ] as const;
 export type BrowsVariant = typeof browsVariants[number];
