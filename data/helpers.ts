@@ -82,6 +82,9 @@ export const getLayers = (companion: Companion) => {
 			});
 			if (match) {
 				match.layers.forEach((layer) => {
+					if (typeof layer.path !== "string" && !layer.path[companion.properties.pose]) {
+						return;
+					}
 					let result: [Layer, AttributeSelection?, boolean?] = [
 						layer,
 						selection,
