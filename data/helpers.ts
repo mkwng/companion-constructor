@@ -1,5 +1,6 @@
 import { selectableAttributes, selectableAttributesArray } from "./attributes";
 import { colors } from "./colors";
+import { companionExample } from "./example";
 import { poses } from "./poses";
 import {
 	AttributeSelection,
@@ -246,4 +247,64 @@ export const companionToUrl = (companion: Companion): string => {
 		}
 	}
 	return path;
+};
+
+const colorRegEx = /Color\d/g;
+
+export const keysToCompanion = (companionQuery): Companion => {
+	const companion = companionExample;
+	for (const key in companionQuery) {
+		if (typeof companionQuery[key] !== "string") {
+			continue;
+		}
+		switch (key) {
+			case "pose":
+				if (!((companionQuery[key] as string) in Pose)) {
+					throw new Error(`${key} not valid`);
+				}
+				companion.properties.pose = Number(companionQuery[key]);
+				break;
+			case "gender":
+				if (companionQuery[key] !== "f" && companionQuery[key] !== "m") {
+					throw new Error(`${key} not valid`);
+				}
+				companion.properties.gender = companionQuery[key] as "m" | "f";
+				break;
+			case "skinColor":
+			case "hairColor":
+			case "backgroundColor":
+				const propName = key.replace("Color", "");
+				const color = colors[propName][companionQuery[key] as string];
+				if (!color) {
+					throw new Error(`${key} not valid`);
+				}
+				companion.properties[propName] = color;
+				break;
+			default:
+				if (key.match(colorRegEx)) {
+					continue;
+				}
+				if (!(key in selectableAttributes)) {
+					throw new Error(`${key} not valid`);
+				}
+				const match = selectableAttributes[key].variants.find(
+					(variant) => variant.name === companionQuery[key]
+				);
+				if (!match) {
+					throw new Error(`${key}: ${companionQuery[key]} not valid`);
+				}
+				companion.attributes[key] = {
+					name: companionQuery[key],
+				};
+				let i = 1;
+				let colorList: RGBColor[] = [];
+				while (companionQuery[key + "Color" + i]) {
+					colorList.push(colors.clothing[companionQuery[key + "Color" + i++] as string]);
+				}
+				if (colorList.length > 0) {
+					companion.attributes[key].color = colorList;
+				}
+		}
+	}
+	return companion;
 };

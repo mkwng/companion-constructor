@@ -5,12 +5,10 @@ import sharp from "sharp";
 import { selectableAttributes } from "../../data/attributes";
 import { colors } from "../../data/colors";
 import { companionExample } from "../../data/example";
-import { getColor, getLayers, getPath } from "../../data/helpers";
+import { getColor, getLayers, getPath, keysToCompanion } from "../../data/helpers";
 import { Pose, RGBColor } from "../../data/types";
 
 const imageCache = new NodeCache();
-
-const colorRegEx = /Color\d/g;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Example url query:
@@ -23,60 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	}
 
 	if (!optimized) {
-		const companion = companionExample;
-		for (const key in req.query) {
-			if (typeof req.query[key] !== "string") {
-				throw new Error(`${key} should be a string, got ${typeof req.query[key]} instead`);
-			}
-			switch (key) {
-				case "pose":
-					if (!((req.query[key] as string) in Pose)) {
-						throw new Error(`${key} not valid`);
-					}
-					companion.properties.pose = Number(req.query[key]);
-					break;
-				case "gender":
-					if (req.query[key] !== "f" && req.query[key] !== "m") {
-						throw new Error(`${key} not valid`);
-					}
-					companion.properties.gender = req.query[key] as "m" | "f";
-					break;
-				case "skinColor":
-				case "hairColor":
-				case "backgroundColor":
-					const propName = key.replace("Color", "");
-					const color = colors[propName][req.query[key] as string];
-					if (!color) {
-						throw new Error(`${key} not valid`);
-					}
-					companion.properties[propName] = color;
-					break;
-				default:
-					if (key.match(colorRegEx)) {
-						continue;
-					}
-					if (!(key in selectableAttributes)) {
-						throw new Error(`${key} not valid`);
-					}
-					const match = selectableAttributes[key].variants.find(
-						(variant) => variant.name === req.query[key]
-					);
-					if (!match) {
-						throw new Error(`${key} not valid`);
-					}
-					companion.attributes[key] = {
-						name: req.query[key],
-					};
-					let i = 1;
-					let colorList: RGBColor[] = [];
-					while (req.query[key + "Color" + i]) {
-						colorList.push(colors.clothing[req.query[key + "Color" + i++] as string]);
-					}
-					if (colorList.length > 0) {
-						companion.attributes[key].color = colorList;
-					}
-			}
-		}
+		const companion = keysToCompanion(req.query);
 		const layers = getLayers(companion);
 
 		const imageBuffers = layers.map(async ([layer]) => {

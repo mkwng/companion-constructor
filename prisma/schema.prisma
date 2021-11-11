@@ -14,4 +14,35 @@ model Companion {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  name      String?
+
+  backgroundColor String
+  skinColor       String
+  hairColor       String
+  pose            String
+  gender          String
+
+  blemish String?
+  hair    String
+  brows   String
+  eyes    String
+  nose    String
+  mouth   String
+
+  headwear String?
+  eyewear  String?
+  mask     String?
+  top      String?
+  bottom   String
+  shoes    String?
+
+  hairColors     String?
+  headwearColors String?
+  eyewearColors  String?
+  maskColors     String?
+  topColors      String?
+  bottomColors   String?
+  shoesColors    String?
+
+
 }
