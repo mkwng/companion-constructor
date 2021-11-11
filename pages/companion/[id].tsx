@@ -1,11 +1,10 @@
 import { useRouter } from "next/dist/client/router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import Editor from "../../components/editor";
 import Renderer from "../../components/renderer";
-import { colors } from "../../data/colors";
 import { keysToCompanion } from "../../data/helpers";
-import { Companion, Pose } from "../../data/types";
+import { Companion } from "../../data/types";
 import { fetcher } from "../../lib/swr";
 
 export default function CompanionDetails() {
