@@ -8,6 +8,7 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"@prisma/client": "3.4.2",
 		"@types/sharp": "^0.29.3",
 		"axios": "^0.24.0",
 		"next": "12.0.2",
@@ -20,6 +21,7 @@
 		"@types/react": "^17.0.34",
 		"eslint": "7",
 		"eslint-config-next": "12.0.2",
+		"prisma": "3.4.2",
 		"typescript": "^4.4.4"
 	}
 }
