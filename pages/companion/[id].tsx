@@ -1,6 +1,7 @@
 import { useRouter } from "next/dist/client/router";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
+import Editor from "../../components/editor";
 import Renderer from "../../components/renderer";
 import { colors } from "../../data/colors";
 import { keysToCompanion } from "../../data/helpers";
@@ -10,8 +11,10 @@ import { fetcher } from "../../lib/swr";
 export default function CompanionDetails() {
 	const router = useRouter();
 	const { data, error } = useSWR(`/api/companion/${router.query.id}`, fetcher);
-	const companion = useMemo<Companion | null>(() => {
-		if (!data || error) return null;
+	const [companion, setCompanion] = useState<Companion | null>(null);
+
+	useEffect(() => {
+		if (!data?.pose) return null;
 		console.log(data);
 		const {
 			id,
@@ -51,17 +54,15 @@ export default function CompanionDetails() {
 			}
 		}
 
-		return keysToCompanion(rest);
+		setCompanion(keysToCompanion(rest));
 	}, [data]);
-	useEffect(() => {
-		console.log(data);
-	}, [data]);
-	if (error) return <div>failed to load</div>;
+
+	if (error || !data?.pose || !companion) return <div>failed to load</div>;
 	return (
 		<div>
-			<h1>Companion</h1>
+			<h1>{companion.name}</h1>
 			<Renderer companion={companion} />
-			{data && <div>{JSON.stringify(companion)}</div>}
+			<Editor companionState={[companion, setCompanion]} />
 		</div>
 	);
 }
