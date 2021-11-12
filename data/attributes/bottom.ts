@@ -12,14 +12,14 @@ export const bottom: AttributeDictionary = {
 			layers: [
 				{
 					path: {
-						1: "pose1/02-bottom/pants_1-v_clothing.png",
+						1: "pose1/02-bottom/cropped_1-v_clothing.png",
 						2: "pose2/02-bottoms/cropped_1-v_clothing.png",
 					},
 					colorType: "clothing",
 				},
 				{
 					path: {
-						1: "pose1/02-bottom/pants_2-c_shadow.png",
+						1: "pose1/02-bottom/cropped_2-c_shadow.png",
 						2: "pose2/02-bottoms/cropped_2-c_shadow.png",
 					},
 					color: colors.default.gray,
@@ -27,7 +27,7 @@ export const bottom: AttributeDictionary = {
 				},
 				{
 					path: {
-						1: "pose1/02-bottom/pants_3-c_outline.png",
+						1: "pose1/02-bottom/cropped_3-c_outline.png",
 						2: "pose2/02-bottoms/cropped_3-c_outline.png",
 					},
 					color: colors.default.black,

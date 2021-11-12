@@ -9,23 +9,34 @@ export const shoes: AttributeDictionary = {
 		{
 			attribute: "shoes",
 			name: "hightops",
-			restrictions: { pose: 2 },
 			layers: [
 				{
-					path: "pose2/06-shoes/hightops_1-v_clothing.png",
+					path: {
+						1: "pose1/02-shoes/hightops_1-v_clothing.png",
+						2: "pose2/06-shoes/hightops_1-v_clothing.png",
+					},
 					colorType: "clothing",
 				},
 				{
-					path: "pose2/06-shoes/hightops_3-c_shadow.png",
+					path: {
+						1: "pose1/02-shoes/hightops_2-c_shadow.png",
+						2: "pose2/06-shoes/hightops_3-c_shadow.png",
+					},
 					color: colors.default.gray,
 					blendMode: "multiply",
 				},
 				{
-					path: "pose2/06-shoes/hightops_4-c_outline.png",
+					path: {
+						1: "pose1/02-shoes/hightops_3-c_white.png",
+						2: "pose2/06-shoes/hightops_4-c_outline.png",
+					},
 					color: colors.default.black,
 				},
 				{
-					path: "pose2/06-shoes/hightops_4-c_white.png",
+					path: {
+						1: "pose1/02-shoes/hightops_4-c_outline.png",
+						2: "pose2/06-shoes/hightops_4-c_white.png",
+					},
 					color: colors.default.white,
 				},
 			],
@@ -34,23 +45,34 @@ export const shoes: AttributeDictionary = {
 			attribute: "shoes",
 			name: "rollerblades",
 			rarity: "mythic",
-			restrictions: { pose: 2 },
 			layers: [
 				{
-					path: "pose2/06-shoes/rollerblades_1-v_clothing.png",
+					path: {
+						1: "pose1/02-shoes/rollerblades_1-v_clothing.png",
+						2: "pose2/06-shoes/rollerblades_1-v_clothing.png",
+					},
 					colorType: "clothing",
 				},
 				{
-					path: "pose2/06-shoes/rollerblades_2-v_clothing.png",
+					path: {
+						1: "pose1/02-shoes/rollerblades_2-v_clothing.png",
+						2: "pose2/06-shoes/rollerblades_2-v_clothing.png",
+					},
 					colorType: "clothing",
 				},
 				{
-					path: "pose2/06-shoes/rollerblades_3-c_shadow.png",
+					path: {
+						1: "pose1/02-shoes/rollerblades_3-c_shadow.png",
+						2: "pose2/06-shoes/rollerblades_3-c_shadow.png",
+					},
 					color: colors.default.gray,
 					blendMode: "multiply",
 				},
 				{
-					path: "pose2/06-shoes/rollerblades_4-c_outline.png",
+					path: {
+						1: "pose1/02-shoes/rollerblades_4-c_outline.png",
+						2: "pose2/06-shoes/rollerblades_4-c_outline.png",
+					},
 					color: colors.default.black,
 				},
 			],
@@ -58,19 +80,27 @@ export const shoes: AttributeDictionary = {
 		{
 			attribute: "shoes",
 			name: "sneaks",
-			restrictions: { pose: 2 },
 			layers: [
 				{
-					path: "pose2/06-shoes/sneaks_1-v_clothing.png",
+					path: {
+						1: "pose1/02-shoes/sneaks_1-v_clothing.png",
+						2: "pose2/06-shoes/sneaks_1-v_clothing.png",
+					},
 					colorType: "clothing",
 				},
 				{
-					path: "pose2/06-shoes/sneaks_2-c_shadow.png",
+					path: {
+						1: "pose1/02-shoes/sneaks_2-c_shadow.png",
+						2: "pose2/06-shoes/sneaks_2-c_shadow.png",
+					},
 					color: colors.default.gray,
 					blendMode: "multiply",
 				},
 				{
-					path: "pose2/06-shoes/sneaks_3-c_outline.png",
+					path: {
+						1: "pose1/02-shoes/sneaks_3-c_outline.png",
+						2: "pose2/06-shoes/sneaks_3-c_outline.png",
+					},
 					color: colors.default.black,
 				},
 			],

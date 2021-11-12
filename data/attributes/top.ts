@@ -44,6 +44,7 @@ export const top: AttributeDictionary = {
 			layers: [
 				{
 					path: {
+						1: "pose1/13-top/hoodie_0-c_skinshadow.png",
 						2: "pose2/05-tops/hoodie_1-v_skin-b_multiply.png",
 					},
 					color: colors.skin["1"],
