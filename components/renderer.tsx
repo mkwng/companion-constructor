@@ -123,14 +123,13 @@ export default function Renderer({
 		const imagePaths: string[] = layers.map(([layer]) =>
 			getPath(layer, companion.properties.pose)
 		);
-
 		loadAllImages(imagePaths, (imgs) => {
 			layers.forEach(([layer, selection, needsTranslation], i) => {
 				let color: RGBColor | undefined;
 				if ("color" in layer) {
 					color = layer.color;
 				} else if ("colorType" in layer) {
-					color = getColor(layer, companion, selection?.color);
+					color = getColor(layer, companion, selection);
 				}
 				if (layer.blendMode) {
 					ctx.globalCompositeOperation = layer.blendMode;

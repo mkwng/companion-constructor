@@ -93,6 +93,7 @@ export interface RGBColor {
 
 export interface AttributeSelectionBase {
 	color?: RGBColor[];
+	colorIndex?: number;
 }
 interface BlemishSelection extends AttributeSelectionBase {
 	name: BlemishVariant;

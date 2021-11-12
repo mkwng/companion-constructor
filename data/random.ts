@@ -21,7 +21,7 @@ export var randomProperty = function (obj) {
 
 export const randomCompanion = (): Companion => {
 	const companionProps: Companion["properties"] = {
-		pose: 2, //Math.floor(Math.random() * 4) + 1,
+		pose: Math.floor(Math.random() * 2) + 1,
 		gender: Math.random() < 0.5 ? "m" : "f",
 		skin: randomProperty(colors.skin),
 		hair: randomProperty(colors.hair),

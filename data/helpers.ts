@@ -81,15 +81,18 @@ export const getLayers = (companion: Companion) => {
 				return !attribute.isOptional;
 			});
 			if (match) {
+				let colorIndexCount = 0;
 				match.layers.forEach((layer) => {
-					if (typeof layer.path !== "string" && !layer.path[companion.properties.pose]) {
-						return;
-					}
 					let result: [Layer, AttributeSelection?, boolean?] = [
 						layer,
-						selection,
+						"colorType" in layer && layer.colorType === "clothing"
+							? { ...selection, colorIndex: colorIndexCount++ }
+							: selection,
 						attribute.needsTranslation,
 					];
+					if (typeof layer.path !== "string" && !layer.path[companion.properties.pose]) {
+						return false;
+					}
 					layers.push(result);
 				});
 			}
@@ -98,7 +101,11 @@ export const getLayers = (companion: Companion) => {
 };
 
 let colorCount = 0;
-export const getColor = (layer: Layer, companion?: Companion, color?: RGBColor[]): RGBColor => {
+export const getColor = (
+	layer: Layer,
+	companion?: Companion,
+	selection?: AttributeSelection
+): RGBColor => {
 	if (!("colorType" in layer)) {
 		throw new Error(`Can't get color for layer: ${layer.path}`);
 	}
@@ -111,12 +118,16 @@ export const getColor = (layer: Layer, companion?: Companion, color?: RGBColor[]
 			}
 			return companion.properties[layer.colorType];
 		case "clothing":
-			if (!color) {
-				console.log(companion);
+			if (!selection.color) {
 				throw new Error(`No colors were specified for layer: ${layer.path}`);
 			}
-			const temp = color[colorCount++];
-			if (colorCount >= color.length) {
+			const temp =
+				selection.color[
+					selection.colorIndex || selection.colorIndex == 0
+						? selection.colorIndex
+						: colorCount++
+				];
+			if (colorCount >= selection.color.length) {
 				colorCount = 0;
 			}
 			return temp;
