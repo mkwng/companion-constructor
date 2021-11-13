@@ -56,38 +56,6 @@ export default function Home() {
 		});
 	};
 
-	const handlePropertyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		const { name, value } = e.target;
-		if (name === "pose") {
-			setCompanion({
-				...companion,
-				properties: {
-					...companion.properties,
-					pose: parseInt(value) as Pose,
-				},
-			});
-		} else {
-			setCompanion({
-				...companion,
-				properties: {
-					...companion.properties,
-					[name]: value,
-				},
-			});
-		}
-	};
-
-	const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		const { name, value } = e.target;
-		setCompanion({
-			...companion,
-			properties: {
-				...companion.properties,
-				[name]: colors[name][value],
-			},
-		});
-	};
-
 	const skinOptions = [];
 	const hairOptions = [];
 	const backgroundOptions = [];

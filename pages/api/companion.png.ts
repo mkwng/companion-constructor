@@ -51,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				if ("color" in layer) {
 					color = layer.color;
 				} else if ("colorType" in layer) {
-					color = getColor(layer, companion, selection?.color);
+					color = getColor(layer, companion, selection);
 				}
 
 				let input: Buffer = next;

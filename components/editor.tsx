@@ -218,13 +218,6 @@ export default function Editor({
 					<option value="m">m</option>
 					<option value="f">f</option>
 				</select>
-				<select
-					name="hair"
-					value={colorToKey(companion.properties.hair, colors.hair)}
-					onChange={handleColorChange}
-				>
-					{hairOptions}
-				</select>
 			</div>
 			<div>
 				{selectableAttributesArray.map((attribute) => (
