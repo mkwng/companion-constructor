@@ -161,12 +161,12 @@ export default function Editor({
 					<ColorSelector
 						colors={colors.background}
 						active={colorToKey(companion.properties.background, colors.background)}
-						onSelect={(e) => {
+						onSelect={(color) => {
 							setCompanion({
 								...companion,
 								properties: {
 									...companion.properties,
-									background: colors.background[e],
+									background: colors.background[color],
 								},
 							});
 						}}
@@ -177,12 +177,12 @@ export default function Editor({
 					<ColorSelector
 						colors={colors.hair}
 						active={colorToKey(companion.properties.hair, colors.hair)}
-						onSelect={(e) => {
+						onSelect={(color) => {
 							setCompanion({
 								...companion,
 								properties: {
 									...companion.properties,
-									hair: colors.hair[e],
+									hair: colors.hair[color],
 								},
 							});
 						}}
@@ -193,12 +193,12 @@ export default function Editor({
 					<ColorSelector
 						colors={colors.skin}
 						active={colorToKey(companion.properties.skin, colors.skin)}
-						onSelect={(e) => {
+						onSelect={(color) => {
 							setCompanion({
 								...companion,
 								properties: {
 									...companion.properties,
-									skin: colors.skin[e],
+									skin: colors.skin[color],
 								},
 							});
 						}}

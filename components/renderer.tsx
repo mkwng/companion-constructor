@@ -1,25 +1,17 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AttributeSelection, Companion, Layer, Pose, RGBColor } from "../data/types";
 import { getColor, getLayers, getPath } from "../data/helpers";
 
-const loadAllImages = (paths: string[], callback: (img: HTMLImageElement[]) => void): void => {
-	let count: number = 0;
-	const imgs: HTMLImageElement[] = [];
-
-	paths.forEach((path) => {
+const loadImages = async (paths: string[]): Promise<HTMLImageElement[]> => {
+	const etc = paths.map(async (path) => {
 		const img = new Image();
-		imgs.push(img);
-		img.onload = () => {
-			count++;
-			if (count === paths.length) {
-				callback(imgs);
-			}
-		};
-		img.onerror = () => {
-			throw new Error(`Failed to load image: ${path}`);
-		};
 		img.src = path;
+		try {
+			await img.decode();
+		} catch (error) {}
+		return img;
 	});
+	return Promise.all(etc);
 };
 
 const replaceColor = (source: HTMLImageElement, color: RGBColor): HTMLCanvasElement => {
@@ -114,6 +106,7 @@ export default function Renderer({
 	companion: Companion;
 }) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
@@ -123,7 +116,11 @@ export default function Renderer({
 		const imagePaths: string[] = layers.map(([layer]) =>
 			getPath(layer, companion.properties.pose)
 		);
-		loadAllImages(imagePaths, (imgs) => {
+
+		setIsLoading(true);
+
+		(async () => {
+			const imgs = await loadImages(imagePaths);
 			layers.forEach(([layer, selection, needsTranslation], i) => {
 				let color: RGBColor | undefined;
 				if ("color" in layer) {
@@ -142,11 +139,13 @@ export default function Renderer({
 				ctx.drawImage(imageToDraw, 0, 0);
 				ctx.globalCompositeOperation = "source-over";
 			});
-		});
+			setIsLoading(false);
+		})();
 	}, [companion]);
 
 	return (
 		<div className={className} {...props}>
+			{isLoading ? "loading" : "done"} <br />
 			{companion && (
 				<canvas
 					width="2048"
