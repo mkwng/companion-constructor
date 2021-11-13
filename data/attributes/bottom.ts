@@ -14,6 +14,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/cropped_1-v_clothing.png",
 						2: "pose2/02-bottoms/cropped_1-v_clothing.png",
+						3: "pose3/10-bottom/cropped_1-v_clothing.png",
 					},
 					colorType: "clothing",
 				},
@@ -21,6 +22,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/cropped_2-c_shadow.png",
 						2: "pose2/02-bottoms/cropped_2-c_shadow.png",
+						3: "pose3/10-bottom/cropped_2-c_shadow.png",
 					},
 					color: colors.default.gray,
 					blendMode: "multiply",
@@ -29,6 +31,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/cropped_3-c_outline.png",
 						2: "pose2/02-bottoms/cropped_3-c_outline.png",
+						3: "pose3/10-bottom/cropped_3-c_outline.png",
 					},
 					color: colors.default.black,
 				},
@@ -64,6 +67,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/shortshorts_1-v_clothing-g_f.png",
 						2: "pose2/02-bottoms/shortshorts_1-v_clothing.png",
+						3: "pose3/10-bottom/shortshorts_1-v_clothing.png",
 					},
 					colorType: "clothing",
 				},
@@ -71,6 +75,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/shortshorts_2-c_shadow.png",
 						2: "pose2/02-bottoms/shortshorts_2-c_shadow.png",
+						3: "pose3/10-bottom/shortshorts_2-c_shadow.png",
 					},
 					color: colors.default.gray,
 					blendMode: "multiply",
@@ -79,6 +84,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/shortshorts_3-c_outline.png",
 						2: "pose2/02-bottoms/shortshorts_3-c_outline.png",
+						3: "pose3/10-bottom/shortshorts_3-c_outline.png",
 					},
 					color: colors.default.black,
 				},
@@ -101,6 +107,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/skirt_1-v_clothing.png",
 						2: "pose2/02-bottoms/skirt_2-v_clothing.png",
+						3: "pose3/10-bottom/skirt_1-v_clothing-g_f.png",
 					},
 					colorType: "clothing",
 				},
@@ -108,6 +115,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/skirt_2-c_shadow.png",
 						2: "pose2/02-bottoms/skirt_3-c_shadow.png",
+						3: "pose3/10-bottom/skirt_2-c_shadow.png",
 					},
 					color: colors.default.gray,
 					blendMode: "multiply",
@@ -116,6 +124,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/skirt_3-c_outline.png",
 						2: "pose2/02-bottoms/skirt_4-c_outline.png",
+						3: "pose3/10-bottom/skirt_3-c_outline.png",
 					},
 					color: colors.default.black,
 				},
@@ -130,6 +139,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/pants_1-v_clothing.png",
 						2: "pose2/02-bottoms/waist_1-v_clothing-g_f.png",
+						3: "pose3/10-bottom/cropped_1-v_clothing.png",
 					},
 					colorType: "clothing",
 				},
@@ -137,6 +147,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/pants_2-c_shadow.png",
 						2: "pose2/02-bottoms/waist_2-c_shadow.png",
+						3: "pose3/10-bottom/cropped_2-c_shadow.png",
 					},
 					color: colors.default.gray,
 					blendMode: "multiply",
@@ -145,6 +156,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/pants_3-c_outline.png",
 						2: "pose2/02-bottoms/waist_3-c_outline.png",
+						3: "pose3/10-bottom/cropped_3-c_outline.png",
 					},
 					color: colors.default.black,
 				},
@@ -158,6 +170,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/pants_1-v_clothing.png",
 						2: "pose2/02-bottoms/pants_1-v_clothing.png",
+						3: "pose3/10-bottom/cropped_1-v_clothing.png",
 					},
 					colorType: "clothing",
 				},
@@ -165,6 +178,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/pants_2-c_shadow.png",
 						2: "pose2/02-bottoms/pants_2-c_shadow.png",
+						3: "pose3/10-bottom/cropped_2-c_shadow.png",
 					},
 					color: colors.default.gray,
 					blendMode: "multiply",
@@ -173,6 +187,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "pose1/02-bottom/pants_3-c_outline.png",
 						2: "pose2/02-bottoms/pants_3-c_outline.png",
+						3: "pose3/10-bottom/cropped_3-c_outline.png",
 					},
 					color: colors.default.black,
 				},

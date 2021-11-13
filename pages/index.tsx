@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import Colors from "../components/colors";
 import Renderer from "../components/renderer";
 import { selectableAttributesArray } from "../data/attributes";
 import { colors } from "../data/colors";
@@ -248,6 +249,7 @@ export default function Home() {
 			>
 				Permalink
 			</button>
+			<Colors />
 		</>
 	);
 }

@@ -803,6 +803,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "pose1/13-top/northstar_1-v_clothing.png",
 						2: "pose2/05-tops/northstar_2-v_clothing.png",
+						3: "pose3/03-top/northstar_1-v_clothing.png",
 					},
 					colorType: "clothing",
 				},
@@ -817,6 +818,7 @@ export const top: AttributeDictionary = {
 				{
 					path: {
 						1: "pose1/13-top/northstar_3-c_outline.png",
+						3: "pose3/03-top/northstar_2-c_outline.png",
 					},
 					color: colors.default.black,
 				},
@@ -836,7 +838,6 @@ export const top: AttributeDictionary = {
 				},
 				{
 					path: {
-						1: "",
 						2: "pose2/05-tops/northstar_6-c_skinshadow.png",
 					},
 					color: colors.skin["1"],
@@ -846,12 +847,12 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "pose1/13-top/northstar_6-c_gray.png",
 						2: "pose2/05-tops/northstar_7-c_gray.png",
+						3: "pose3/03-top/northstar_3-c_gray.png",
 					},
 					color: colors.hair.gray,
 				},
 				{
 					path: {
-						1: "",
 						2: "pose2/05-tops/northstar_8-c_black.png",
 					},
 					color: colors.clothing.black,
@@ -860,6 +861,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "pose1/13-top/northstar_7-c_shadow.png",
 						2: "pose2/05-tops/northstar_9-c_shadow.png",
+						3: "pose3/03-top/northstar_4-c_shadow.png",
 					},
 					color: colors.default.gray,
 					blendMode: "multiply",
@@ -868,6 +870,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "pose1/13-top/northstar_8-c_outline.png",
 						2: "pose2/05-tops/northstar_10-c_outline.png",
+						3: "pose3/03-top/northstar_5-c_outline.png",
 					},
 					color: colors.default.black,
 				},
@@ -887,6 +890,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "pose1/13-top/leatherjacket_1-v_clothing.png",
 						2: "pose2/05-tops/leatherjacket_2-v_clothing.png",
+						3: "pose3/03-top/leatherjacket_1-v_clothing.png",
 					},
 					colorType: "clothing",
 				},
@@ -894,6 +898,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "pose1/13-top/leatherjacket_2-c_shadow.png",
 						2: "pose2/05-tops/leatherjacket_3-c_shadow.png",
+						3: "pose3/03-top/leatherjacket_2-c_shadow.png",
 					},
 					color: colors.default.gray,
 					blendMode: "multiply",
@@ -902,6 +907,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "pose1/13-top/leatherjacket_3-c_outline.png",
 						2: "pose2/05-tops/leatherjacket_4-c_outline.png",
+						3: "pose3/03-top/leatherjacket_3-c_outline.png",
 					},
 					color: colors.default.black,
 				},
