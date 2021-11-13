@@ -9,7 +9,7 @@ import {
 	isCompatible,
 } from "../data/helpers";
 import { randomCompanion, randomProperty } from "../data/random";
-import { Companion, Pose, Restrictions } from "../data/types";
+import { Companion, Pose, Restrictions, RGBColor } from "../data/types";
 
 const findFirstIdenticalObject = (array: any[], object: any) => {
 	for (let i = 0; i < array.length; i++) {
@@ -18,6 +18,36 @@ const findFirstIdenticalObject = (array: any[], object: any) => {
 		}
 	}
 	return -1;
+};
+
+const ColorSelector = ({
+	colors,
+	active,
+	onSelect,
+}: {
+	colors: { [key: string]: RGBColor };
+	active?: string;
+	onSelect: (color: string) => void;
+}) => {
+	return (
+		<>
+			{Object.keys(colors).map((color) => {
+				return (
+					<div
+						key={color}
+						onClick={() => onSelect(color)}
+						className={color === active ? "active" : ""}
+						style={{
+							width: "48px",
+							height: "48px",
+							display: "inline-block",
+							backgroundColor: `rgb(${colors[color].r},${colors[color].g},${colors[color].b})`,
+						}}
+					></div>
+				);
+			})}
+		</>
+	);
 };
 
 export default function Editor({
@@ -126,13 +156,54 @@ export default function Editor({
 	return (
 		<>
 			<div>
-				<select
-					name="background"
-					value={colorToKey(companion.properties.background, colors.background)}
-					onChange={handleColorChange}
-				>
-					{backgroundOptions}
-				</select>
+				<div>
+					Background color:{" "}
+					<ColorSelector
+						colors={colors.background}
+						active={colorToKey(companion.properties.background, colors.background)}
+						onSelect={(e) => {
+							setCompanion({
+								...companion,
+								properties: {
+									...companion.properties,
+									background: colors.background[e],
+								},
+							});
+						}}
+					/>
+				</div>
+				<div>
+					Hair color:{" "}
+					<ColorSelector
+						colors={colors.hair}
+						active={colorToKey(companion.properties.hair, colors.hair)}
+						onSelect={(e) => {
+							setCompanion({
+								...companion,
+								properties: {
+									...companion.properties,
+									hair: colors.hair[e],
+								},
+							});
+						}}
+					/>
+				</div>
+				<div>
+					Skin color:{" "}
+					<ColorSelector
+						colors={colors.skin}
+						active={colorToKey(companion.properties.skin, colors.skin)}
+						onSelect={(e) => {
+							setCompanion({
+								...companion,
+								properties: {
+									...companion.properties,
+									skin: colors.skin[e],
+								},
+							});
+						}}
+					/>
+				</div>
 				<select name="pose" value={companion.properties.pose} onChange={handlePropertyChange}>
 					<option value={1}>1</option>
 					<option value={2}>2</option>
@@ -146,13 +217,6 @@ export default function Editor({
 				>
 					<option value="m">m</option>
 					<option value="f">f</option>
-				</select>
-				<select
-					name="skin"
-					value={colorToKey(companion.properties.skin, colors.skin)}
-					onChange={handleColorChange}
-				>
-					{skinOptions}
 				</select>
 				<select
 					name="hair"
