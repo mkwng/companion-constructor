@@ -1,14 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { selectableAttributesArray } from "../data/attributes";
 import { colors } from "../data/colors";
-import {
-	colorsRequired,
-	colorToKey,
-	companionToUrl,
-	getRestrictions,
-	isCompatible,
-} from "../data/helpers";
-import { randomCompanion, randomProperty } from "../data/random";
+import { colorsRequired, colorToKey, getRestrictions, isCompatible } from "../data/helpers";
+import { randomProperty } from "../data/random";
 import { Companion, Pose, Restrictions, RGBColor } from "../data/types";
 
 const ColorSelector = ({
@@ -21,23 +15,27 @@ const ColorSelector = ({
 	onSelect: (color: string) => void;
 }) => {
 	return (
-		<>
-			{Object.keys(colors).map((color) => {
-				const rgb = `rgb(${colors[color].r},${colors[color].g},${colors[color].b})`;
-				return (
-					<div
-						key={color}
-						onClick={() => onSelect(color)}
-						className="w-10 h-10 inline-block rounded-full m-1 cursor-pointer hover:opacity-90"
-						style={{
-							backgroundColor: rgb,
-							border: color === active ? "4px solid white" : "",
-							outline: color === active ? `4px solid ${rgb}` : "",
-						}}
-					></div>
-				);
-			})}
-		</>
+		<div className="w-100 overflow-x-scroll scroll hide-scrollbar py-4">
+			<div className="w-max">
+				<span className="w-4 inline-block" aria-hidden="true" />
+				{Object.keys(colors).map((color) => {
+					const rgb = `rgb(${colors[color].r},${colors[color].g},${colors[color].b})`;
+					return (
+						<div
+							key={color}
+							onClick={() => onSelect(color)}
+							className="w-10 h-10 inline-block rounded-full m-1 cursor-pointer hover:opacity-90"
+							style={{
+								backgroundColor: rgb,
+								border: color === active ? "4px solid white" : "",
+								outline: color === active ? `4px solid ${rgb}` : "",
+							}}
+						></div>
+					);
+				})}
+				<span className="w-4 inline-block" aria-hidden="true" />
+			</div>
+		</div>
 	);
 };
 
@@ -51,22 +49,22 @@ const AttributeSelector = ({
 	onSelect: (variant: string | number) => void;
 }) => {
 	return (
-		<>
+		<div className="grid grid-cols-2 gap-2 p-4">
 			{variants.map((variant) => {
 				return (
 					<div
 						key={variant}
 						onClick={() => onSelect(variant)}
-						className="inline-block m-1 p-1 w-24 h-24 cursor-pointer hover:text-gray-800 rounded-xl bg-gray-100 hover:bg-gray-200"
+						className="flex justify-center content-center cursor-pointer min-h-20 rounded-xl bg-gray-100 hover:text-gray-800  hover:bg-gray-200"
 						style={{
-							border: variant === active ? "4px solid blue" : "",
+							border: variant === active ? "4px solid blue" : "4px solid rgba(0,0,0,0)",
 						}}
 					>
-						{variant}
+						<p className="h-6 text-center m-auto">{variant}</p>
 					</div>
 				);
 			})}
-		</>
+		</div>
 	);
 };
 
@@ -378,12 +376,16 @@ export default function Editor({
 
 	return (
 		<>
-			<div className="flex">
-				<CategoryLink category="general">General</CategoryLink>
-				<CategoryLink category="hair">Hair</CategoryLink>
-				<CategoryLink category="face">Face</CategoryLink>
-				<CategoryLink category="clothing">Clothing</CategoryLink>
-				<CategoryLink category="accessories">Accessories</CategoryLink>
+			<div className="w-full overflow-x-scroll hide-scrollbar py-4">
+				<div className="w-max flex gap-4">
+					<span className="w-0" aria-hidden="true" />
+					<CategoryLink category="general">General</CategoryLink>
+					<CategoryLink category="hair">Hair</CategoryLink>
+					<CategoryLink category="face">Face</CategoryLink>
+					<CategoryLink category="clothing">Clothing</CategoryLink>
+					<CategoryLink category="accessories">Accessories</CategoryLink>
+					<span className="w-0" aria-hidden="true" />
+				</div>
 			</div>
 			{(() => {
 				switch (viewing) {

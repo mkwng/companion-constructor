@@ -1,0 +1,15 @@
+body {
+	min-height: 100vh;
+}
+
+#__next {
+	height: 100vh;
+}
+
+.hide-scrollbar {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+	display: none; /* Safari and Chrome */
+}

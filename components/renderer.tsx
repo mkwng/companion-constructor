@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AttributeSelection, Companion, Layer, Pose, RGBColor } from "../data/types";
-import { getColor, getLayers, getPath } from "../data/helpers";
+import { colorToKey, getColor, getLayers, getPath } from "../data/helpers";
+import { colors } from "../data/colors";
 
 const loadImages = async (paths: string[]): Promise<HTMLImageElement[]> => {
 	const etc = paths.map(async (path) => {
@@ -144,14 +145,21 @@ export default function Renderer({
 	}, [companion]);
 
 	return (
-		<div className={className} {...props}>
-			{isLoading ? "loading" : "done"} <br />
+		<div
+			className={`w-full bg-background-${colorToKey(
+				companion.properties.background,
+				colors.background
+			)}`}
+			{...props}
+		>
 			{companion && (
 				<canvas
 					width="2048"
 					height="2048"
 					ref={canvasRef}
-					style={{ width: "100%", maxWidth: "960px" }}
+					className={`max-w-full max-h-2/3-screen mx-auto transition-opacity ${
+						isLoading && "opacity-50"
+					}`}
 				/>
 			)}
 		</div>

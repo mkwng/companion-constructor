@@ -49,9 +49,6 @@ module.exports = {
 	},
 	darkMode: false, // or 'media' or 'class'
 	theme: {
-		extend: {},
-	},
-	variants: {
 		extend: {
 			colors: {
 				hair: {
@@ -112,7 +109,16 @@ module.exports = {
 					gray: "#f5f7f3",
 				},
 			},
+			maxHeight: {
+				"2/3-screen": "66vh",
+			},
+			minHeight: {
+				20: "5rem",
+			},
 		},
 	},
-	plugins: [],
+	variants: {
+		extend: {},
+	},
+	plugins: [require("@tailwindcss/aspect-ratio")],
 };

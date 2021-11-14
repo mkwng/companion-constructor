@@ -9,6 +9,7 @@
 	},
 	"dependencies": {
 		"@prisma/client": "3.4.2",
+		"@tailwindcss/aspect-ratio": "^0.3.0",
 		"@types/sharp": "^0.29.3",
 		"autoprefixer": "^10.4.0",
 		"axios": "^0.24.0",
