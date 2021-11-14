@@ -11,15 +11,6 @@ import {
 import { randomCompanion, randomProperty } from "../data/random";
 import { Companion, Pose, Restrictions, RGBColor } from "../data/types";
 
-const findFirstIdenticalObject = (array: any[], object: any) => {
-	for (let i = 0; i < array.length; i++) {
-		if (JSON.stringify(array[i]) === JSON.stringify(object)) {
-			return i;
-		}
-	}
-	return -1;
-};
-
 const ColorSelector = ({
 	colors,
 	active,
@@ -32,6 +23,7 @@ const ColorSelector = ({
 	return (
 		<>
 			{Object.keys(colors).map((color) => {
+				const rgb = `rgb(${colors[color].r},${colors[color].g},${colors[color].b})`;
 				return (
 					<div
 						key={color}
@@ -41,9 +33,44 @@ const ColorSelector = ({
 							width: "48px",
 							height: "48px",
 							display: "inline-block",
-							backgroundColor: `rgb(${colors[color].r},${colors[color].g},${colors[color].b})`,
+							backgroundColor: rgb,
+							borderRadius: "128px",
+							margin: "4px",
+							border: color === active ? "4px solid white" : "",
+							outline: color === active ? `4px solid ${rgb}` : "",
 						}}
 					></div>
+				);
+			})}
+		</>
+	);
+};
+
+const AttributeSelector = ({
+	variants,
+	active,
+	onSelect,
+}: {
+	variants: string[] | number[];
+	active?: string | number;
+	onSelect: (variant: string | number) => void;
+}) => {
+	return (
+		<>
+			{variants.map((variant) => {
+				return (
+					<div
+						key={variant}
+						onClick={() => onSelect(variant)}
+						className={variant === active ? "active" : ""}
+						style={{
+							display: "inline-block",
+							borderBottom: variant === active ? "4px solid black" : "",
+							margin: "4px",
+						}}
+					>
+						{variant}
+					</div>
 				);
 			})}
 		</>
@@ -204,20 +231,38 @@ export default function Editor({
 						}}
 					/>
 				</div>
-				<select name="pose" value={companion.properties.pose} onChange={handlePropertyChange}>
-					<option value={1}>1</option>
-					<option value={2}>2</option>
-					<option value={3}>3</option>
-					<option value={4}>4</option>
-				</select>
-				<select
-					name="gender"
-					value={companion.properties.gender}
-					onChange={handlePropertyChange}
-				>
-					<option value="m">m</option>
-					<option value="f">f</option>
-				</select>
+				<div>
+					Pose:{" "}
+					<AttributeSelector
+						variants={[1, 2, 3, 4]}
+						active={companion.properties.pose}
+						onSelect={(pose) => {
+							setCompanion({
+								...companion,
+								properties: {
+									...companion.properties,
+									pose: pose as Pose,
+								},
+							});
+						}}
+					/>
+				</div>
+				<div>
+					Face shape:{" "}
+					<AttributeSelector
+						variants={["m", "f"]}
+						active={companion.properties.gender}
+						onSelect={(gender) => {
+							setCompanion({
+								...companion,
+								properties: {
+									...companion.properties,
+									gender: gender as "m" | "f",
+								},
+							});
+						}}
+					/>
+				</div>
 			</div>
 			<div>
 				{selectableAttributesArray.map((attribute) => (
@@ -229,7 +274,14 @@ export default function Editor({
 							companionRestrictions
 						) && <>⚠️</>}
 						{attribute.name}:
-						<select
+						<AttributeSelector
+							variants={attribute.variants.map((variant) => variant.name)}
+							active={companion.attributes[attribute.name]?.name || ""}
+							onSelect={(attribute) => {
+								console.log(attribute);
+							}}
+						/>
+						{/* <select
 							name={attribute.name}
 							value={companion.attributes[attribute.name]?.name || ""}
 							onChange={handleAttributeChange}
@@ -251,7 +303,7 @@ export default function Editor({
 									</option>
 								);
 							})}
-						</select>
+						</select> */}
 						{colorsRequired(attribute.name, companion.attributes[attribute.name]?.name) ? (
 							<>
 								{[
@@ -287,6 +339,7 @@ export default function Editor({
 								))}
 							</>
 						) : null}
+						<hr />
 					</div>
 				))}
 			</div>
