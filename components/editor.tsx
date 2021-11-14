@@ -49,16 +49,15 @@ const AttributeSelector = ({
 	onSelect: (variant: string | number) => void;
 }) => {
 	return (
-		<div className="grid grid-cols-2 gap-2 p-4">
+		<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-2 p-4">
 			{variants.map((variant) => {
 				return (
 					<div
 						key={variant}
 						onClick={() => onSelect(variant)}
-						className="flex justify-center content-center cursor-pointer min-h-20 rounded-xl bg-gray-100 hover:text-gray-800  hover:bg-gray-200"
-						style={{
-							border: variant === active ? "4px solid blue" : "4px solid rgba(0,0,0,0)",
-						}}
+						className={`flex justify-center content-center cursor-pointer min-h-20 rounded-xl bg-gray-100 hover:text-gray-800  hover:bg-gray-200 border-4 border-transparent ${
+							variant === active && "border-indigo-500 text-indigo-500"
+						}`}
 					>
 						<p className="h-6 text-center m-auto">{variant}</p>
 					</div>
@@ -364,8 +363,8 @@ export default function Editor({
 	}) => (
 		<div
 			className={
-				"text-lg font-semibold m-1 cursor-pointer" +
-				(category === viewing ? " text-blue-500" : "")
+				"py-2 px-3 bg-gray-50 rounded-lg text-lg font-semibold cursor-pointer border-4 border-gray-50" +
+				(category === viewing ? " text-indigo-500 border-indigo-500" : "")
 			}
 			onClick={() => {
 				setViewing(category);

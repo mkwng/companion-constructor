@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Editor from "../components/editor";
 import Renderer from "../components/renderer";
 import { colors } from "../data/colors";
-import { colorsRequired, colorToKey, companionToUrl, getRestrictions } from "../data/helpers";
-import { randomCompanion, randomProperty } from "../data/random";
-import { Companion, Restrictions } from "../data/types";
+import { colorToKey, companionToUrl } from "../data/helpers";
+import { randomCompanion } from "../data/random";
+import { Companion } from "../data/types";
 
 export default function Home() {
 	const [companion, setCompanion] = useState<Companion | null>(null);
