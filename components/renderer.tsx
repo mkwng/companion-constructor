@@ -3,14 +3,18 @@ import { AttributeSelection, Companion, Layer, Pose, RGBColor } from "../data/ty
 import { colorToKey, getColor, getLayers, getPath } from "../data/helpers";
 import { colors } from "../data/colors";
 
+const imgLoadToPromise = (src): Promise<HTMLImageElement> => {
+	return new Promise((resolve, reject) => {
+		let img = new Image();
+		img.onload = () => resolve(img);
+		img.onerror = reject;
+		img.src = src;
+	});
+};
+
 const loadImages = async (paths: string[]): Promise<HTMLImageElement[]> => {
 	const etc = paths.map(async (path) => {
-		const img = new Image();
-		img.src = path;
-		try {
-			await img.decode();
-		} catch (error) {}
-		return img;
+		return imgLoadToPromise(path);
 	});
 	return Promise.all(etc);
 };
