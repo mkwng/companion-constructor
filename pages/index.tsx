@@ -24,7 +24,7 @@ export default function Home() {
 				colors.background
 			)}`}
 		>
-			<div className="z-10 relative w-100">
+			<div className="z-10 w-full fixed top-0 flex justify-between bg-white h-14 px-4">
 				<button
 					onClick={() => {
 						setCompanion(randomCompanion());
@@ -40,10 +40,10 @@ export default function Home() {
 					Permalink
 				</button>
 			</div>
-			<div className="fixed top-0 w-screen z-0">
+			<div className="fixed top-14 w-screen z-0">
 				<Renderer companion={companion} />
 			</div>
-			<div className="absolute top-0 w-full">
+			<div className="absolute top-14 w-full">
 				{/* eslint-disable */}
 				<img
 					src="/attributes/pose1/00-background/bg-v_background.png"

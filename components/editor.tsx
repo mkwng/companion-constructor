@@ -24,7 +24,7 @@ const ColorSelector = ({
 						<div
 							key={color}
 							onClick={() => onSelect(color)}
-							className="w-10 h-10 inline-block rounded-full m-1 cursor-pointer hover:opacity-90"
+							className="w-14 h-14 inline-block rounded-full m-1 cursor-pointer hover:opacity-90"
 							style={{
 								backgroundColor: rgb,
 								border: color === active ? "4px solid white" : "",
@@ -123,34 +123,35 @@ export default function Editor({
 
 	const selectables = selectableAttributesArray.map((attribute) => (
 		<div key={attribute.name}>
-			{!isCompatible(
-				attribute.variants.find((variant) => {
-					return companion.attributes[attribute.name]?.name === variant.name;
-				})?.restrictions,
-				companionRestrictions
-			) && <>⚠️</>}
-			{attribute.name}:
-			{attribute.isOptional && (
-				<div
-					onClick={() => {
-						setCompanion((old) => {
-							return {
-								...old,
-								attributes: {
-									...old.attributes,
-									[attribute.name]: undefined,
-								},
-							};
-						});
-					}}
-					className="inline-block m-1 p-1 w-24 h-24 cursor-pointer hover:text-gray-800 rounded-xl bg-gray-100 hover:bg-gray-200"
-					style={{
-						border: companion.attributes[attribute.name]?.name ? "" : "4px solid blue",
-					}}
-				>
-					none
+			<div className="px-4 py-2 w-full flex justify-between">
+				<div>
+					{!isCompatible(
+						attribute.variants.find((variant) => {
+							return companion.attributes[attribute.name]?.name === variant.name;
+						})?.restrictions,
+						companionRestrictions
+					) && <>⚠️</>}
+					{attribute.name.charAt(0).toUpperCase() + attribute.name.slice(1)}
 				</div>
-			)}
+				{attribute.isOptional && companion.attributes[attribute.name]?.name && (
+					<div
+						className="cursor-pointer"
+						onClick={() => {
+							setCompanion((old) => {
+								return {
+									...old,
+									attributes: {
+										...old.attributes,
+										[attribute.name]: undefined,
+									},
+								};
+							});
+						}}
+					>
+						🗑 Remove
+					</div>
+				)}
+			</div>
 			<AttributeSelector
 				variants={attribute.variants.map((variant) => variant.name)}
 				active={companion.attributes[attribute.name]?.name || ""}
@@ -221,7 +222,7 @@ export default function Editor({
 	const GeneralOptions = () => (
 		<>
 			<div>
-				Pose:{" "}
+				<div className="px-4 py-2 w-full flex justify-between">Pose</div>
 				<AttributeSelector
 					variants={[1, 2, 3, 4]}
 					active={companion.properties.pose}
@@ -239,7 +240,7 @@ export default function Editor({
 				/>
 			</div>
 			<div>
-				Background color:{" "}
+				<div className="px-4 py-2 w-full flex justify-between">Background</div>
 				<ColorSelector
 					colors={colors.background}
 					active={colorToKey(companion.properties.background, colors.background)}
@@ -258,7 +259,7 @@ export default function Editor({
 			</div>
 
 			<div>
-				Skin color:{" "}
+				<div className="px-4 py-2 w-full flex justify-between">Skin</div>
 				<ColorSelector
 					colors={colors.skin}
 					active={colorToKey(companion.properties.skin, colors.skin)}
@@ -281,7 +282,7 @@ export default function Editor({
 	const FaceOptions = () => (
 		<>
 			<div>
-				Face shape:{" "}
+				<div className="px-4 py-2 w-full flex justify-between">Shape</div>
 				<AttributeSelector
 					variants={["m", "f"]}
 					active={companion.properties.gender}
@@ -313,7 +314,7 @@ export default function Editor({
 	const HairOptions = () => (
 		<>
 			<div>
-				Hair color:{" "}
+				<div className="px-4 py-2 w-full flex justify-between">Color</div>
 				<ColorSelector
 					colors={colors.hair}
 					active={colorToKey(companion.properties.hair, colors.hair)}
@@ -377,7 +378,7 @@ export default function Editor({
 	return (
 		<>
 			<div className="w-full overflow-x-scroll hide-scrollbar py-4">
-				<div className="w-max flex gap-4">
+				<div className="w-max min-w-full flex gap-4 justify-center">
 					<span className="w-0" aria-hidden="true" />
 					<CategoryLink category="general">General</CategoryLink>
 					<CategoryLink category="hair">Hair</CategoryLink>
