@@ -217,7 +217,7 @@ export const getRestrictions = (companion: Companion): Restrictions[] => {
 	];
 	for (const key in companion.attributes) {
 		const match = selectableAttributes[key].variants.find((variant) => {
-			return variant.name === companion.attributes[key].name;
+			return variant.name === companion.attributes[key]?.name;
 		});
 		if (match?.restrictions && isCompatible(match.restrictions, restrictions)) {
 			restrictions.push(match.restrictions);

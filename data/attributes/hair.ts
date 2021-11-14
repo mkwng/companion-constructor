@@ -208,7 +208,7 @@ export const hair: AttributeDictionary = {
 		{
 			attribute: "hair",
 			name: "fuzz",
-			restrictions: { headShape: "flat" },
+			restrictions: { headShape: "flat", gender: "m" },
 			layers: [
 				{
 					path: "face/05-hair/fuzz_1-v_hair-g_m-q_5.png",

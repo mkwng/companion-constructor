@@ -21,7 +21,8 @@
 	"extensions": [
 		"dbaeumer.vscode-eslint",
 		"prisma.prisma",
-		"esbenp.prettier-vscode"
+		"esbenp.prettier-vscode",
+		"bradlc.vscode-tailwindcss"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

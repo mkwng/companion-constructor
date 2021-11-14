@@ -28,14 +28,9 @@ const ColorSelector = ({
 					<div
 						key={color}
 						onClick={() => onSelect(color)}
-						className={color === active ? "active" : ""}
+						className="w-10 h-10 inline-block rounded-full m-1 cursor-pointer hover:opacity-90"
 						style={{
-							width: "48px",
-							height: "48px",
-							display: "inline-block",
 							backgroundColor: rgb,
-							borderRadius: "128px",
-							margin: "4px",
 							border: color === active ? "4px solid white" : "",
 							outline: color === active ? `4px solid ${rgb}` : "",
 						}}
@@ -62,11 +57,9 @@ const AttributeSelector = ({
 					<div
 						key={variant}
 						onClick={() => onSelect(variant)}
-						className={variant === active ? "active" : ""}
+						className="inline-block m-1 p-1 w-24 h-24 cursor-pointer hover:text-gray-800 rounded-xl bg-gray-100 hover:bg-gray-200"
 						style={{
-							display: "inline-block",
-							borderBottom: variant === active ? "4px solid black" : "",
-							margin: "4px",
+							border: variant === active ? "4px solid blue" : "",
 						}}
 					>
 						{variant}
@@ -84,64 +77,14 @@ export default function Editor({
 	companionState: [Companion, Dispatch<SetStateAction<Companion>>];
 }) {
 	const [companion, setCompanion] = companionState;
+	const [viewing, setViewing] = useState<
+		"general" | "face" | "hair" | "clothing" | "accessories"
+	>("general");
 
 	const companionRestrictions = useMemo<Restrictions[]>(
 		() => getRestrictions(companion),
 		[companion]
 	);
-
-	const handleAttributeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		const { name, value } = e.target;
-		let color = companion.attributes[name]?.color || [];
-		let requiredColors = colorsRequired(name, value);
-
-		while (color.length < requiredColors) {
-			color.push(randomProperty(colors.clothing));
-		}
-
-		setCompanion({
-			...companion,
-			attributes: {
-				...companion.attributes,
-				[name]: {
-					name: value,
-					color,
-				},
-			},
-		});
-	};
-
-	const handlePropertyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		const { name, value } = e.target;
-		if (name === "pose") {
-			setCompanion({
-				...companion,
-				properties: {
-					...companion.properties,
-					pose: parseInt(value) as Pose,
-				},
-			});
-		} else {
-			setCompanion({
-				...companion,
-				properties: {
-					...companion.properties,
-					[name]: value,
-				},
-			});
-		}
-	};
-
-	const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		const { name, value } = e.target;
-		setCompanion({
-			...companion,
-			properties: {
-				...companion.properties,
-				[name]: colors[name][value],
-			},
-		});
-	};
 
 	const skinOptions = [];
 	const hairOptions = [];
@@ -180,183 +123,284 @@ export default function Editor({
 		return <>Loading..</>;
 	}
 
-	return (
+	const selectables = selectableAttributesArray.map((attribute) => (
+		<div key={attribute.name}>
+			{!isCompatible(
+				attribute.variants.find((variant) => {
+					return companion.attributes[attribute.name]?.name === variant.name;
+				})?.restrictions,
+				companionRestrictions
+			) && <>⚠️</>}
+			{attribute.name}:
+			{attribute.isOptional && (
+				<div
+					onClick={() => {
+						setCompanion((old) => {
+							return {
+								...old,
+								attributes: {
+									...old.attributes,
+									[attribute.name]: undefined,
+								},
+							};
+						});
+					}}
+					className="inline-block m-1 p-1 w-24 h-24 cursor-pointer hover:text-gray-800 rounded-xl bg-gray-100 hover:bg-gray-200"
+					style={{
+						border: companion.attributes[attribute.name]?.name ? "" : "4px solid blue",
+					}}
+				>
+					none
+				</div>
+			)}
+			<AttributeSelector
+				variants={attribute.variants.map((variant) => variant.name)}
+				active={companion.attributes[attribute.name]?.name || ""}
+				onSelect={(selected) => {
+					if (typeof selected !== "string") {
+						throw new Error("Invalid variant");
+					}
+					let color = companion.attributes[attribute.name]?.color || [];
+					let requiredColors = colorsRequired(attribute.name, selected);
+
+					while (color.length < requiredColors) {
+						color.push(randomProperty(colors.clothing));
+					}
+
+					setCompanion((old) => {
+						return {
+							...old,
+							attributes: {
+								...old.attributes,
+								[attribute.name]: {
+									name: selected,
+									color,
+								},
+							},
+						};
+					});
+				}}
+			/>
+			{colorsRequired(attribute.name, companion.attributes[attribute.name]?.name) ? (
+				<>
+					{[
+						...Array(
+							colorsRequired(attribute.name, companion.attributes[attribute.name]?.name)
+						),
+					].map((x, i) => (
+						<div key={`${attribute.name}-${i}`}>
+							<ColorSelector
+								colors={colors.clothing}
+								active={colorToKey(
+									companion.attributes[attribute.name]?.color[i],
+									colors.clothing
+								)}
+								onSelect={(selected) => {
+									let color = [...companion.attributes[attribute.name].color];
+									color[i] = colors.clothing[selected];
+									setCompanion((old) => {
+										return {
+											...old,
+											attributes: {
+												...old.attributes,
+												[attribute.name]: {
+													...old.attributes[attribute.name],
+													color,
+												},
+											},
+										};
+									});
+								}}
+							/>
+						</div>
+					))}
+				</>
+			) : null}
+			<hr />
+		</div>
+	));
+
+	const GeneralOptions = () => (
 		<>
 			<div>
-				<div>
-					Background color:{" "}
-					<ColorSelector
-						colors={colors.background}
-						active={colorToKey(companion.properties.background, colors.background)}
-						onSelect={(color) => {
-							setCompanion({
-								...companion,
+				Pose:{" "}
+				<AttributeSelector
+					variants={[1, 2, 3, 4]}
+					active={companion.properties.pose}
+					onSelect={(pose) => {
+						setCompanion((old) => {
+							return {
+								...old,
 								properties: {
-									...companion.properties,
-									background: colors.background[color],
-								},
-							});
-						}}
-					/>
-				</div>
-				<div>
-					Hair color:{" "}
-					<ColorSelector
-						colors={colors.hair}
-						active={colorToKey(companion.properties.hair, colors.hair)}
-						onSelect={(color) => {
-							setCompanion({
-								...companion,
-								properties: {
-									...companion.properties,
-									hair: colors.hair[color],
-								},
-							});
-						}}
-					/>
-				</div>
-				<div>
-					Skin color:{" "}
-					<ColorSelector
-						colors={colors.skin}
-						active={colorToKey(companion.properties.skin, colors.skin)}
-						onSelect={(color) => {
-							setCompanion({
-								...companion,
-								properties: {
-									...companion.properties,
-									skin: colors.skin[color],
-								},
-							});
-						}}
-					/>
-				</div>
-				<div>
-					Pose:{" "}
-					<AttributeSelector
-						variants={[1, 2, 3, 4]}
-						active={companion.properties.pose}
-						onSelect={(pose) => {
-							setCompanion({
-								...companion,
-								properties: {
-									...companion.properties,
+									...old.properties,
 									pose: pose as Pose,
 								},
-							});
-						}}
-					/>
-				</div>
-				<div>
-					Face shape:{" "}
-					<AttributeSelector
-						variants={["m", "f"]}
-						active={companion.properties.gender}
-						onSelect={(gender) => {
-							setCompanion({
-								...companion,
-								properties: {
-									...companion.properties,
-									gender: gender as "m" | "f",
-								},
-							});
-						}}
-					/>
-				</div>
+							};
+						});
+					}}
+				/>
 			</div>
 			<div>
-				{selectableAttributesArray.map((attribute) => (
-					<div key={attribute.name}>
-						{!isCompatible(
-							attribute.variants.find((variant) => {
-								return companion.attributes[attribute.name]?.name === variant.name;
-							})?.restrictions,
-							companionRestrictions
-						) && <>⚠️</>}
-						{attribute.name}:
-						<AttributeSelector
-							variants={attribute.variants.map((variant) => variant.name)}
-							active={companion.attributes[attribute.name]?.name || ""}
-							onSelect={(attribute) => {
-								console.log(attribute);
-							}}
-						/>
-						{/* <select
-							name={attribute.name}
-							value={companion.attributes[attribute.name]?.name || ""}
-							onChange={handleAttributeChange}
-						>
-							{attribute.isOptional && <option value="">none</option>}
-							{attribute.variants.map((variant) => {
-								const matchIndex = findFirstIdenticalObject(
-									companionRestrictions,
-									variant.restrictions
-								);
-								const newRestrictions = companionRestrictions.filter(
-									(_, i) => i !== matchIndex
-								);
-
-								return (
-									<option value={variant.name} key={variant.name}>
-										{!isCompatible(variant.restrictions, newRestrictions) && "⚠️"}{" "}
-										{variant.name}
-									</option>
-								);
-							})}
-						</select> */}
-						{colorsRequired(attribute.name, companion.attributes[attribute.name]?.name) ? (
-							<>
-								{[
-									...Array(
-										colorsRequired(attribute.name, companion.attributes[attribute.name]?.name)
-									),
-								].map((x, i) => (
-									<select
-										key={`${attribute.name}-${i}`}
-										name={`${attribute.name}-${i}`}
-										value={colorToKey(
-											companion.attributes[attribute.name]?.color[i],
-											colors.clothing
-										)}
-										onChange={(e) => {
-											const { name, value } = e.target;
-											let color = [...companion.attributes[attribute.name].color];
-											color[i] = colors.clothing[value];
-											setCompanion({
-												...companion,
-												attributes: {
-													...companion.attributes,
-													[attribute.name]: {
-														...companion.attributes[attribute.name],
-														color,
-													},
-												},
-											});
-										}}
-									>
-										{clothingOptions}
-									</select>
-								))}
-							</>
-						) : null}
-						<hr />
-					</div>
-				))}
+				Background color:{" "}
+				<ColorSelector
+					colors={colors.background}
+					active={colorToKey(companion.properties.background, colors.background)}
+					onSelect={(color) => {
+						setCompanion((old) => {
+							return {
+								...old,
+								properties: {
+									...old.properties,
+									background: colors.background[color],
+								},
+							};
+						});
+					}}
+				/>
 			</div>
-			<button
-				onClick={() => {
-					setCompanion(randomCompanion());
-				}}
-			>
-				Random Companion
-			</button>
-			<button
-				onClick={() => {
-					window.location.href = "/api/companion.png?" + companionToUrl(companion);
-				}}
-			>
-				Permalink
-			</button>
+
+			<div>
+				Skin color:{" "}
+				<ColorSelector
+					colors={colors.skin}
+					active={colorToKey(companion.properties.skin, colors.skin)}
+					onSelect={(color) => {
+						setCompanion((old) => {
+							return {
+								...old,
+								properties: {
+									...old.properties,
+									skin: colors.skin[color],
+								},
+							};
+						});
+					}}
+				/>
+			</div>
+		</>
+	);
+
+	const FaceOptions = () => (
+		<>
+			<div>
+				Face shape:{" "}
+				<AttributeSelector
+					variants={["m", "f"]}
+					active={companion.properties.gender}
+					onSelect={(gender) => {
+						setCompanion((old) => {
+							return {
+								...old,
+								properties: {
+									...old.properties,
+									gender: gender as "m" | "f",
+								},
+							};
+						});
+					}}
+				/>
+			</div>
+
+			{selectables.filter(
+				(attribute) =>
+					attribute.key === "blemish" ||
+					attribute.key === "brows" ||
+					attribute.key === "eyes" ||
+					attribute.key === "nose" ||
+					attribute.key === "mouth"
+			)}
+		</>
+	);
+
+	const HairOptions = () => (
+		<>
+			<div>
+				Hair color:{" "}
+				<ColorSelector
+					colors={colors.hair}
+					active={colorToKey(companion.properties.hair, colors.hair)}
+					onSelect={(color) => {
+						setCompanion((old) => {
+							return {
+								...old,
+								properties: {
+									...old.properties,
+									hair: colors.hair[color],
+								},
+							};
+						});
+					}}
+				/>
+			</div>
+			{selectables.filter((attribute) => attribute.key === "hair")}
+		</>
+	);
+
+	const AccessoriesOptions = () => (
+		<>
+			{selectables.filter(
+				(attribute) =>
+					attribute.key === "eyewear" ||
+					attribute.key === "headwear" ||
+					attribute.key === "mask"
+			)}
+		</>
+	);
+
+	const ClothingOptions = () => (
+		<>
+			{selectables.filter(
+				(attribute) =>
+					attribute.key === "top" || attribute.key === "bottom" || attribute.key === "shoes"
+			)}
+		</>
+	);
+
+	const CategoryLink = ({
+		category,
+		children,
+	}: {
+		category: "general" | "face" | "hair" | "accessories" | "clothing";
+		children: React.ReactNode;
+	}) => (
+		<div
+			className={
+				"text-lg font-semibold m-1 cursor-pointer" +
+				(category === viewing ? " text-blue-500" : "")
+			}
+			onClick={() => {
+				setViewing(category);
+			}}
+		>
+			{children}
+		</div>
+	);
+
+	return (
+		<>
+			<div className="flex">
+				<CategoryLink category="general">General</CategoryLink>
+				<CategoryLink category="hair">Hair</CategoryLink>
+				<CategoryLink category="face">Face</CategoryLink>
+				<CategoryLink category="clothing">Clothing</CategoryLink>
+				<CategoryLink category="accessories">Accessories</CategoryLink>
+			</div>
+			{(() => {
+				switch (viewing) {
+					case "general":
+						return <GeneralOptions />;
+					case "face":
+						return <FaceOptions />;
+					case "hair":
+						return <HairOptions />;
+					case "accessories":
+						return <AccessoriesOptions />;
+					case "clothing":
+						return <ClothingOptions />;
+					default:
+						return null;
+				}
+			})()}
 		</>
 	);
 }

@@ -10,13 +10,16 @@
 	"dependencies": {
 		"@prisma/client": "3.4.2",
 		"@types/sharp": "^0.29.3",
+		"autoprefixer": "^10.4.0",
 		"axios": "^0.24.0",
 		"next": "12.0.2",
 		"node-cache": "^5.1.2",
+		"postcss": "^8.3.11",
 		"react": "17.0.2",
 		"react-dom": "17.0.2",
 		"sharp": "^0.29.2",
-		"swr": "^1.0.1"
+		"swr": "^1.0.1",
+		"tailwindcss": "^2.2.19"
 	},
 	"devDependencies": {
 		"@types/react": "^17.0.34",

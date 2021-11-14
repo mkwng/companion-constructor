@@ -95,6 +95,20 @@ export default function Home() {
 
 	return (
 		<>
+			<button
+				onClick={() => {
+					setCompanion(randomCompanion());
+				}}
+			>
+				Random Companion
+			</button>
+			<button
+				onClick={() => {
+					window.location.href = "/api/companion.png?" + companionToUrl(companion);
+				}}
+			>
+				Permalink
+			</button>
 			<Renderer companion={companion} />
 			<Editor companionState={[companion, setCompanion]} />
 		</>
