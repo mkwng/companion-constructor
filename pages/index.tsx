@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import useSWR from "swr";
 import Editor from "../components/editor";
 import Renderer from "../components/renderer";
 import { colors } from "../data/colors";
@@ -34,11 +35,24 @@ export default function Home() {
 				</button>
 				<button
 					onClick={() => {
+						fetch("/api/companion", {
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify(companion),
+						});
+					}}
+				>
+					Mint
+				</button>
+				{/* <button
+					onClick={() => {
 						window.location.href = "/api/companion.png?" + companionToUrl(companion);
 					}}
 				>
 					Permalink
-				</button>
+				</button> */}
 			</div>
 			<div className="fixed top-14 w-screen z-0">
 				<Renderer companion={companion} />

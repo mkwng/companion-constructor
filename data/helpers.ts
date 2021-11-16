@@ -226,6 +226,50 @@ export const getRestrictions = (companion: Companion): Restrictions[] => {
 	return restrictions;
 };
 
+export const flattenCompanion = (
+	companion: Companion
+): {
+	[key: string]: any;
+} => {
+	let flatCompanion = {};
+
+	for (const key in companion.properties) {
+		switch (key) {
+			case "pose":
+			case "gender":
+				flatCompanion[key] = companion.properties[key];
+				break;
+			case "background":
+			case "hair":
+			case "skin":
+				flatCompanion[key] = colorToKey(companion.properties[key], colors[key]);
+				break;
+		}
+	}
+	for (const key in companion.attributes) {
+		const attribute = selectableAttributes[key];
+		const variant = attribute.variants.find(
+			(variant) => variant.name === companion.attributes[key].name
+		);
+		if (variant) {
+			flatCompanion[key] = variant.name;
+			let colorsString = "";
+			let i = 0;
+			for (const layer of variant.layers) {
+				if ("colorType" in layer && layer.colorType === "clothing") {
+					if (colorsString.length) {
+						colorsString += ",";
+					}
+					colorsString += colorToKey(companion.attributes[key].color[i], colors.clothing);
+					i++;
+				}
+			}
+			if (colorsString.length) flatCompanion[key + "Color"] = colorsString;
+		}
+	}
+	return flatCompanion;
+};
+
 export const companionToUrl = (companion: Companion): string => {
 	let path = "";
 	for (const key in companion.properties) {
