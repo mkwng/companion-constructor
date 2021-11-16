@@ -14,7 +14,7 @@ export default async function apiCompanions(req, res) {
 			});
 			console.log(companion);
 
-			res.status(200).end();
+			res.status(200).json(companion);
 			break;
 	}
 }

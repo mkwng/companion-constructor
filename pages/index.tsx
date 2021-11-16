@@ -1,3 +1,4 @@
+import { useRouter } from "next/dist/client/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import Editor from "../components/editor";
@@ -8,6 +9,7 @@ import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
 
 export default function Home() {
+	const router = useRouter();
 	const [companion, setCompanion] = useState<Companion | null>(null);
 
 	useEffect(() => {
@@ -34,14 +36,16 @@ export default function Home() {
 					Random Companion
 				</button>
 				<button
-					onClick={() => {
-						fetch("/api/companion", {
+					onClick={async () => {
+						const response = await fetch("/api/companion", {
 							method: "POST",
 							headers: {
 								"Content-Type": "application/json",
 							},
 							body: JSON.stringify(companion),
 						});
+
+						router.push(`/companion/${(await response.json()).id}`);
 					}}
 				>
 					Mint
