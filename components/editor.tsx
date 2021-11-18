@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { selectableAttributesArray } from "../data/attributes";
 import { colors } from "../data/colors";
 import { colorsRequired, colorToKey, getRestrictions, isCompatible } from "../data/helpers";
@@ -14,26 +14,62 @@ const ColorSelector = ({
 	active?: string;
 	onSelect: (color: string) => void;
 }) => {
+	const leftPlaceholder = useRef<HTMLDivElement>(null);
+	const rightPlaceholder = useRef<HTMLDivElement>(null);
+	const [moreLeft, setMoreLeft] = useState(false);
+	const [moreRight, setMoreRight] = useState(false);
+
+	const checkMore = () => {
+		if (leftPlaceholder.current.getBoundingClientRect().right > 0) {
+			setMoreLeft(false);
+		} else {
+			setMoreLeft(true);
+		}
+		if (rightPlaceholder.current.getBoundingClientRect().left < window.innerWidth) {
+			setMoreRight(false);
+		} else {
+			setMoreRight(true);
+		}
+	};
+
+	useEffect(() => {
+		checkMore();
+	}, [colors]);
+
 	return (
-		<div className="w-100 overflow-x-scroll scroll hide-scrollbar py-4">
-			<div className="w-max">
-				<span className="w-4 inline-block" aria-hidden="true" />
-				{Object.keys(colors).map((color) => {
-					const rgb = `rgb(${colors[color].r},${colors[color].g},${colors[color].b})`;
-					return (
-						<div
-							key={color}
-							onClick={() => onSelect(color)}
-							className="w-14 h-14 inline-block rounded-full m-2 cursor-pointer hover:opacity-90"
-							style={{
-								backgroundColor: rgb,
-								border: color === active ? "4px solid white" : "",
-								outline: color === active ? `4px solid black` : "",
-							}}
-						></div>
-					);
-				})}
-				<span className="w-4 inline-block" aria-hidden="true" />
+		<div className="w-100 relative">
+			<div
+				className={`pointer-events-none transition-opacity duration-300 absolute left-0 w-16 h-full bg-gradient-to-r from-white to-transparent text-center flex justify-center items-center ${
+					moreLeft ? "opacity-100" : "opacity-0"
+				}`}
+				aria-hidden="true"
+			></div>
+			<div
+				className={`pointer-events-none transition-opacity duration-300 absolute right-0 w-16 h-full bg-gradient-to-l from-white to-transparent text-center flex justify-center items-center ${
+					moreRight ? "opacity-100" : "opacity-0"
+				}`}
+				aria-hidden="true"
+			></div>
+			<div className="w-100 overflow-x-scroll scroll hide-scrollbar py-4" onScroll={checkMore}>
+				<div className="w-max flex">
+					<span className="w-4 h-4 inline-block" aria-hidden="true" ref={leftPlaceholder} />
+					{Object.keys(colors).map((color) => {
+						const rgb = `rgb(${colors[color].r},${colors[color].g},${colors[color].b})`;
+						return (
+							<div
+								key={color}
+								onClick={() => onSelect(color)}
+								className="w-14 h-14 inline-block rounded-full m-2 cursor-pointer hover:opacity-90"
+								style={{
+									backgroundColor: rgb,
+									border: color === active ? "4px solid white" : "",
+									outline: color === active ? `4px solid black` : "",
+								}}
+							></div>
+						);
+					})}
+					<span className="w-4 h-4 inline-block" aria-hidden="true" ref={rightPlaceholder} />
+				</div>
 			</div>
 		</div>
 	);
@@ -378,7 +414,8 @@ export default function Editor({
 					? ` ${highlightColor || "bg-clothing-orange"} duration-0 border-black`
 					: ` hover:bg-gray-50 duration-75 hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0`)
 			}
-			onClick={() => {
+			onClick={(e) => {
+				e.preventDefault();
 				setViewing(category);
 			}}
 		>
@@ -386,29 +423,75 @@ export default function Editor({
 		</div>
 	);
 
-	return (
-		<>
-			<div className="w-full overflow-x-scroll hide-scrollbar py-4">
-				<div className="w-max min-w-full flex gap-4 justify-center">
-					<span className="w-0" aria-hidden="true" />
-					<CategoryLink category="general" highlightColor="bg-background-red">
-						General
-					</CategoryLink>
-					<CategoryLink category="hair" highlightColor="bg-hair-lightblue">
-						Hair
-					</CategoryLink>
-					<CategoryLink category="face" highlightColor="bg-clothing-yellow">
-						Face
-					</CategoryLink>
-					<CategoryLink category="clothing" highlightColor="bg-clothing-green">
-						Clothing
-					</CategoryLink>
-					<CategoryLink category="accessories" highlightColor="bg-clothing-red">
-						Accessories
-					</CategoryLink>
-					<span className="w-0" aria-hidden="true" />
+	const CategorySelector = () => {
+		const scrollableArea = useRef<HTMLDivElement>(null);
+		const leftPlaceholder = useRef<HTMLDivElement>(null);
+		const rightPlaceholder = useRef<HTMLDivElement>(null);
+		const [moreLeft, setMoreLeft] = useState(false);
+		const [moreRight, setMoreRight] = useState(false);
+
+		const checkMore = () => {
+			if (leftPlaceholder.current.getBoundingClientRect().right > 0) {
+				setMoreLeft(false);
+			} else {
+				setMoreLeft(true);
+			}
+			if (rightPlaceholder.current.getBoundingClientRect().left < window.innerWidth) {
+				setMoreRight(false);
+			} else {
+				setMoreRight(true);
+			}
+		};
+		useEffect(() => {
+			checkMore();
+		}, []);
+
+		return (
+			<div className="w-full relative">
+				<div
+					className={`pointer-events-none rounded-t-xl z-10 transition-opacity duration-300 absolute left-0 w-16 h-full bg-gradient-to-r from-white to-transparent text-center flex justify-center items-center ${
+						moreLeft ? "opacity-100" : "opacity-0"
+					}`}
+					aria-hidden="true"
+				></div>
+				<div
+					className={`pointer-events-none rounded-t-xl z-10 transition-opacity duration-300 absolute right-0 w-16 h-full bg-gradient-to-l from-white to-transparent text-center flex justify-center items-center ${
+						moreRight ? "opacity-100" : "opacity-0"
+					}`}
+					aria-hidden="true"
+				></div>
+				<div
+					ref={scrollableArea}
+					onScroll={checkMore}
+					className="w-full overflow-x-scroll hide-scrollbar py-4"
+				>
+					<div className="w-max min-w-full flex gap-4 justify-center">
+						<span className="w-4 h-4 inline-block" aria-hidden="true" ref={leftPlaceholder} />
+						<CategoryLink category="general" highlightColor="bg-background-red">
+							General
+						</CategoryLink>
+						<CategoryLink category="hair" highlightColor="bg-hair-lightblue">
+							Hair
+						</CategoryLink>
+						<CategoryLink category="face" highlightColor="bg-clothing-yellow">
+							Face
+						</CategoryLink>
+						<CategoryLink category="clothing" highlightColor="bg-clothing-green">
+							Clothing
+						</CategoryLink>
+						<CategoryLink category="accessories" highlightColor="bg-clothing-red">
+							Accessories
+						</CategoryLink>
+						<span className="w-4 h-4 inline-block" aria-hidden="true" ref={rightPlaceholder} />
+					</div>
 				</div>
 			</div>
+		);
+	};
+
+	return (
+		<>
+			<CategorySelector />
 			{(() => {
 				switch (viewing) {
 					case "general":

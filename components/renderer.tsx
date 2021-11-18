@@ -127,6 +127,9 @@ export default function Renderer({
 		(async () => {
 			const imgs = await loadImages(imagePaths);
 			layers.forEach(([layer, selection, needsTranslation], i) => {
+				if (layer.path == "pose1/00-background/bg-v_background.png") {
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+				}
 				let color: RGBColor | undefined;
 				if ("color" in layer) {
 					color = layer.color;
@@ -149,13 +152,7 @@ export default function Renderer({
 	}, [companion]);
 
 	return (
-		<div
-			className={`my-auto w-full bg-background-${colorToKey(
-				companion.properties.background,
-				colors.background
-			)}`}
-			{...props}
-		>
+		<div className={`my-auto w-full`} {...props}>
 			{isLoading && (
 				<div className="absolute animate-spin w-12 h-12 left-1/2 top-1/2 -ml-6 -mt-6">
 					<svg
