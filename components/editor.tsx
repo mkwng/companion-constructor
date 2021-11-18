@@ -398,31 +398,6 @@ export default function Editor({
 		</>
 	);
 
-	const CategoryLink = ({
-		category,
-		highlightColor,
-		children,
-	}: {
-		category: "general" | "face" | "hair" | "accessories" | "clothing";
-		highlightColor?: string;
-		children: React.ReactNode;
-	}) => (
-		<div
-			className={
-				"py-3 px-5 transition-transform transform-gpu rounded-full text-lg font-semibold cursor-pointer border-4 border-transparent" +
-				(category === viewing
-					? ` ${highlightColor || "bg-clothing-orange"} duration-0 border-black`
-					: ` hover:bg-gray-50 duration-75 hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0`)
-			}
-			onClick={(e) => {
-				e.preventDefault();
-				setViewing(category);
-			}}
-		>
-			{children}
-		</div>
-	);
-
 	const CategorySelector = () => {
 		const scrollableArea = useRef<HTMLDivElement>(null);
 		const leftPlaceholder = useRef<HTMLDivElement>(null);
@@ -445,6 +420,31 @@ export default function Editor({
 		useEffect(() => {
 			checkMore();
 		}, []);
+
+		const CategoryLink = ({
+			category,
+			highlightColor,
+			children,
+		}: {
+			category: "general" | "face" | "hair" | "accessories" | "clothing";
+			highlightColor?: string;
+			children: React.ReactNode;
+		}) => (
+			<div
+				className={
+					"py-3 px-5 transition-transform transform-gpu rounded-full text-lg font-semibold cursor-pointer border-4 border-transparent" +
+					(category === viewing
+						? ` ${highlightColor || "bg-clothing-orange"} duration-0 border-black`
+						: ` hover:bg-gray-50 duration-75 hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0`)
+				}
+				onClick={(e) => {
+					e.preventDefault();
+					setViewing(category);
+				}}
+			>
+				{children}
+			</div>
+		);
 
 		return (
 			<div className="w-full relative">

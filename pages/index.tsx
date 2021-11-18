@@ -32,12 +32,12 @@ export default function Constructor() {
 					customizing ? "lg:w-2/3" : "pb-12 h-full w-screen"
 				}`}
 			>
-				<Renderer companion={companion} />
+				<Renderer showTitle={!customizing} companion={companion} />
 			</div>
 
 			{customizing ? (
 				<>
-					<div className="absolute z-10 space-x-2 left-0 top-0 p-4">
+					<div className="fixed z-10 space-x-2 left-0 top-0 p-4">
 						<button
 							className="m-2 py-3 px-6 transition-transform transform-gpu rounded-full text-lg font-semibold cursor-pointer border-4 border-transparent bg-hair-lightblue duration-75 hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0 border-black"
 							onClick={() => {
