@@ -110,7 +110,7 @@ export default function Renderer({
 }: {
 	className?: string;
 	companion: Companion;
-	showTitle: boolean;
+	showTitle?: boolean;
 }) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [isLoading, setIsLoading] = useState(true);
