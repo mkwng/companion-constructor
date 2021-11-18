@@ -237,12 +237,12 @@ export const flattenCompanion = (
 		switch (key) {
 			case "pose":
 			case "gender":
-				flatCompanion[key] = companion.properties[key];
+				flatCompanion[key] = companion.properties[key].toString();
 				break;
 			case "background":
 			case "hair":
 			case "skin":
-				flatCompanion[key] = colorToKey(companion.properties[key], colors[key]);
+				flatCompanion[key + "Color"] = colorToKey(companion.properties[key], colors[key]);
 				break;
 		}
 	}
@@ -264,7 +264,7 @@ export const flattenCompanion = (
 					i++;
 				}
 			}
-			if (colorsString.length) flatCompanion[key + "Color"] = colorsString;
+			if (colorsString.length) flatCompanion[key + "Colors"] = colorsString;
 		}
 	}
 	return flatCompanion;

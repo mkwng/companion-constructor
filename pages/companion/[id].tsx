@@ -11,6 +11,7 @@ export default function CompanionDetails() {
 	const router = useRouter();
 	const { data, error } = useSWR(`/api/companion/${router.query.id}`, fetcher);
 	const [companion, setCompanion] = useState<Companion | null>(null);
+	const [isEditing, setIsEditing] = useState(false);
 
 	useEffect(() => {
 		if (!data?.pose) return null;
@@ -61,7 +62,8 @@ export default function CompanionDetails() {
 		<div>
 			<h1>{companion.name}</h1>
 			<Renderer companion={companion} />
-			<Editor companionState={[companion, setCompanion]} />
+			<button onClick={() => setIsEditing(!isEditing)}>{isEditing ? "View" : "Edit"}</button>
+			{isEditing && <Editor companionState={[companion, setCompanion]} />}
 		</div>
 	);
 }
