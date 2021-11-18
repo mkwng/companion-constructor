@@ -150,7 +150,7 @@ export default function Renderer({
 
 	return (
 		<div
-			className={`w-full bg-background-${colorToKey(
+			className={`my-auto w-full bg-background-${colorToKey(
 				companion.properties.background,
 				colors.background
 			)}`}
@@ -162,7 +162,7 @@ export default function Renderer({
 					height="2048"
 					ref={canvasRef}
 					className={`max-w-full max-h-2/3-screen mx-auto transition-opacity ${
-						isLoading && "opacity-50"
+						isLoading && "opacity-0 duration-0"
 					}`}
 				/>
 			)}

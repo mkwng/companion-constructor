@@ -20,13 +20,14 @@ export default function Home() {
 
 	return (
 		<div
-			className={`min-h-screen bg-background-${colorToKey(
+			className={`h-screen bg-background-${colorToKey(
 				companion.properties.background,
 				colors.background
 			)}`}
 		>
-			<div className="z-10 w-full fixed top-0 flex justify-between bg-white h-14 px-4">
+			<div className="z-10 w-full fixed top-0 flex justify-between p-4">
 				<button
+					className="py-3 px-5 transition-transform transform-gpu rounded-full text-lg font-semibold cursor-pointer border-4 border-transparent bg-clothing-orange duration-75 hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0 border-black"
 					onClick={() => {
 						setCompanion(randomCompanion());
 					}}
@@ -34,6 +35,7 @@ export default function Home() {
 					Random Companion
 				</button>
 				<button
+					className="py-3 px-5 transition-transform transform-gpu rounded-full text-lg font-semibold cursor-pointer border-4 border-transparent bg-clothing-green duration-75 hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0 border-black"
 					onClick={() => {
 						fetch("/api/companion", {
 							method: "POST",
@@ -54,18 +56,18 @@ export default function Home() {
 					Permalink
 				</button> */}
 			</div>
-			<div className="fixed top-14 w-screen z-0">
+			<div className="fixed left-0 top-14 w-screen z-0 lg:w-2/3 lg:h-full lg:flex lg:justify-center">
 				<Renderer companion={companion} />
 			</div>
-			<div className="absolute top-14 w-full">
+			<div className="absolute pt-14 lg:right-4 w-full lg:w-1/3 lg:pt-24 lg:h-full lg:pb-12">
 				{/* eslint-disable */}
 				<img
 					src="/attributes/pose1/00-background/bg-v_background.png"
-					className="w-full max-h-2/3-screen opacity-0"
+					className="w-full max-h-2/3-screen opacity-0 lg:hidden"
 					aria-hidden="true"
 				/>
 				{/* eslint-enable */}
-				<div className="bg-white rounded-t-lg">
+				<div className="bg-white rounded-t-xl lg:rounded-xl lg:max-h-full lg:overflow-y-scroll  hide-scrollbar">
 					<Editor companionState={[companion, setCompanion]} />
 				</div>
 			</div>

@@ -28,7 +28,7 @@ const ColorSelector = ({
 							style={{
 								backgroundColor: rgb,
 								border: color === active ? "4px solid white" : "",
-								outline: color === active ? `4px solid ${rgb}` : "",
+								outline: color === active ? `4px solid black` : "",
 							}}
 						></div>
 					);
@@ -49,14 +49,16 @@ const AttributeSelector = ({
 	onSelect: (variant: string | number) => void;
 }) => {
 	return (
-		<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-2 p-4">
+		<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-2 gap-2 p-4">
 			{variants.map((variant) => {
 				return (
 					<div
 						key={variant}
 						onClick={() => onSelect(variant)}
-						className={`flex justify-center content-center cursor-pointer min-h-20 rounded-xl bg-gray-100 hover:text-gray-800  hover:bg-gray-200 border-4 border-transparent ${
-							variant === active && "border-indigo-500 text-indigo-500"
+						className={`font-semibold flex justify-center content-center cursor-pointer min-h-20 rounded-xl  hover:text-gray-800  border-4 border-transparent ${
+							variant === active
+								? "border-black bg-hair-lightblue"
+								: "hover:bg-gray-100 bg-gray-50"
 						}`}
 					>
 						<p className="h-6 text-center m-auto">{variant}</p>
@@ -121,8 +123,8 @@ export default function Editor({
 	}
 
 	const selectables = selectableAttributesArray.map((attribute) => (
-		<div key={attribute.name}>
-			<div className="px-4 py-2 w-full flex justify-between">
+		<div key={attribute.name} className="my-4">
+			<div className="px-4 py-2 w-full flex justify-between font-semibold text-lg">
 				<div>
 					{!isCompatible(
 						attribute.variants.find((variant) => {
@@ -220,8 +222,8 @@ export default function Editor({
 
 	const GeneralOptions = () => (
 		<>
-			<div>
-				<div className="px-4 py-2 w-full flex justify-between">Pose</div>
+			<div className="my-4">
+				<div className="px-4 w-full flex justify-between  font-semibold text-lg">Pose</div>
 				<AttributeSelector
 					variants={[1, 2, 3, 4]}
 					active={companion.properties.pose}
@@ -238,8 +240,11 @@ export default function Editor({
 					}}
 				/>
 			</div>
-			<div>
-				<div className="px-4 py-2 w-full flex justify-between">Background</div>
+			<hr />
+			<div className="my-4">
+				<div className="px-4 w-full flex justify-between  font-semibold text-lg">
+					Background
+				</div>
 				<ColorSelector
 					colors={colors.background}
 					active={colorToKey(companion.properties.background, colors.background)}
@@ -256,9 +261,10 @@ export default function Editor({
 					}}
 				/>
 			</div>
+			<hr />
 
-			<div>
-				<div className="px-4 py-2 w-full flex justify-between">Skin</div>
+			<div className="my-4">
+				<div className="px-4 w-full flex justify-between  font-semibold text-lg">Skin</div>
 				<ColorSelector
 					colors={colors.skin}
 					active={colorToKey(companion.properties.skin, colors.skin)}
@@ -280,8 +286,8 @@ export default function Editor({
 
 	const FaceOptions = () => (
 		<>
-			<div>
-				<div className="px-4 py-2 w-full flex justify-between">Shape</div>
+			<div className="my-4">
+				<div className="px-4 w-full flex justify-between  font-semibold text-lg">Shape</div>
 				<AttributeSelector
 					variants={["m", "f"]}
 					active={companion.properties.gender}
@@ -298,6 +304,7 @@ export default function Editor({
 					}}
 				/>
 			</div>
+			<hr />
 
 			{selectables.filter(
 				(attribute) =>
@@ -312,8 +319,8 @@ export default function Editor({
 
 	const HairOptions = () => (
 		<>
-			<div>
-				<div className="px-4 py-2 w-full flex justify-between">Color</div>
+			<div className="my-4">
+				<div className="px-4 w-full flex justify-between  font-semibold text-lg">Color</div>
 				<ColorSelector
 					colors={colors.hair}
 					active={colorToKey(companion.properties.hair, colors.hair)}
@@ -330,6 +337,7 @@ export default function Editor({
 					}}
 				/>
 			</div>
+			<hr />
 			{selectables.filter((attribute) => attribute.key === "hair")}
 		</>
 	);
@@ -356,15 +364,19 @@ export default function Editor({
 
 	const CategoryLink = ({
 		category,
+		highlightColor,
 		children,
 	}: {
 		category: "general" | "face" | "hair" | "accessories" | "clothing";
+		highlightColor?: string;
 		children: React.ReactNode;
 	}) => (
 		<div
 			className={
-				"py-2 px-3 bg-gray-50 rounded-lg text-lg font-semibold cursor-pointer border-4 border-gray-50" +
-				(category === viewing ? " text-indigo-500 border-indigo-500" : "")
+				"py-3 px-5 transition-transform transform-gpu rounded-full text-lg font-semibold cursor-pointer border-4 border-transparent" +
+				(category === viewing
+					? ` ${highlightColor || "bg-clothing-orange"} duration-0 border-black`
+					: ` hover:bg-gray-50 duration-75 hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0`)
 			}
 			onClick={() => {
 				setViewing(category);
@@ -379,11 +391,21 @@ export default function Editor({
 			<div className="w-full overflow-x-scroll hide-scrollbar py-4">
 				<div className="w-max min-w-full flex gap-4 justify-center">
 					<span className="w-0" aria-hidden="true" />
-					<CategoryLink category="general">General</CategoryLink>
-					<CategoryLink category="hair">Hair</CategoryLink>
-					<CategoryLink category="face">Face</CategoryLink>
-					<CategoryLink category="clothing">Clothing</CategoryLink>
-					<CategoryLink category="accessories">Accessories</CategoryLink>
+					<CategoryLink category="general" highlightColor="bg-background-red">
+						General
+					</CategoryLink>
+					<CategoryLink category="hair" highlightColor="bg-hair-lightblue">
+						Hair
+					</CategoryLink>
+					<CategoryLink category="face" highlightColor="bg-clothing-yellow">
+						Face
+					</CategoryLink>
+					<CategoryLink category="clothing" highlightColor="bg-clothing-green">
+						Clothing
+					</CategoryLink>
+					<CategoryLink category="accessories" highlightColor="bg-clothing-red">
+						Accessories
+					</CategoryLink>
 					<span className="w-0" aria-hidden="true" />
 				</div>
 			</div>

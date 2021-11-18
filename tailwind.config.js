@@ -50,7 +50,11 @@ module.exports = {
 	darkMode: false, // or 'media' or 'class'
 	theme: {
 		extend: {
+			transitionDuration: {
+				0: "0ms",
+			},
 			colors: {
+				black: "#19230b",
 				hair: {
 					lightblue: "#a6d3d1",
 					gray: "#bfbaac",
@@ -118,7 +122,9 @@ module.exports = {
 		},
 	},
 	variants: {
-		extend: {},
+		extend: {
+			translate: ["active"],
+		},
 	},
 	plugins: [require("@tailwindcss/aspect-ratio")],
 };
