@@ -29,7 +29,7 @@ export default function Constructor() {
 		>
 			<div
 				className={`transition-all fixed w-screen z-0 lg:h-full flex justify-center left-0 lg:top-0 ${
-					customizing ? "lg:w-2/3" : "pb-12 h-full w-screen"
+					customizing ? "top-14 lg:w-2/3" : "pb-12 h-full w-screen"
 				}`}
 			>
 				<Renderer showTitle={!customizing} companion={companion} />
