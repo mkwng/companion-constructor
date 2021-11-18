@@ -24,7 +24,7 @@ const ColorSelector = ({
 						<div
 							key={color}
 							onClick={() => onSelect(color)}
-							className="w-14 h-14 inline-block rounded-full m-1 cursor-pointer hover:opacity-90"
+							className="w-14 h-14 inline-block rounded-full m-2 cursor-pointer hover:opacity-90"
 							style={{
 								backgroundColor: rgb,
 								border: color === active ? "4px solid white" : "",
@@ -49,7 +49,7 @@ const AttributeSelector = ({
 	onSelect: (variant: string | number) => void;
 }) => {
 	return (
-		<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-2 gap-2 p-4">
+		<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-2 xl:grid-cols-3 gap-2 p-4">
 			{variants.map((variant) => {
 				return (
 					<div

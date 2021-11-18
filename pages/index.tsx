@@ -27,7 +27,7 @@ export default function Home() {
 				colors.background
 			)}`}
 		>
-			<div className="z-10 w-full fixed top-0 flex justify-between p-4">
+			<div className="z-10 w-full fixed top-0 lg:top-auto lg:bottom-0 flex justify-between p-6">
 				<button
 					className="py-3 px-5 transition-transform transform-gpu rounded-full text-lg font-semibold cursor-pointer border-4 border-transparent bg-clothing-orange duration-75 hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0 border-black"
 					onClick={() => {
@@ -60,10 +60,10 @@ export default function Home() {
 					Permalink
 				</button> */}
 			</div>
-			<div className="fixed left-0 top-14 w-screen z-0 lg:w-2/3 lg:h-full lg:flex lg:justify-center">
+			<div className="fixed left-0 top-14 lg:top-0 w-screen z-0 lg:w-2/3 lg:h-full lg:flex lg:justify-center">
 				<Renderer companion={companion} />
 			</div>
-			<div className="absolute pt-14 lg:right-4 w-full lg:w-1/3 lg:pt-24 lg:h-full lg:pb-12">
+			<div className="absolute pt-14 lg:right-4 w-full lg:w-1/3 lg:pt-12 lg:h-full lg:pb-28">
 				{/* eslint-disable */}
 				<img
 					src="/attributes/pose1/00-background/bg-v_background.png"
@@ -71,7 +71,7 @@ export default function Home() {
 					aria-hidden="true"
 				/>
 				{/* eslint-enable */}
-				<div className="bg-white rounded-t-xl lg:rounded-xl lg:max-h-full lg:overflow-y-scroll  hide-scrollbar">
+				<div className="bg-white rounded-t-xl min-h-full lg:rounded-xl lg:max-h-full lg:overflow-y-scroll hide-scrollbar shadow-medium">
 					<Editor companionState={[companion, setCompanion]} />
 				</div>
 			</div>
