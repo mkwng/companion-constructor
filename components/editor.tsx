@@ -432,7 +432,7 @@ export default function Editor({
 		}) => (
 			<div
 				className={
-					"py-3 px-5 transition-transform transform-gpu rounded-full text-lg font-semibold cursor-pointer border-4 border-transparent" +
+					"font-mono py-3 px-5 transition-transform transform-gpu rounded-full text-lg font-semibold cursor-pointer border-4 border-transparent" +
 					(category === viewing
 						? ` ${highlightColor || "bg-clothing-orange"} duration-0 border-black`
 						: ` hover:bg-gray-50 duration-75 hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0`)
