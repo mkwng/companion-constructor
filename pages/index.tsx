@@ -26,8 +26,8 @@ export default function Constructor() {
 		<>
 			<div
 				ref={scrollableArea}
-				className={`z-10 fixed inset-0 h-screen w-screen overflow-x-hidden ${
-					customizing ? "overflow-y-hidden" : "overflow-y-scroll"
+				className={`font-mono z-10 fixed inset-0 h-screen w-screen overflow-x-hidden ${
+					customizing ? "lg:overflow-y-hidden" : ""
 				}`}
 			>
 				{customizing ? (
@@ -65,7 +65,7 @@ export default function Constructor() {
 				>
 					Permalink
 				</button> */}
-						<div className="fixed pt-14 lg:right-4 w-full lg:w-1/3 lg:pt-12 lg:h-full lg:pb-28">
+						<div className="absolute lg:fixed pt-14 lg:right-4 w-full lg:w-1/3 lg:pt-12 lg:h-full lg:pb-28">
 							{/* eslint-disable */}
 							<img
 								src="/attributes/pose1/00-background/bg-v_background.png"
@@ -79,7 +79,7 @@ export default function Constructor() {
 						</div>
 					</>
 				) : (
-					<div className="fixed z-10 flex flex-wrap space-x-2 w-screen justify-center bottom-12 lg:bottom-24">
+					<div className="fixed z-10 flex flex-wrap w-screen justify-center bottom-24 lg:bottom-24">
 						<Button
 							className="bg-hair-lightblue"
 							onClick={() => {
@@ -101,8 +101,15 @@ export default function Constructor() {
 					</div>
 				)}
 				<div className="h-screen pointer-events-none">&nbsp;</div>
-				<div className="relative z-30 rounded-xl bg-clothing-white w-11/12 min-h-screen shadow-2xl p-16 mx-auto my-16">
-					Hi
+				<div
+					className={`transition-opacity duration-1000 relative z-30 min-h-screen w-screen -mt-16 p-2 md:px-8 lg:px-32 xl:px-64 ${
+						customizing ? "pointer-events-none opacity-0 duration-75 " : ""
+					}`}
+				>
+					<div className="w-full min-h-full bg-clothing-white rounded-xl shadow-2xl p-4">
+						{" "}
+						Hi
+					</div>
 				</div>
 			</div>
 			<div
