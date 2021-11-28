@@ -161,7 +161,7 @@ export default function Renderer({
 	return (
 		<div className={`my-auto w-full`} {...props}>
 			<div
-				className={`transition-opacity duration-700 absolute top-0 z-0 h-full w-full flex justify-center items-center ${
+				className={`transition-opacity duration-700 absolute top-0 pb-24 z-0 h-full w-full flex justify-center items-center ${
 					showTitle ? "opacity-100" : "opacity-0"
 				}`}
 			>
