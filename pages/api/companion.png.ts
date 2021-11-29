@@ -3,7 +3,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import NodeCache from "node-cache";
 import sharp from "sharp";
 import { getColor, getLayers, getPath, keysToCompanion } from "../../data/helpers";
-import { RGBColor } from "../../data/types";
+import { Companion, RGBColor } from "../../data/types";
+import prisma from "../../lib/prisma";
 
 const imageCache = new NodeCache();
 
@@ -18,7 +19,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	}
 
 	if (!optimized) {
-		const companion = keysToCompanion(req.query);
+		let companion: Companion | null;
+		if (req.query.id && typeof req.query.id === "string") {
+			companion = await prisma.companion.findUnique({
+				where: { id: parseInt(req.query.id) },
+			});
+		} else {
+			companion = keysToCompanion(req.query);
+		}
 		const layers = getLayers(companion);
 
 		const imageBuffers = layers.map(async ([layer]) => {
