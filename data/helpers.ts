@@ -351,7 +351,17 @@ export const apiToKeys = (data) => {
 };
 
 export const keysToCompanion = (companionQuery): Companion => {
-	const companion = companionExample;
+	const companion: Companion = {
+		name: null,
+		properties: { ...companionExample.properties },
+		attributes: {
+			hair: { name: "crop" },
+			eyes: { name: "open" },
+			brows: { name: "bushy" },
+			mouth: { name: "handlebars" },
+			nose: { name: "hook" },
+		},
+	};
 	for (const key in companionQuery) {
 		if (typeof companionQuery[key] !== "string") {
 			continue;
