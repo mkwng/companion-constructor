@@ -176,7 +176,21 @@ export default function Constructor() {
 				>
 					<div className="w-full min-h-full bg-clothing-white rounded-xl shadow-2xl px-4 lg:px-8 py-16 max-w-6xl mx-auto text-lg grid-cols-1 md:grid-cols-5 items-center mb-8 flex justify-center">
 						<Button className="bg-hair-lightblue">View on OpenSea</Button>
-						<Button className="bg-hair-yellow">Save</Button>
+						<Button
+							className="bg-hair-yellow"
+							onClick={async () => {
+								const response = await fetch("/api/companion", {
+									method: "POST",
+									headers: {
+										"Content-Type": "application/json",
+									},
+									body: JSON.stringify(companion),
+								});
+								console.log((await response.json()).id);
+							}}
+						>
+							Save
+						</Button>
 						<a href={`/api/face.png?${companionToUrl(companion)}`}>Link</a>
 					</div>
 					<Marketing />
