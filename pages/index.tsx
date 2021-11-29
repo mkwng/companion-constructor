@@ -19,7 +19,7 @@ const MyCompanions = ({
 	callback: (companionId?: number) => void;
 }) => {
 	return (
-		<div className="fixed z-40 flex flex-col left-4 top-4 p-4 bg-white rounded-xl overflow-y-scroll hide-scrollbar shadow-medium">
+		<div className="fixed z-40 flex flex-col justify-center items-center left-4 top-4 p-4 bg-white rounded-xl overflow-y-scroll hide-scrollbar shadow-medium">
 			<div
 				className={`font-semibold flex justify-center content-center cursor-pointer min-h-20 rounded-xl  hover:text-gray-800  border-4 border-transparent ${
 					!selected ? "border-black bg-hair-lightblue" : "hover:bg-gray-100 bg-gray-50"
@@ -36,7 +36,7 @@ const MyCompanions = ({
 				return (
 					<div
 						key={companionId}
-						className={`font-semibold flex justify-center content-center cursor-pointer min-h-20 rounded-xl  hover:text-gray-800  border-4 border-transparent ${
+						className={`w-24 h-24 flex justify-center items-center font-semibold cursor-pointer rounded-full hover:text-gray-800  border-4 border-transparent ${
 							selected == companionId
 								? "border-black bg-hair-lightblue"
 								: "hover:bg-gray-100 bg-gray-50"
@@ -45,13 +45,13 @@ const MyCompanions = ({
 							callback(companionId);
 						}}
 					>
+						{/* eslint-disable */}
 						<img
 							src={`/api/face.png?id=${companionId}`}
 							alt={`${companionId}`}
-							width={64}
-							height={64}
+							className="w-full h-full"
 						/>
-						{companionId}
+						{/* eslint-enable */}
 					</div>
 				);
 			})}
