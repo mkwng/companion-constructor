@@ -45,6 +45,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				let color: RGBColor | undefined;
 				const [layer, selection, needsTranslation] = layers[i];
 
+				if (!needsTranslation) {
+					return current;
+				}
+
 				if ("color" in layer) {
 					color = layer.color;
 				} else if ("colorType" in layer) {
@@ -71,55 +75,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 							},
 						])
 						.toBuffer();
-				}
-				if (needsTranslation) {
-					switch (companion.properties.pose) {
-						case 1:
-							input = await sharp({
-								create: {
-									width: 2048,
-									height: 2048,
-									channels: 4,
-									background: { r: 255, g: 255, b: 255, alpha: 0 },
-								},
-							})
-								.png()
-								.composite([
-									{ input: await sharp(input).flop().toBuffer(), top: -15, left: -261 },
-								])
-								.toBuffer();
-							break;
-						case 2:
-							break;
-						case 3:
-							input = await sharp({
-								create: {
-									width: 2048,
-									height: 2048,
-									channels: 4,
-									background: { r: 255, g: 255, b: 255, alpha: 0 },
-								},
-							})
-								.png()
-								.composite([{ input, left: 521, top: -313 }])
-								.toBuffer();
-							break;
-						case 4:
-							input = await sharp({
-								create: {
-									width: 2048,
-									height: 2048,
-									channels: 4,
-									background: { r: 255, g: 255, b: 255, alpha: 0 },
-								},
-							})
-								.png()
-								.composite([
-									{ input: await sharp(input).flip().rotate(90).toBuffer(), top: 0, left: 246 },
-								])
-								.toBuffer();
-							break;
-					}
 				}
 				return sharp(await current)
 					.composite([{ input, blend: layer.blendMode || "over" }])
