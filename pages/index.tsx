@@ -74,7 +74,6 @@ export default function Constructor() {
 				res.json().then((data) => {
 					const fetchedCompanion = keysToCompanion(apiToKeys(data));
 					fetchedCompanion.name = `Companion #${selectedCompanion}`;
-					console.log(colorToKey(fetchedCompanion.properties.background, colors.background));
 					setCompanion({ ...fetchedCompanion });
 					scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
 				});

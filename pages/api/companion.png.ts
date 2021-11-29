@@ -2,7 +2,7 @@ import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import NodeCache from "node-cache";
 import sharp from "sharp";
-import { getColor, getLayers, getPath, keysToCompanion } from "../../data/helpers";
+import { apiToKeys, getColor, getLayers, getPath, keysToCompanion } from "../../data/helpers";
 import { Companion, RGBColor } from "../../data/types";
 import prisma from "../../lib/prisma";
 
@@ -21,9 +21,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	if (!optimized) {
 		let companion: Companion | null;
 		if (req.query.id && typeof req.query.id === "string") {
-			companion = await prisma.companion.findUnique({
+			const result = await prisma.companion.findUnique({
 				where: { id: parseInt(req.query.id) },
 			});
+			companion = keysToCompanion(apiToKeys(result));
 		} else {
 			companion = keysToCompanion(req.query);
 		}
