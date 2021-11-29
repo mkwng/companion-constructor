@@ -4,46 +4,50 @@ import Editor from "../components/editor";
 import Marketing from "../components/marketing";
 import Renderer from "../components/renderer";
 import { colors } from "../data/colors";
-import { colorToKey } from "../data/helpers";
+import { apiToKeys, colorToKey, keysToCompanion } from "../data/helpers";
 import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
 
-const MyCompanions = ({ callback }: { callback: () => void }) => {
-	let variant, active;
+const MyCompanions = ({
+	owned,
+	selected,
+	callback,
+}: {
+	owned: number[];
+	selected?: number;
+	callback: (companionId?: number) => void;
+}) => {
 	return (
 		<div className="fixed z-40 flex flex-col left-4 top-4 p-4 bg-white rounded-xl overflow-y-scroll hide-scrollbar shadow-medium">
-			<h2>My companions</h2>
+			<div
+				className={`font-semibold flex justify-center content-center cursor-pointer min-h-20 rounded-xl  hover:text-gray-800  border-4 border-transparent ${
+					!selected ? "border-black bg-hair-lightblue" : "hover:bg-gray-100 bg-gray-50"
+				}`}
+				onClick={() => {
+					callback();
+				}}
+			>
+				Random
+			</div>
 
-			<div
-				className={`font-semibold flex justify-center content-center cursor-pointer min-h-20 rounded-xl  hover:text-gray-800  border-4 border-transparent ${
-					variant === active ? "border-black bg-hair-lightblue" : "hover:bg-gray-100 bg-gray-50"
-				}`}
-				onClick={() => {
-					callback();
-				}}
-			>
-				🚫
-			</div>
-			<div
-				className={`font-semibold flex justify-center content-center cursor-pointer min-h-20 rounded-xl  hover:text-gray-800  border-4 border-transparent ${
-					false ? "border-black bg-hair-lightblue" : "hover:bg-gray-100 bg-gray-50"
-				}`}
-				onClick={() => {
-					callback();
-				}}
-			>
-				1
-			</div>
-			<div
-				className={`font-semibold flex justify-center content-center cursor-pointer min-h-20 rounded-xl  hover:text-gray-800  border-4 border-transparent ${
-					false ? "border-black bg-hair-lightblue" : "hover:bg-gray-100 bg-gray-50"
-				}`}
-				onClick={() => {
-					callback();
-				}}
-			>
-				2
-			</div>
+			<h2>My companions</h2>
+			{owned.map((companionId) => {
+				return (
+					<div
+						key={companionId}
+						className={`font-semibold flex justify-center content-center cursor-pointer min-h-20 rounded-xl  hover:text-gray-800  border-4 border-transparent ${
+							selected == companionId
+								? "border-black bg-hair-lightblue"
+								: "hover:bg-gray-100 bg-gray-50"
+						}`}
+						onClick={() => {
+							callback(companionId);
+						}}
+					>
+						{companionId}
+					</div>
+				);
+			})}
 			<Button className=" bg-hair-yellow">Claim $COMPANIONSHIP</Button>
 			<Button className=" bg-hair-purple">Mint now!</Button>
 		</div>
@@ -54,11 +58,24 @@ export default function Constructor() {
 	const [companion, setCompanion] = useState<Companion | null>(null);
 	const [connected, setConnected] = useState(false);
 	const [customizing, setCustomizing] = useState<boolean>(false);
+	const [selectedCompanion, setSelectedCompanion] = useState<number | null>(null);
 	const scrollableArea = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		setCompanion(randomCompanion());
-	}, []);
+		if (selectedCompanion) {
+			fetch(`/api/companion/${selectedCompanion}`).then((res) => {
+				res.json().then((data) => {
+					const fetchedCompanion = keysToCompanion(apiToKeys(data));
+					fetchedCompanion.name = `Companion #${selectedCompanion}`;
+					console.log(colorToKey(fetchedCompanion.properties.background, colors.background));
+					setCompanion({ ...fetchedCompanion });
+					scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
+				});
+			});
+		} else {
+			setCompanion(randomCompanion());
+		}
+	}, [selectedCompanion]);
 
 	if (!companion) {
 		return <>Loading..</>;
@@ -109,28 +126,19 @@ export default function Constructor() {
 								{connected ? "Disconnect your wallet" : "Connect your wallet"}
 							</Button>
 						</div>
-						{connected ? (
+						{connected && (
 							<>
 								<MyCompanions
-									callback={() => {
-										scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
+									owned={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+									selected={selectedCompanion}
+									callback={(companionId) => {
+										setSelectedCompanion(companionId);
 									}}
 								/>
-
-								<div className="fixed z-10 flex flex-wrap w-screen justify-center bottom-24 lg:bottom-24">
-									<Button
-										className="bg-clothing-orange"
-										onClick={() => {
-											setCustomizing(true);
-											scrollableArea.current?.scrollTo(0, 0);
-										}}
-									>
-										Customize
-									</Button>
-								</div>
 							</>
-						) : (
-							<div className="fixed z-10 flex flex-wrap w-screen justify-center bottom-24 lg:bottom-24">
+						)}
+						<div className="fixed z-10 flex flex-wrap w-screen justify-center bottom-24 lg:bottom-24">
+							{!selectedCompanion && (
 								<Button
 									className="bg-hair-lightblue"
 									onClick={() => {
@@ -139,18 +147,18 @@ export default function Constructor() {
 								>
 									Randomize
 								</Button>
+							)}
 
-								<Button
-									className="bg-clothing-orange"
-									onClick={() => {
-										setCustomizing(true);
-										scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
-									}}
-								>
-									Customize
-								</Button>
-							</div>
-						)}
+							<Button
+								className="bg-clothing-orange"
+								onClick={() => {
+									setCustomizing(true);
+									scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
+								}}
+							>
+								Customize
+							</Button>
+						</div>
 					</>
 				)}
 				<div className="h-screen pointer-events-none">&nbsp;</div>
@@ -161,6 +169,7 @@ export default function Constructor() {
 				>
 					<div className="w-full min-h-full bg-clothing-white rounded-xl shadow-2xl px-4 lg:px-8 py-16 max-w-6xl mx-auto text-lg grid-cols-1 md:grid-cols-5 items-center mb-8 flex justify-center">
 						<Button className="bg-hair-lightblue">View on OpenSea</Button>
+						<Button className="bg-hair-yellow">Save</Button>
 					</div>
 					<Marketing />
 				</div>

@@ -116,6 +116,7 @@ export default function Renderer({
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
+		console.log("hello");
 		const canvas = canvasRef.current;
 		const ctx = canvas.getContext("2d");
 		const layers: [Layer, AttributeSelection?, boolean?][] = getLayers(companion);

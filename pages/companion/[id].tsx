@@ -15,7 +15,6 @@ export default function CompanionDetails() {
 
 	useEffect(() => {
 		if (!data?.pose) return null;
-		console.log(data);
 		const {
 			id,
 			createdAt,

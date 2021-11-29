@@ -309,6 +309,47 @@ export const companionToUrl = (companion: Companion): string => {
 
 const colorRegEx = /Color\d/g;
 
+export const apiToKeys = (data) => {
+	const {
+		id,
+		createdAt,
+		updatedAt,
+		hairColors,
+		headwearColors,
+		eyewearColors,
+		maskColors,
+		topColors,
+		bottomColors,
+		shoesColors,
+		...rest
+	} = data;
+	const colors: {
+		[key in string]: string;
+	} = {
+		hair: hairColors,
+		headwear: headwearColors,
+		eyewear: eyewearColors,
+		mask: maskColors,
+		top: topColors,
+		bottom: bottomColors,
+		shoes: shoesColors,
+	};
+	for (const key of Object.keys(colors)) {
+		// split colors string at commas, remove spaces, and convert to array
+		if (!colors[key]) continue;
+		const colorArray = [];
+		colors[key].split(",").forEach((color) => {
+			colorArray.push(color.trim());
+		});
+		if (colorArray.length) {
+			colorArray.forEach((color, i) => {
+				rest[`${key}Color${i + 1}`] = color;
+			});
+		}
+	}
+	return rest;
+};
+
 export const keysToCompanion = (companionQuery): Companion => {
 	const companion = companionExample;
 	for (const key in companionQuery) {
