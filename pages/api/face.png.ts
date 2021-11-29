@@ -27,6 +27,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		} else {
 			companion = keysToCompanion(req.query);
 		}
+		if (!companion?.properties?.pose) {
+			res.status(404).send("No companion found");
+			return;
+		}
 		const layers = getLayers(companion);
 
 		const imageBuffers = layers.map(async ([layer]) => {
