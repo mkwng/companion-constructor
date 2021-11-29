@@ -45,7 +45,7 @@ const MyCompanions = ({
 							callback(companionId);
 						}}
 					>
-						<Image
+						<img
 							src={`/api/face.png?id=${companionId}`}
 							alt={`${companionId}`}
 							width={64}
