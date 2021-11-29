@@ -138,7 +138,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		);
 
 		optimized = await sharp(final)
-			.resize({ width: 960 })
 			.flatten()
 			.png()
 			// .png({ compressionLevel: 8, quality: 80 })
