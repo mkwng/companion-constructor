@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import Button from "../components/button";
 import Editor from "../components/editor";
@@ -44,6 +45,12 @@ const MyCompanions = ({
 							callback(companionId);
 						}}
 					>
+						<Image
+							src={`/api/face.png?id=${companionId}`}
+							alt={`${companionId}`}
+							width={64}
+							height={64}
+						/>
 						{companionId}
 					</div>
 				);
