@@ -36,7 +36,7 @@ const MyCompanions = ({
 				return (
 					<div
 						key={companionId}
-						className={`w-24 h-24 flex justify-center items-center font-semibold cursor-pointer rounded-full hover:text-gray-800  border-4 border-transparent ${
+						className={`w-24 h-24 flex justify-center items-center font-semibold cursor-pointer rounded-full overflow-hidden shadow-xl hover:text-gray-800  border-4 border-transparent ${
 							selected == companionId
 								? "border-black bg-hair-lightblue"
 								: "hover:bg-gray-100 bg-gray-50"
