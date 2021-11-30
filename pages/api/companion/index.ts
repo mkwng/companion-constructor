@@ -12,7 +12,6 @@ export default async function apiCompanions(req, res) {
 			const companion = await prisma.companion.create({
 				data: flattenCompanion(req.body as Companion),
 			});
-			console.log(companion);
 
 			res.status(200).json(companion);
 			break;

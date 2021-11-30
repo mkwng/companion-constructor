@@ -16,7 +16,6 @@ Object.keys(colors).map((group) => {
 	});
 	allColors[group] = temp;
 });
-console.log(allColors);
 
 export default function Colors() {
 	return (
