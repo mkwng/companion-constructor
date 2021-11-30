@@ -28,7 +28,7 @@ const MyCompanions = ({
 					callback();
 				}}
 			>
-				Random
+				Playground
 			</div>
 
 			<h2>My companions</h2>
@@ -36,22 +36,20 @@ const MyCompanions = ({
 				return (
 					<div
 						key={companionId}
-						className={`w-24 h-24 flex justify-center items-center font-semibold cursor-pointer rounded-full overflow-hidden shadow-xl hover:text-gray-800  border-4 border-transparent ${
+						className={`m-2 transition-all transform-gpu w-24 h-24 flex justify-center items-center font-semibold cursor-pointer rounded-full overflow-hidden shadow-xl hover:text-gray-800  border-4 border-transparent ${
 							selected == companionId
-								? "border-black bg-hair-lightblue"
-								: "hover:bg-gray-100 bg-gray-50"
+								? "border-hair-lightblue"
+								: "hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0 bg-gray-50 filter grayscale"
 						}`}
 						onClick={() => {
 							callback(companionId);
 						}}
 					>
-						{/* eslint-disable */}
-						<img
+						<Image
 							src={`/api/face.png?id=${companionId}`}
 							alt={`${companionId}`}
-							className="w-full h-full"
+							layout="fill"
 						/>
-						{/* eslint-enable */}
 					</div>
 				);
 			})}

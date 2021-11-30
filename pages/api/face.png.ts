@@ -58,7 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				let color: RGBColor | undefined;
 				const [layer, selection, needsTranslation] = layers[i];
 
-				if (!needsTranslation) {
+				if (!needsTranslation && layer.path !== "pose1/00-background/bg-v_background.png") {
 					return current;
 				}
 
