@@ -106,11 +106,13 @@ export default function Renderer({
 	className,
 	companion,
 	showTitle,
+	hideBackground,
 	...props
 }: {
 	className?: string;
 	companion: Companion;
 	showTitle?: boolean;
+	hideBackground?: boolean;
 }) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [isLoading, setIsLoading] = useState(true);
@@ -129,7 +131,7 @@ export default function Renderer({
 		(async () => {
 			const imgs = await loadImages(imagePaths);
 			layers.forEach(([layer, selection, needsTranslation], i) => {
-				if (layer.path == "pose1/00-background/bg-v_background.png") {
+				if (layer.path == "pose1/00-background/bg-v_background.png" && hideBackground) {
 					ctx.clearRect(0, 0, canvas.width, canvas.height);
 					return;
 				}
@@ -137,7 +139,11 @@ export default function Renderer({
 				if ("color" in layer) {
 					color = layer.color;
 				} else if ("colorType" in layer) {
-					color = getColor(layer, companion, selection);
+					if (layer.colorType == "inherit") {
+						color = getColor(layers[i + 1][0], companion, layers[i + 1][1]);
+					} else {
+						color = getColor(layer, companion, selection);
+					}
 				}
 				if (layer.blendMode) {
 					ctx.globalCompositeOperation = layer.blendMode;

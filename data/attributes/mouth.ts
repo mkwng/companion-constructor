@@ -255,8 +255,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/08-mouth/smilelips_1-c_skin-b_multiply-g_f.png",
-					color: colors.skin["1"],
-					blendMode: "multiply",
+					colorType: "clothing",
 				},
 				{
 					path: "face/08-mouth/smilelips_2-c_outline.png",

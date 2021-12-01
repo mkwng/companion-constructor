@@ -286,6 +286,9 @@ export const companionToUrl = (companion: Companion): string => {
 		}
 	}
 	for (const key in companion.attributes) {
+		if (!companion.attributes[key]?.name) {
+			continue;
+		}
 		const attribute = selectableAttributes[key];
 		const variant = attribute.variants.find(
 			(variant) => variant.name === companion.attributes[key].name

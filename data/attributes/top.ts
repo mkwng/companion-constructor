@@ -51,6 +51,14 @@ export const top: AttributeDictionary = {
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
+
+				{
+					path: {
+						2: "pose2/05-tops/hoodie_2-v_clothing-destination_over.png",
+					},
+					colorType: "inherit",
+					blendMode: "destination-over",
+				},
 				{
 					path: {
 						1: "pose1/13-top/hoodie_1-v_clothing.png",

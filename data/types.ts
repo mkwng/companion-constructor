@@ -59,7 +59,7 @@ export interface Restrictions {
 	profileShape?: ProfileShape;
 }
 interface LayerBase {
-	blendMode?: "multiply";
+	blendMode?: "multiply" | "destination-over";
 	path:
 		| string
 		| {
@@ -70,7 +70,7 @@ interface LayerBase {
 		  };
 }
 interface LayerDynamic extends LayerBase {
-	colorType: "hair" | "skin" | "clothing" | "background";
+	colorType: "hair" | "skin" | "clothing" | "background" | "inherit";
 }
 interface LayerStatic extends LayerBase {
 	color: RGBColor;

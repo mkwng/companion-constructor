@@ -11,13 +11,16 @@ export const hair: AttributeDictionary = {
 			restrictions: { gender: "m" },
 			layers: [
 				{
+					path: "face/05-hair/alfalfa_1-v_hair-destination_over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/05-hair/alfalfa_1-v_hair-g_m.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/alfalfa_2-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -28,14 +31,17 @@ export const hair: AttributeDictionary = {
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
 				{
+					path: "face/05-hair/anime_2-v_hair-destination_over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/05-hair/anime_1-c_skin-b_multiply-g_f-a_0.png",
-
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
 					path: "face/05-hair/anime_2-v_hair.png",
-
 					colorType: "hair",
 				},
 			],
@@ -46,13 +52,16 @@ export const hair: AttributeDictionary = {
 			restrictions: { gender: "m", headShape: "flat" },
 			layers: [
 				{
+					path: "face/05-hair/balding_0-v_hair-destination_over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/05-hair/balding_1-v_hair-g_m.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/balding_2-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -63,18 +72,20 @@ export const hair: AttributeDictionary = {
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
 				{
+					path: "face/05-hair/braided_0-v_hair-destination-over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/05-hair/braided_1-v_hair-g_f-a_0.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/braided_2-v_clothing.png",
-
 					colorType: "clothing",
 				},
 				{
 					path: "face/05-hair/braided_3-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -84,6 +95,11 @@ export const hair: AttributeDictionary = {
 			name: "braids",
 			restrictions: { gender: "f", headShape: "flat" },
 			layers: [
+				{
+					path: "face/05-hair/braids-v_hair-destination_over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
 				{
 					path: "face/05-hair/braids-v_hair-g_f-q_5.png",
 					colorType: "hair",
@@ -95,6 +111,11 @@ export const hair: AttributeDictionary = {
 			name: "crew",
 			restrictions: { gender: "m", headShape: "flat" },
 			layers: [
+				{
+					path: "face/05-hair/crew-v_hair-destination_over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
 				{
 					path: "face/05-hair/crew-v_hair-g_m.png",
 					colorType: "hair",
@@ -177,13 +198,16 @@ export const hair: AttributeDictionary = {
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
 				{
+					path: "face/05-hair/frizzlong_0-v_hair-destination_over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/05-hair/frizzlong_1-v_hair-g_f-a_0.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/frizzlong_2-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -194,13 +218,16 @@ export const hair: AttributeDictionary = {
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
 				{
+					path: "public/attributes/face/05-hair/frizzshort_0-v_hair-destination_over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/05-hair/frizzshort_1-v_hair-g_f-a_0.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/frizzshort_2-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -243,18 +270,15 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/05-hair/kunoichi_1-c_skin-b_multiply-g_f-a_0.png",
-
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
 					path: "face/05-hair/kunoichi_2-v_hair.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/kunoichi_3-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -265,19 +289,21 @@ export const hair: AttributeDictionary = {
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
 				{
+					path: "face/05-hair/kunoichilong_2-v_hair-destination_over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/05-hair/kunoichilong_1-c_skin-b_multiply-g_f-a_0.png",
-
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
 					path: "face/05-hair/kunoichilong_2-v_hair.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/kunoichilong_3-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -289,17 +315,14 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/05-hair/locks_1-v_hair-g_m-a_0.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/locks_2-v_clothing.png",
-
 					colorType: "clothing",
 				},
 				{
 					path: "face/05-hair/locks_3-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -310,13 +333,16 @@ export const hair: AttributeDictionary = {
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
 				{
+					path: "face/05-hair/long_0-v_hair-destination_over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/05-hair/long_1-v_hair-g_f-a_0.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/long_2-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -328,18 +354,20 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/05-hair/longstraight_1-c_skin-b_multiply-g_f-a_0.png",
-
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
+					path: "face/05-hair/longstraight_2-v_hair-destination_over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/05-hair/longstraight_2-v_hair.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/longstraight_3-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -367,12 +395,10 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/05-hair/mohawk_1-v_hair-a_0.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/mohawk_2-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -384,18 +410,20 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/05-hair/ponylong_1-c_skin-b_multiply-g_f-a_0.png",
-
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
+					path: "face/05-hair/ponylong_2-v_hair-destination_over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/05-hair/ponylong_2-v_hair.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/ponylong_3-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -407,12 +435,10 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/05-hair/samurai_1-v_hair-g_m-a_0.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/samurai_2-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -441,17 +467,14 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/05-hair/shiny_1-v_hair-a_0.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/shiny_2-c_outline.png",
-
 					color: colors.default.black,
 				},
 				{
 					path: "face/05-hair/shiny_3-c_white.png",
-
 					color: colors.default.white,
 				},
 			],
@@ -462,13 +485,16 @@ export const hair: AttributeDictionary = {
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
 				{
+					path: "face/05-hair/short_0-v_hair-destination_over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/05-hair/short_1-v_hair-g_f-a_0.png",
-
 					colorType: "hair",
 				},
 				{
 					path: "face/05-hair/short_2-c_outline.png",
-
 					color: colors.default.black,
 				},
 			],
@@ -480,13 +506,16 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "face/05-hair/waveshort_1-c_skin-b_multiply-g_f-a_0.png",
-
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
+					path: "face/05-hair/waveshort_2-v_hair-destination_over.png",
+					colorType: "hair",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/05-hair/waveshort_2-v_hair.png",
-
 					colorType: "hair",
 				},
 			],

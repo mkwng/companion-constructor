@@ -155,7 +155,7 @@ export default function Constructor() {
 						customizing ? "top-14 lg:w-2/3" : "pb-24 h-full w-screen"
 					}`}
 				>
-					<Renderer showTitle={!customizing} companion={companion} />
+					<Renderer showTitle={!customizing} companion={companion} hideBackground={true} />
 				</div>
 			</div>
 		</>

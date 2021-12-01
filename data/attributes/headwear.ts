@@ -109,6 +109,11 @@ export const headwear: AttributeDictionary = {
 			hides: ["hair"],
 			layers: [
 				{
+					path: "face/10-accessories/hijab_1-v_clothing-destination_over.png",
+					colorType: "inherit",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/10-accessories/hijab_1-v_clothing-g_f-a_1.png",
 					colorType: "clothing",
 				},
@@ -161,6 +166,11 @@ export const headwear: AttributeDictionary = {
 			hides: ["hair"],
 			layers: [
 				{
+					path: "face/10-accessories/turban_1-v_clothing-destination_over.png",
+					colorType: "inherit",
+					blendMode: "destination-over",
+				},
+				{
 					path: "face/10-accessories/turban_1-v_clothing-g_m-a_1.png",
 					colorType: "clothing",
 				},
@@ -180,6 +190,11 @@ export const headwear: AttributeDictionary = {
 					path: "face/10-accessories/bucket_1-v_skin-b_multiply.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
+				},
+				{
+					path: "face/10-accessories/bucket_2-v_clothing-destination_over.png",
+					colorType: "inherit",
+					blendMode: "destination-over",
 				},
 				{
 					path: "face/10-accessories/bucket_2-v_clothing.png",
