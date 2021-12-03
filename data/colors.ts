@@ -58,6 +58,6 @@ export const colors: {
 		red: { r: 250, g: 97, b: 91 },
 		yellow: { r: 247, g: 211, b: 115 },
 		blue: { r: 85, g: 107, b: 121 },
-		gray: { r: 245, g: 247, b: 243 },
+		gray: { r: 214, g: 212, b: 208 },
 	},
 };

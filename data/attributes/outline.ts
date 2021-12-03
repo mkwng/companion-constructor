@@ -10,7 +10,7 @@ export const outline: AttributeDictionary = {
 			restrictions: { gender: "f" },
 			layers: [
 				{
-					path: "face/03-outline/fhead-g_f-c_outline.png",
+					path: "/attributes/face/03-outline/fhead-g_f-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -20,7 +20,7 @@ export const outline: AttributeDictionary = {
 			restrictions: { gender: "m" },
 			layers: [
 				{
-					path: "face/03-outline/mhead-g_m-c_outline.png",
+					path: "/attributes/face/03-outline/mhead-g_m-c_outline.png",
 					color: colors.default.black,
 				},
 			],

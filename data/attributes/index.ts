@@ -16,6 +16,7 @@ import { neck } from "./neck";
 import { face } from "./face";
 import { outline } from "./outline";
 import { shoes } from "./shoes";
+import { accessory } from "./accessory";
 
 export const allAttributes: {
 	[attribute in AttributeType]: AttributeDictionary;
@@ -38,6 +39,7 @@ export const allAttributes: {
 	bottom,
 	mask,
 	shoes,
+	accessory,
 };
 
 export const selectableAttributes: { [key: string]: AttributeDictionary } = {
@@ -53,6 +55,7 @@ export const selectableAttributes: { [key: string]: AttributeDictionary } = {
 	bottom,
 	mask,
 	shoes,
+	accessory,
 };
 export const selectableAttributesArray: AttributeDictionary[] = [
 	blemish,
@@ -67,4 +70,5 @@ export const selectableAttributesArray: AttributeDictionary[] = [
 	bottom,
 	mask,
 	shoes,
+	accessory,
 ];

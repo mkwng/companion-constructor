@@ -11,11 +11,11 @@ export const face: AttributeDictionary = {
 			},
 			layers: [
 				{
-					path: "face/01-base/mhead_1-g_m-v_skin.png",
+					path: "/attributes/face/01-base/mhead_1-g_m-v_skin.png",
 					colorType: "skin",
 				},
 				{
-					path: "face/01-base/mhead_2-c_skin-b_multiply.png",
+					path: "/attributes/face/01-base/mhead_2-c_skin-b_multiply.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
@@ -27,11 +27,11 @@ export const face: AttributeDictionary = {
 			},
 			layers: [
 				{
-					path: "face/01-base/fhead_1-g_f-v_skin.png",
+					path: "/attributes/face/01-base/fhead_1-g_f-v_skin.png",
 					colorType: "skin",
 				},
 				{
-					path: "face/01-base/fhead_2-c_skin-b_multiply.png",
+					path: "/attributes/face/01-base/fhead_2-c_skin-b_multiply.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},

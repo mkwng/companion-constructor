@@ -382,9 +382,10 @@ export default function Editor({
 		<>
 			{selectables.filter(
 				(attribute) =>
-					attribute.key === "eyewear" ||
 					attribute.key === "headwear" ||
-					attribute.key === "mask"
+					attribute.key === "eyewear" ||
+					attribute.key === "mask" ||
+					attribute.key === "accessory"
 			)}
 		</>
 	);

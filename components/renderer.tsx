@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { AttributeSelection, Companion, Layer, Pose, RGBColor } from "../data/types";
-import { colorToKey, getColor, getLayers, getPath } from "../data/helpers";
+import {
+	AttributeSelection,
+	Companion,
+	Layer,
+	LayerStatic,
+	LayerWithData,
+	Pose,
+	RGBColor,
+} from "../data/types";
+import { colorToKey, drawLayer, getColor, getLayers, getPath } from "../data/helpers";
 import { colors } from "../data/colors";
 
 const imgLoadToPromise = (src): Promise<HTMLImageElement> => {
@@ -119,46 +127,70 @@ export default function Renderer({
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
-		const ctx = canvas.getContext("2d");
+		canvas.getContext("2d")!.clearRect(0, 0, canvas.width, canvas.height);
 		const layers: [Layer, AttributeSelection?, boolean?][] = getLayers(companion);
 
-		const imagePaths: string[] = layers.map(([layer]) =>
-			getPath(layer, companion.properties.pose)
-		);
+		const imagePaths = layers.map(([layer]) => getPath(layer, companion.properties.pose));
 
 		setIsLoading(true);
 
 		(async () => {
+			const batches = [];
 			const imgs = await loadImages(imagePaths);
-			layers.forEach(([layer, selection, needsTranslation], i) => {
-				if (layer.path == "pose1/00-background/bg-v_background.png" && hideBackground) {
-					ctx.clearRect(0, 0, canvas.width, canvas.height);
+			const layersWithData: [LayerWithData, AttributeSelection?, boolean?][] = layers.map(
+				([layer, ...rest], i) => {
+					return [
+						{
+							imgData: imgs[i],
+							...layer,
+						},
+						...rest,
+					];
+				}
+			);
+			layers.forEach(([layer], i) => {
+				if (layer.batch && batches.includes(layer.batch)) {
 					return;
 				}
-				let color: RGBColor | undefined;
-				if ("color" in layer) {
-					color = layer.color;
-				} else if ("colorType" in layer) {
-					if (layer.colorType == "inherit") {
-						color = getColor(layers[i + 1][0], companion, layers[i + 1][1]);
-					} else {
-						color = getColor(layer, companion, selection);
-					}
+
+				if (
+					layer.path == "/attributes/pose1/00-background/bg-v_background.png" &&
+					hideBackground
+				) {
+					return;
 				}
-				if (layer.blendMode) {
-					ctx.globalCompositeOperation = layer.blendMode;
+
+				drawLayer({
+					companion,
+					canvas,
+					layers: layersWithData,
+					drawIndex: i,
+					recurseBatches: true,
+					paint: (input, canvas, blendMode) => {
+						canvas = canvas as HTMLCanvasElement;
+						input = input as HTMLImageElement | HTMLCanvasElement;
+						if (!canvas.getContext) throw new Error("No canvas context");
+						const ctx = canvas.getContext("2d");
+						ctx.globalCompositeOperation = blendMode || "source-over";
+						ctx.drawImage(input, 0, 0);
+						return canvas;
+					},
+					createCanvas: () => {
+						const tempCanvas = document.createElement("canvas");
+						tempCanvas.width = canvas.width;
+						tempCanvas.height = canvas.height;
+						return tempCanvas;
+					},
+					replaceColor,
+					translateImage: applyTransform,
+				});
+				if (layer.batch) {
+					batches.push(layer.batch);
 				}
-				let imageToDraw = color ? replaceColor(imgs[i], color) : imgs[i];
-				imageToDraw = needsTranslation
-					? applyTransform(imageToDraw, companion.properties.pose)
-					: imageToDraw;
-				if (!imageToDraw) throw new Error("No image returned");
-				ctx.drawImage(imageToDraw, 0, 0);
-				ctx.globalCompositeOperation = "source-over";
 			});
 			setIsLoading(false);
 		})();
-	}, [companion]);
+	}, [companion, hideBackground]);
 
 	const bgColorKey = colorToKey(companion.properties.background, colors.background);
 	const typeColor =

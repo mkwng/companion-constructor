@@ -10,7 +10,7 @@ export const nose: AttributeDictionary = {
 			name: "button",
 			layers: [
 				{
-					path: "face/11-nose/button-c_outline-g_f.png",
+					path: "/attributes/face/11-nose/button-c_outline-g_f.png",
 					color: colors.default.black,
 				},
 			],
@@ -21,12 +21,12 @@ export const nose: AttributeDictionary = {
 			name: "dotline",
 			layers: [
 				{
-					path: "face/11-nose/dotline_1-c_skin-b_multiply-g_f.png",
+					path: "/attributes/face/11-nose/dotline_1-c_skin-b_multiply-g_f.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
-					path: "face/11-nose/dotline_2-c_outline.png",
+					path: "/attributes/face/11-nose/dotline_2-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -37,12 +37,12 @@ export const nose: AttributeDictionary = {
 			name: "dotshadow",
 			layers: [
 				{
-					path: "face/11-nose/dotshadow_1-c_skin-b_multiply-g_f.png",
+					path: "/attributes/face/11-nose/dotshadow_1-c_skin-b_multiply-g_f.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
-					path: "face/11-nose/dotshadow_2-c_outline.png",
+					path: "/attributes/face/11-nose/dotshadow_2-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -53,12 +53,12 @@ export const nose: AttributeDictionary = {
 			name: "freckly",
 			layers: [
 				{
-					path: "face/11-nose/freckly_1-c_skin-b_multiply-g_f.png",
+					path: "/attributes/face/11-nose/freckly_1-c_skin-b_multiply-g_f.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
-					path: "face/11-nose/freckly_2-c_outline.png",
+					path: "/attributes/face/11-nose/freckly_2-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -69,16 +69,16 @@ export const nose: AttributeDictionary = {
 			name: "hook",
 			layers: [
 				{
-					path: "face/11-nose/hook_1-v_skin-g_m.png",
+					path: "/attributes/face/11-nose/hook_1-v_skin-g_m.png",
 					colorType: "skin",
 				},
 				{
-					path: "face/11-nose/hook_1-c_skin-b_multiply-g_m.png",
+					path: "/attributes/face/11-nose/hook_1-c_skin-b_multiply-g_m.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
-					path: "face/11-nose/hook_2-c_outline.png",
+					path: "/attributes/face/11-nose/hook_2-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -89,16 +89,16 @@ export const nose: AttributeDictionary = {
 			name: "longdown",
 			layers: [
 				{
-					path: "face/11-nose/longdown_1-v_skin.png",
+					path: "/attributes/face/11-nose/longdown_1-v_skin.png",
 					colorType: "skin",
 				},
 				{
-					path: "face/11-nose/longdown_2-c_skin-b_multiply.png",
+					path: "/attributes/face/11-nose/longdown_2-c_skin-b_multiply.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
-					path: "face/11-nose/longdown_3-c_outline.png",
+					path: "/attributes/face/11-nose/longdown_3-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -109,16 +109,16 @@ export const nose: AttributeDictionary = {
 			name: "longstraight",
 			layers: [
 				{
-					path: "face/11-nose/longstraight_1-v_skin.png",
+					path: "/attributes/face/11-nose/longstraight_1-v_skin.png",
 					colorType: "skin",
 				},
 				{
-					path: "face/11-nose/longstraight_2-c_skin-b_multiply.png",
+					path: "/attributes/face/11-nose/longstraight_2-c_skin-b_multiply.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
-					path: "face/11-nose/longstraight_3-c_outline.png",
+					path: "/attributes/face/11-nose/longstraight_3-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -129,16 +129,16 @@ export const nose: AttributeDictionary = {
 			name: "longup",
 			layers: [
 				{
-					path: "face/11-nose/longup_1-v_skin.png",
+					path: "/attributes/face/11-nose/longup_1-v_skin.png",
 					colorType: "skin",
 				},
 				{
-					path: "face/11-nose/longup_2-c_skin-b_multiply.png",
+					path: "/attributes/face/11-nose/longup_2-c_skin-b_multiply.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
-					path: "face/11-nose/longup_3-c_outline.png",
+					path: "/attributes/face/11-nose/longup_3-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -149,7 +149,7 @@ export const nose: AttributeDictionary = {
 			name: "nostrils",
 			layers: [
 				{
-					path: "face/11-nose/nostrils-c_outline.png",
+					path: "/attributes/face/11-nose/nostrils-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -160,12 +160,12 @@ export const nose: AttributeDictionary = {
 			name: "pointed",
 			layers: [
 				{
-					path: "face/11-nose/pointed_1-c_skin-b_multiply-g_m.png",
+					path: "/attributes/face/11-nose/pointed_1-c_skin-b_multiply-g_m.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
-					path: "face/11-nose/pointed_2-c_outline.png",
+					path: "/attributes/face/11-nose/pointed_2-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -176,12 +176,12 @@ export const nose: AttributeDictionary = {
 			name: "wavenarrow",
 			layers: [
 				{
-					path: "face/11-nose/wavenarrow_1-c_skin-b_multiply.png",
+					path: "/attributes/face/11-nose/wavenarrow_1-c_skin-b_multiply.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
-					path: "face/11-nose/wavenarrow_2-c_outline.png",
+					path: "/attributes/face/11-nose/wavenarrow_2-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -192,12 +192,12 @@ export const nose: AttributeDictionary = {
 			name: "wavewide",
 			layers: [
 				{
-					path: "face/11-nose/wavewide_1-c_skin-b_multiply-g_m.png",
+					path: "/attributes/face/11-nose/wavewide_1-c_skin-b_multiply-g_m.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
-					path: "face/11-nose/wavewide_2-c_outline.png",
+					path: "/attributes/face/11-nose/wavewide_2-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -208,12 +208,12 @@ export const nose: AttributeDictionary = {
 			name: "wobble",
 			layers: [
 				{
-					path: "face/11-nose/wobble_1-c_skin-b_multiply.png",
+					path: "/attributes/face/11-nose/wobble_1-c_skin-b_multiply.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
-					path: "face/11-nose/wobble_2-c_outline.png",
+					path: "/attributes/face/11-nose/wobble_2-c_outline.png",
 					color: colors.default.black,
 				},
 			],

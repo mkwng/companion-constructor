@@ -13,16 +13,16 @@ export const mask: AttributeDictionary = {
 			hides: ["nose", "mouth"],
 			layers: [
 				{
-					path: "face/11-nose/fullmask_1-v_clothing.png",
+					path: "/attributes/face/11-nose/fullmask_1-v_clothing.png",
 					colorType: "clothing",
 				},
 				{
-					path: "face/11-nose/fullmask_2-v_clothing-b_multiply.png",
+					path: "/attributes/face/11-nose/fullmask_2-v_clothing-b_multiply.png",
 					color: colors.default.gray,
 					blendMode: "multiply",
 				},
 				{
-					path: "face/11-nose/fullmask_3-c_outline.png",
+					path: "/attributes/face/11-nose/fullmask_3-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -33,20 +33,20 @@ export const mask: AttributeDictionary = {
 			hides: ["nose", "mouth"],
 			layers: [
 				{
-					path: "face/11-nose/warrior_1-v_clothing.png",
+					path: "/attributes/face/11-nose/warrior_1-v_clothing.png",
 					colorType: "clothing",
 				},
 				{
-					path: "face/11-nose/warrior_2-c_white.png",
+					path: "/attributes/face/11-nose/warrior_2-c_white.png",
 					color: colors.default.white,
 				},
 				{
-					path: "face/11-nose/warrior_3-c_black-b_multiply.png",
+					path: "/attributes/face/11-nose/warrior_3-c_black-b_multiply.png",
 					color: colors.default.gray,
 					blendMode: "multiply",
 				},
 				{
-					path: "face/11-nose/warrior_4-c_white.png",
+					path: "/attributes/face/11-nose/warrior_4-c_white.png",
 					color: colors.default.black,
 				},
 			],
@@ -58,12 +58,16 @@ export const mask: AttributeDictionary = {
 			hides: ["nose", "mouth"],
 			layers: [
 				{
-					path: "face/11-nose/mask_1-v_clothing.png",
+					path: "/attributes/face/11-nose/mask_1-v_clothing.png",
 					colorType: "clothing",
 				},
-				{ path: "face/11-nose/mask_2.png", color: colors.skin["1"], blendMode: "multiply" },
 				{
-					path: "face/11-nose/mask_3-c_outline.png",
+					path: "/attributes/face/11-nose/mask_2.png",
+					color: colors.skin["1"],
+					blendMode: "multiply",
+				},
+				{
+					path: "/attributes/face/11-nose/mask_3-c_outline.png",
 					color: colors.default.black,
 				},
 			],
@@ -71,6 +75,6 @@ export const mask: AttributeDictionary = {
 	],
 };
 
-let maskVariants = ["facemask", "warrior", "medical"] as const;
+let maskVariants = ["/attributes/facemask", "warrior", "medical"] as const;
 
 export type MaskVariant = typeof maskVariants[number];

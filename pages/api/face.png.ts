@@ -89,8 +89,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 						])
 						.toBuffer();
 				}
+				const blend = layer.blendMode
+					? ((): "multiply" | "dest-over" | "over" => {
+							switch (layer.blendMode) {
+								case "multiply":
+									return "multiply";
+								case "destination-over":
+									return "dest-over";
+								default:
+									return "over";
+							}
+					  })()
+					: "over";
 				return sharp(await current)
-					.composite([{ input, blend: layer.blendMode || "over" }])
+					.composite([{ input, blend }])
 					.toBuffer();
 			},
 			sharp({

@@ -7,6 +7,8 @@ import {
 	AttributeType,
 	Companion,
 	Layer,
+	LayerStaticWithData,
+	LayerWithData,
 	Pose,
 	Restrictions,
 	RGBColor,
@@ -136,11 +138,11 @@ export const getColor = (
 	}
 };
 
-export const getPath = (layer: Layer, pose?: Pose) => {
+export const getPath = (layer: Layer, pose?: Pose): string => {
 	if (typeof layer.path == "string") {
-		return "/attributes/" + layer.path;
+		return layer.path;
 	} else {
-		return "/attributes/" + layer.path[pose];
+		return layer.path[pose];
 	}
 };
 
@@ -419,4 +421,101 @@ export const keysToCompanion = (companionQuery): Companion => {
 		}
 	}
 	return companion;
+};
+
+export const drawLayer = ({
+	companion,
+	canvas,
+	layers,
+	drawIndex,
+	recurseBatches,
+	paint,
+	createCanvas,
+	replaceColor,
+	translateImage,
+}: {
+	companion: Companion;
+	canvas: HTMLCanvasElement | Buffer;
+	layers: [LayerWithData, AttributeSelection?, boolean?][];
+	drawIndex: number;
+	recurseBatches?: boolean;
+	paint: (
+		input: HTMLImageElement | HTMLCanvasElement | Buffer,
+		target: HTMLCanvasElement | Buffer,
+		blendMode?: "source-over" | "multiply" | "destination-over"
+	) => HTMLImageElement | HTMLCanvasElement | Buffer;
+	createCanvas: () => HTMLCanvasElement | Buffer;
+	replaceColor: (
+		input: HTMLImageElement | HTMLCanvasElement | Buffer,
+		color: RGBColor
+	) => HTMLImageElement | HTMLCanvasElement | Buffer;
+	translateImage: (
+		input: HTMLImageElement | HTMLCanvasElement | Buffer,
+		pose: Pose
+	) => HTMLImageElement | HTMLCanvasElement | Buffer;
+}): HTMLImageElement | HTMLCanvasElement | Buffer => {
+	const [layer, selection, needsTranslation] = layers[drawIndex];
+	let imageToDraw: HTMLImageElement | HTMLCanvasElement | Buffer;
+
+	if (layer.batch && recurseBatches) {
+		const tempCanvas = createCanvas();
+
+		const batchIndices = layers.reduce<number[]>((indices, curr, k) => {
+			if (curr[0].batch === layer.batch) {
+				indices.push(k);
+			}
+			return indices;
+		}, []);
+
+		const batchLayers = layers
+			.map((l, k) => {
+				if ("colorType" in l[0] && l[0].colorType === "inherit") {
+					const { colorType, ...rest } = l[0];
+					return [
+						{
+							color: getColor(layers[k + 1][0], companion, layers[k + 1][1]),
+							...rest,
+						} as LayerStaticWithData,
+						l[1],
+						l[2],
+					] as [LayerStaticWithData, AttributeSelection?, boolean?];
+				}
+				return l;
+			})
+			.filter((_, i) => batchIndices.includes(i));
+
+		if (batchLayers.length) {
+			batchLayers.forEach((_, j) => {
+				drawLayer({
+					companion,
+					canvas: tempCanvas,
+					layers: batchLayers,
+					drawIndex: j,
+					paint,
+					createCanvas,
+					replaceColor,
+					translateImage,
+				});
+			});
+		}
+		imageToDraw = tempCanvas;
+	} else {
+		let color: RGBColor | undefined;
+		if ("color" in layer) {
+			color = layer.color;
+		} else if ("colorType" in layer) {
+			if (layer.colorType == "inherit") {
+				color = getColor(layers[drawIndex + 1][0], companion, layers[drawIndex + 1][1]);
+			} else {
+				color = getColor(layer, companion, selection);
+			}
+		}
+		imageToDraw = color ? replaceColor(layer.imgData, color) : layer.imgData;
+		imageToDraw = needsTranslation
+			? translateImage(imageToDraw, companion.properties.pose)
+			: imageToDraw;
+	}
+
+	if (!imageToDraw) throw new Error("No image returned");
+	return paint(imageToDraw, canvas, layer.blendMode);
 };

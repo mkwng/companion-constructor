@@ -1,3 +1,4 @@
+import { AccessoryVariant } from "./attributes/accessory";
 import { BlemishVariant } from "./attributes/blemish";
 import { BottomVariant } from "./attributes/bottom";
 import { BrowsVariant } from "./attributes/brows";
@@ -36,7 +37,8 @@ export type AttributeType =
 	| "top"
 	| "bottom"
 	| "mask"
-	| "shoes";
+	| "shoes"
+	| "accessory";
 
 type Gender = "m" | "f";
 type HeadShape = "big" | "flat";
@@ -51,7 +53,6 @@ export interface Variant {
 	rarity?: Rarity;
 	hides?: AttributeType[];
 }
-
 export interface Restrictions {
 	gender?: Gender;
 	pose?: Pose;
@@ -68,15 +69,28 @@ interface LayerBase {
 				"3"?: string;
 				"4"?: string;
 		  };
+	batch?: string;
 }
-interface LayerDynamic extends LayerBase {
+export interface LayerDynamic extends LayerBase {
 	colorType: "hair" | "skin" | "clothing" | "background" | "inherit";
 }
-interface LayerStatic extends LayerBase {
+export interface LayerStatic extends LayerBase {
 	color: RGBColor;
 }
 
 export type Layer = LayerBase | LayerDynamic | LayerStatic;
+
+interface LayerBaseWithData extends LayerBase {
+	imgData: HTMLImageElement | HTMLCanvasElement | Buffer;
+}
+export interface LayerDynamicWithData extends LayerBaseWithData {
+	colorType: "hair" | "skin" | "clothing" | "background" | "inherit";
+}
+export interface LayerStaticWithData extends LayerBaseWithData {
+	color: RGBColor;
+}
+
+export type LayerWithData = LayerBaseWithData | LayerDynamicWithData | LayerStaticWithData;
 
 export interface AttributeDictionary {
 	name: AttributeType;
@@ -131,6 +145,9 @@ interface MaskSelection extends AttributeSelectionBase {
 interface ShoesSelection extends AttributeSelectionBase {
 	name: ShoesVariant;
 }
+interface AccessorySelection extends AttributeSelectionBase {
+	name: AccessoryVariant;
+}
 
 export type AttributeSelection =
 	| AttributeSelectionBase
@@ -169,5 +186,6 @@ export interface Companion {
 		bottom?: BottomSelection;
 		mask?: MaskSelection;
 		shoes?: ShoesSelection;
+		accessory?: AccessorySelection;
 	};
 }
