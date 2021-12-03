@@ -3,7 +3,6 @@ import { AttributeDictionary } from "./types";
 
 export const poses: { [key: string]: AttributeDictionary[] } = {
 	"1": [
-		attributes.background,
 		attributes.bodyBack,
 		attributes.bottom,
 		attributes.shoes,
@@ -21,9 +20,9 @@ export const poses: { [key: string]: AttributeDictionary[] } = {
 		attributes.top,
 		attributes.eyewear,
 		attributes.nose,
+		attributes.background,
 	],
 	"2": [
-		attributes.background,
 		attributes.bodyBack,
 		attributes.shoes,
 		attributes.bottom,
@@ -42,9 +41,9 @@ export const poses: { [key: string]: AttributeDictionary[] } = {
 		attributes.eyewear,
 		attributes.nose,
 		attributes.accessory,
+		attributes.background,
 	],
 	"3": [
-		attributes.background,
 		attributes.bodyBack,
 		attributes.neck,
 		attributes.face,
@@ -62,9 +61,9 @@ export const poses: { [key: string]: AttributeDictionary[] } = {
 		attributes.eyewear,
 		attributes.nose,
 		attributes.shoes,
+		attributes.background,
 	],
 	"4": [
-		attributes.background,
 		attributes.bodyBack,
 		attributes.neck,
 		attributes.face,
@@ -77,5 +76,6 @@ export const poses: { [key: string]: AttributeDictionary[] } = {
 		attributes.eyewear,
 		attributes.headwear,
 		attributes.nose,
+		attributes.background,
 	],
 };

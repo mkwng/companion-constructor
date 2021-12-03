@@ -9,6 +9,7 @@ export const background: AttributeDictionary = {
 				{
 					path: "/attributes/pose1/00-background/bg-v_background.png",
 					colorType: "background",
+					blendMode: "destination-over",
 				},
 			],
 		},
