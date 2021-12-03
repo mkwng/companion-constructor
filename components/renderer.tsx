@@ -148,19 +148,20 @@ export default function Renderer({
 					];
 				}
 			);
-			layers.forEach(([layer], i) => {
+			for (let i = 0; i < layersWithData.length; i++) {
+				const [layer] = layersWithData[i];
 				if (layer.batch && batches.includes(layer.batch)) {
-					return;
+					continue;
 				}
 
 				if (
 					layer.path == "/attributes/pose1/00-background/bg-v_background.png" &&
 					hideBackground
 				) {
-					return;
+					continue;
 				}
 
-				drawLayer({
+				await drawLayer({
 					companion,
 					canvas,
 					layers: layersWithData,
@@ -184,10 +185,15 @@ export default function Renderer({
 					replaceColor,
 					translateImage: applyTransform,
 				});
+				console.log(
+					`${((i / layersWithData.length) * 100).toLocaleString(undefined, {
+						maximumFractionDigits: 0,
+					})}%`
+				);
 				if (layer.batch) {
 					batches.push(layer.batch);
 				}
-			});
+			}
 			setIsLoading(false);
 		})();
 	}, [companion, hideBackground]);

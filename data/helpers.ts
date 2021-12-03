@@ -423,7 +423,7 @@ export const keysToCompanion = (companionQuery): Companion => {
 	return companion;
 };
 
-export const drawLayer = ({
+export const drawLayer = async ({
 	companion,
 	canvas,
 	layers,
@@ -443,22 +443,22 @@ export const drawLayer = ({
 		input: HTMLImageElement | HTMLCanvasElement | Buffer,
 		target: HTMLCanvasElement | Buffer,
 		blendMode?: "source-over" | "multiply" | "destination-over"
-	) => HTMLImageElement | HTMLCanvasElement | Buffer;
-	createCanvas: () => HTMLCanvasElement | Buffer;
+	) => HTMLImageElement | HTMLCanvasElement | Promise<Buffer>;
+	createCanvas: () => HTMLCanvasElement | Promise<Buffer>;
 	replaceColor: (
 		input: HTMLImageElement | HTMLCanvasElement | Buffer,
 		color: RGBColor
-	) => HTMLImageElement | HTMLCanvasElement | Buffer;
+	) => HTMLImageElement | HTMLCanvasElement | Promise<Buffer>;
 	translateImage: (
 		input: HTMLImageElement | HTMLCanvasElement | Buffer,
 		pose: Pose
-	) => HTMLImageElement | HTMLCanvasElement | Buffer;
-}): HTMLImageElement | HTMLCanvasElement | Buffer => {
+	) => HTMLImageElement | HTMLCanvasElement | Promise<Buffer>;
+}) => {
 	const [layer, selection, needsTranslation] = layers[drawIndex];
 	let imageToDraw: HTMLImageElement | HTMLCanvasElement | Buffer;
 
 	if (layer.batch && recurseBatches) {
-		const tempCanvas = createCanvas();
+		const tempCanvas = await createCanvas();
 
 		const batchIndices = layers.reduce<number[]>((indices, curr, k) => {
 			if (curr[0].batch === layer.batch) {
@@ -510,9 +510,9 @@ export const drawLayer = ({
 				color = getColor(layer, companion, selection);
 			}
 		}
-		imageToDraw = color ? replaceColor(layer.imgData, color) : layer.imgData;
+		imageToDraw = color ? await replaceColor(layer.imgData, color) : layer.imgData;
 		imageToDraw = needsTranslation
-			? translateImage(imageToDraw, companion.properties.pose)
+			? await translateImage(imageToDraw, companion.properties.pose)
 			: imageToDraw;
 	}
 
