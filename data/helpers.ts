@@ -485,8 +485,8 @@ export const drawLayer = async ({
 			.filter((_, i) => batchIndices.includes(i));
 
 		if (batchLayers.length) {
-			batchLayers.forEach((_, j) => {
-				drawLayer({
+			for (let j = 0; j < batchLayers.length; j++) {
+				await drawLayer({
 					companion,
 					canvas: tempCanvas,
 					layers: batchLayers,
@@ -496,7 +496,7 @@ export const drawLayer = async ({
 					replaceColor,
 					translateImage,
 				});
-			});
+			}
 		}
 		imageToDraw = tempCanvas;
 	} else {
