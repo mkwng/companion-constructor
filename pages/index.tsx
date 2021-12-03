@@ -139,7 +139,7 @@ export default function Constructor() {
 						>
 							Save
 						</Button>
-						<a href={`/api/face.png?${companionToUrl(companion)}`}>Link</a>
+						<a href={`/api/companion.png?faceOnly=true&${companionToUrl(companion)}`}>Link</a>
 					</div>
 					<Marketing />
 				</div>

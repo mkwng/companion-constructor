@@ -75,6 +75,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	// Example url query:
 	// http://localhost:3000/api/companion.png?pose=2&gender=m&skinColor=0&hairColor=purple&backgroundColor=yellow&hair=crop&eyes=open&brows=bushy&mouth=handlebars&nose=hook&headwear=cap&headwearColor1=red&headwearColor2=blue
 	// http://localhost:3000/api/companion.png?pose=2&gender=f&skinColor=0&hairColor=purple&backgroundColor=bga&hair=crop&eyes=dart&brows=bushy&mouth=handlebars&nose=hook&headwear=cap&headwearColor1=red&headwearColor2=blue
+
+	const { faceOnly, ...query } = req.query;
 	let optimized: Buffer = await imageCache.get(req.url);
 
 	if (optimized) {
@@ -84,13 +86,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	if (!optimized) {
 		let companion: Companion | null;
 		const batches: string[] = [];
-		if (req.query.id && typeof req.query.id === "string") {
+		if (query.id && typeof query.id === "string") {
 			const result = await prisma.companion.findUnique({
-				where: { id: parseInt(req.query.id) },
+				where: { id: parseInt(query.id) },
 			});
 			companion = keysToCompanion(apiToKeys(result));
 		} else {
-			companion = keysToCompanion(req.query);
+			companion = keysToCompanion(query);
 		}
 		if (!companion?.properties?.pose) {
 			res.status(404).send("No companion found");
@@ -191,11 +193,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 		optimized = await sharp(final as Buffer)
 			.flatten()
-			.png()
-			// .png({ compressionLevel: 8, quality: 80 })
+			.png({ compressionLevel: 8, quality: 80 })
 			.toBuffer();
 
 		imageCache.set(req.url, optimized);
+	}
+
+	if (faceOnly) {
+		optimized = await sharp(optimized)
+			.extract({ left: 65, top: 371, width: 960, height: 960 })
+			.png()
+			.toBuffer();
 	}
 
 	res.setHeader("Content-Type", "image/png");
