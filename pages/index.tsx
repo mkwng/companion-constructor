@@ -78,30 +78,54 @@ const ControlPanel = ({
 						</button>
 					</div>
 				</div>
-				<div className="p-2 pt-0 flex flex-col justify-items-stretch gap-2">
-					<button
-						className={`
+				{activeSection === "playground" && (
+					<div className="p-2 pt-0 flex flex-col justify-items-stretch gap-2">
+						<button
+							className={`
 									relative
 									py-2 rounded-full
 									text-center
 									border-2 border-gray-600
 								`}
-						onClick={handleCustomize}
-					>
-						Customize
-					</button>
-					<button
-						className={`
+							onClick={handleCustomize}
+						>
+							Customize
+						</button>
+						<button
+							className={`
 									relative
 									py-2 rounded-full
 									text-center
 									border-2 border-gray-600
 								`}
-						onClick={handleRandomize}
-					>
-						Randomize
-					</button>
-				</div>
+							onClick={handleRandomize}
+						>
+							Randomize
+						</button>
+					</div>
+				)}
+
+				{activeSection === "myCompanions" && (
+					<div className="p-4 pt-0 flex flex-col justify-items-stretch gap-2">
+						<div className="text-center mx-4 my-1">
+							<h3 className="font-bold mb-2">You don&apos;t have any Companions yet!</h3>
+							<p className="text-gray-400">
+								When you own some Companions, they will show up here
+							</p>
+						</div>
+						<button
+							className={`
+									relative
+									py-2 rounded-full
+									text-center
+									border-2 border-gray-600
+								`}
+							onClick={() => {}}
+						>
+							Mint
+						</button>
+					</div>
+				)}
 			</div>
 		</>
 	);
