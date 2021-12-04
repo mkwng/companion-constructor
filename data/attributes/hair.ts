@@ -218,7 +218,7 @@ export const hair: AttributeDictionary = {
 			restrictions: { gender: "f", headShape: "big" },
 			layers: [
 				{
-					path: "public/attributes/face/05-hair/frizzshort_0-v_hair-destination_over.png",
+					path: "/attributes/face/05-hair/frizzshort_0-v_hair-destination_over.png",
 					colorType: "hair",
 					blendMode: "destination-over",
 				},
