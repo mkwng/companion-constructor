@@ -137,6 +137,7 @@ export default function Editor({
 }: {
 	companionState: [Companion, Dispatch<SetStateAction<Companion>>];
 }) {
+	const [expanded, setExpanded] = useState(true);
 	const [companion, setCompanion] = companionState;
 	const [viewing, setViewing] = useState<
 		"general" | "face" | "hair" | "clothing" | "accessories"
@@ -464,7 +465,7 @@ export default function Editor({
 		);
 
 		return (
-			<div className="w-full relative">
+			<div className="w-full">
 				<div
 					className={`
 						pointer-events-none 
@@ -479,7 +480,6 @@ export default function Editor({
 				<div
 					className={`
 						pointer-events-none 
-						rounded-t-xl 
 						z-10 
 						transition-opacity duration-300 
 						absolute right-0 w-16 h-full 
@@ -519,7 +519,31 @@ export default function Editor({
 	};
 
 	return (
-		<>
+		<div
+			className={`${
+				expanded
+					? "min-h-screen lg:min-h-0 max-h-screen"
+					: "max-h-12 overflow-hidden lg:max-h-full lg:overflow-visible"
+			}`}
+		>
+			<div
+				className={`z-30 fixed lg:hidden bottom-0 w-full p-2 bg-background-yellow text-clothing-black`}
+			>
+				<button
+					className={`
+									relative w-full
+									py-2 rounded-full
+									text-center
+									border-2 border-gray-600
+								`}
+					onClick={() => {
+						setExpanded((prev) => !prev);
+					}}
+				>
+					{expanded ? "Hide controls" : "Show controls"}
+				</button>
+			</div>
+			<div className="h-14 w-full lg:hidden"></div>
 			<CategorySelector />
 			{(() => {
 				switch (viewing) {
@@ -537,6 +561,6 @@ export default function Editor({
 						return null;
 				}
 			})()}
-		</>
+		</div>
 	);
 }

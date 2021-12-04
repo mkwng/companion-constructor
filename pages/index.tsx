@@ -22,13 +22,29 @@ const ControlPanel = ({
 	);
 	return (
 		<>
-			<div className="flex items-center p-2">
-				<div
-					className="w-4 h-4 rounded-full bg-background-yellow"
-					onClick={() => {
-						setExpanded((prev) => !prev);
-					}}
-				></div>
+			<div className="flex items-center justify-center p-4">
+				<div className="w-5 h-5">
+					<div
+						className={`absolute w-5 h-5 rounded-full pointer-events-none ${
+							expanded ? "bg-yellow-400" : "bg-green-300"
+						}`}
+					></div>
+					<a
+						className="absolute w-5 h-5 opacity-0 hover:opacity-100 flex justify-center items-center cursor-default active:bg-green-400"
+						onClick={() => {
+							setExpanded((prev) => !prev);
+						}}
+					>
+						<div
+							className={`pointer-events-none absolute w-2 h-0.5 ${
+								expanded ? "bg-yellow-600" : "bg-green-500"
+							}`}
+						></div>
+						{!expanded && (
+							<div className="pointer-events-none absolute w-0.5 h-2 bg-green-500"></div>
+						)}
+					</a>
+				</div>
 				<div className="text-center flex-grow text-gray-500">Control panel</div>
 				<div className="w-4 h-4">&nbsp;</div>
 			</div>
@@ -163,20 +179,28 @@ export default function Constructor() {
 				ref={scrollableArea}
 				className={`
 				font-mono z-10 fixed inset-0 h-screen w-screen overflow-x-hidden ${
-					customizing ? "lg:overflow-y-hidden" : ""
+					customizing ? "overflow-y-hidden" : ""
 				}`}
 			>
 				<div
 					className={`
 					transition-all
-					z-40 absolute lg:fixed flex flex-col 
-					right-0 top-0 p-4 
+					z-40 fixed flex flex-col 
+					max-h-screen
+					bottom-0
+					lg:bottom-auto lg:left-auto lg:right-0 lg:top-0 lg:p-6 
 					w-full lg:${customizing ? "w-1/3" : "w-1/4"} lg:h-full`}
 				>
-					<div className={`bg-clothing-black text-white rounded-xl overflow-y-scroll text-xs `}>
+					<div
+						className={`
+						bg-clothing-black text-white 
+						lg:rounded-lg 
+						overflow-y-scroll hide-scrollbar 
+						text-xs relative rounded-t-lg`}
+					>
 						{customizing ? (
 							<>
-								<div className="p-2">
+								<div className="fixed lg:sticky left-0 top-0 right-0 p-2 bg-clothing-black lg:bg-opacity-70 lg:backdrop-filter lg:backdrop-blur-sm shadow-md z-10">
 									<button
 										className={`
 									relative
@@ -189,7 +213,7 @@ export default function Constructor() {
 										← Cancel
 									</button>
 								</div>
-								<div className="py-2">
+								<div className="lg:py-2">
 									<Editor companionState={[companion, setCompanion]} />
 								</div>
 							</>
@@ -236,8 +260,8 @@ export default function Constructor() {
 				)}`}
 			>
 				<div
-					className={`transition-all fixed w-screen z-0 lg:h-full flex justify-center left-0 lg:top-0 ${
-						customizing ? "top-14 lg:w-2/3" : "pb-24 h-full w-screen"
+					className={`transition-all fixed w-screen z-0 h-full flex justify-center left-0 lg:top-0 ${
+						customizing ? "lg:w-2/3" : "pb-24 h-full w-screen"
 					}`}
 				>
 					<Renderer showTitle={!customizing} companion={companion} hideBackground={true} />
