@@ -5,6 +5,21 @@ import { colorsRequired, colorToKey, getRestrictions, isCompatible } from "../da
 import { randomProperty } from "../data/random";
 import { Companion, Pose, Restrictions, RGBColor } from "../data/types";
 
+const OptionsContainer = ({
+	title,
+	children,
+}: {
+	title: string;
+	children: React.ReactNode;
+}) => {
+	return (
+		<div className="mt-4 mb-2 text-gray-400">
+			<div className="px-4 w-full flex justify-between font-bold ">{title}</div>
+			{children}
+		</div>
+	);
+};
+
 const ColorSelector = ({
 	colors,
 	active,
@@ -39,18 +54,24 @@ const ColorSelector = ({
 	return (
 		<div className="w-100 relative">
 			<div
-				className={`pointer-events-none transition-opacity duration-300 absolute left-0 w-16 h-full bg-gradient-to-r from-white to-transparent text-center flex justify-center items-center ${
-					moreLeft ? "opacity-100" : "opacity-0"
-				}`}
+				className={`
+					pointer-events-none 
+					transition-opacity duration-300 
+					absolute left-0 w-16 h-full 
+					bg-gradient-to-r from-clothing-black to-transparent 
+					${moreLeft ? "opacity-100" : "opacity-0"}`}
 				aria-hidden="true"
 			></div>
 			<div
-				className={`pointer-events-none transition-opacity duration-300 absolute right-0 w-16 h-full bg-gradient-to-l from-white to-transparent text-center flex justify-center items-center ${
-					moreRight ? "opacity-100" : "opacity-0"
-				}`}
+				className={`
+					pointer-events-none 
+					transition-opacity duration-300 
+					absolute right-0 w-16 h-full 
+					bg-gradient-to-l from-clothing-black to-transparent 
+					${moreRight ? "opacity-100" : "opacity-0"}`}
 				aria-hidden="true"
 			></div>
-			<div className="w-100 overflow-x-scroll scroll hide-scrollbar py-4" onScroll={checkMore}>
+			<div className="w-100 overflow-x-scroll scroll hide-scrollbar" onScroll={checkMore}>
 				<div className="w-max flex">
 					<span className="w-4 h-4 inline-block" aria-hidden="true" ref={leftPlaceholder} />
 					{Object.keys(colors).map((color) => {
@@ -59,11 +80,11 @@ const ColorSelector = ({
 							<div
 								key={color}
 								onClick={() => onSelect(color)}
-								className="w-14 h-14 inline-block rounded-full m-2 cursor-pointer hover:opacity-90"
+								className="w-8 h-8 inline-block rounded-full m-2 cursor-pointer hover:opacity-90"
 								style={{
 									backgroundColor: rgb,
-									border: color === active ? "4px solid white" : "",
-									outline: color === active ? `4px solid black` : "",
+									border: color === active ? "2px solid rgba(69,61,75)" : "",
+									outline: color === active ? `2px solid rgba(166, 211, 209)` : "",
 								}}
 							></div>
 						);
@@ -91,13 +112,18 @@ const AttributeSelector = ({
 					<div
 						key={variant}
 						onClick={() => onSelect(variant)}
-						className={`font-semibold flex justify-center content-center cursor-pointer min-h-20 rounded-xl  hover:text-gray-800  border-4 border-transparent ${
-							variant === active
-								? "border-black bg-hair-lightblue"
-								: "hover:bg-gray-100 bg-gray-50"
-						}`}
+						className={`
+							flex justify-center content-center 
+							cursor-pointer   
+							border-2 border-transparent rounded-full 
+							px-4 py-2
+							${
+								variant === active
+									? "border-hair-lightblue text-hair-lightblue"
+									: "text-gray-400 border-gray-600"
+							}`}
 					>
-						<p className="h-6 text-center m-auto">{variant}</p>
+						<p className="text-center m-auto">{variant}</p>
 					</div>
 				);
 			})}
@@ -159,35 +185,37 @@ export default function Editor({
 	}
 
 	const selectables = selectableAttributesArray.map((attribute) => (
-		<div key={attribute.name} className="my-4">
-			<div className="px-4 py-2 w-full flex justify-between font-semibold text-lg">
-				<div>
-					{!isCompatible(
-						attribute.variants.find((variant) => {
-							return companion.attributes[attribute.name]?.name === variant.name;
-						})?.restrictions,
-						companionRestrictions
-					) && <>⚠️</>}
-					{attribute.name.charAt(0).toUpperCase() + attribute.name.slice(1)}
-				</div>
-				{attribute.isOptional && companion.attributes[attribute.name]?.name && (
-					<div
-						className="cursor-pointer"
-						onClick={() => {
-							setCompanion((old) => {
-								return {
-									...old,
-									attributes: {
-										...old.attributes,
-										[attribute.name]: undefined,
-									},
-								};
-							});
-						}}
-					>
-						🗑 Remove
+		<div key={attribute.name}>
+			<div className="mt-4 text-gray-400">
+				<div className="px-4 w-full flex justify-between font-bold ">
+					<div>
+						{!isCompatible(
+							attribute.variants.find((variant) => {
+								return companion.attributes[attribute.name]?.name === variant.name;
+							})?.restrictions,
+							companionRestrictions
+						) && <>⚠️</>}
+						{attribute.name.charAt(0).toUpperCase() + attribute.name.slice(1)}
 					</div>
-				)}
+					{attribute.isOptional && companion.attributes[attribute.name]?.name && (
+						<div
+							className="cursor-pointer"
+							onClick={() => {
+								setCompanion((old) => {
+									return {
+										...old,
+										attributes: {
+											...old.attributes,
+											[attribute.name]: undefined,
+										},
+									};
+								});
+							}}
+						>
+							🗑 Remove
+						</div>
+					)}
+				</div>
 			</div>
 			<AttributeSelector
 				variants={attribute.variants.map((variant) => variant.name)}
@@ -252,14 +280,12 @@ export default function Editor({
 					))}
 				</>
 			) : null}
-			<hr />
 		</div>
 	));
 
 	const GeneralOptions = () => (
 		<>
-			<div className="my-4">
-				<div className="px-4 w-full flex justify-between  font-semibold text-lg">Pose</div>
+			<OptionsContainer title="Pose">
 				<AttributeSelector
 					variants={[1, 2, 3, 4]}
 					active={companion.properties.pose}
@@ -275,12 +301,9 @@ export default function Editor({
 						});
 					}}
 				/>
-			</div>
-			<hr />
-			<div className="my-4">
-				<div className="px-4 w-full flex justify-between  font-semibold text-lg">
-					Background
-				</div>
+			</OptionsContainer>
+
+			<OptionsContainer title="Background">
 				<ColorSelector
 					colors={colors.background}
 					active={colorToKey(companion.properties.background, colors.background)}
@@ -296,11 +319,9 @@ export default function Editor({
 						});
 					}}
 				/>
-			</div>
-			<hr />
+			</OptionsContainer>
 
-			<div className="my-4">
-				<div className="px-4 w-full flex justify-between  font-semibold text-lg">Skin</div>
+			<OptionsContainer title="Skin">
 				<ColorSelector
 					colors={colors.skin}
 					active={colorToKey(companion.properties.skin, colors.skin)}
@@ -316,14 +337,13 @@ export default function Editor({
 						});
 					}}
 				/>
-			</div>
+			</OptionsContainer>
 		</>
 	);
 
 	const FaceOptions = () => (
 		<>
-			<div className="my-4">
-				<div className="px-4 w-full flex justify-between  font-semibold text-lg">Shape</div>
+			<OptionsContainer title="Face shape">
 				<AttributeSelector
 					variants={["m", "f"]}
 					active={companion.properties.gender}
@@ -339,8 +359,7 @@ export default function Editor({
 						});
 					}}
 				/>
-			</div>
-			<hr />
+			</OptionsContainer>
 
 			{selectables.filter(
 				(attribute) =>
@@ -355,8 +374,7 @@ export default function Editor({
 
 	const HairOptions = () => (
 		<>
-			<div className="my-4">
-				<div className="px-4 w-full flex justify-between  font-semibold text-lg">Color</div>
+			<OptionsContainer title="Color">
 				<ColorSelector
 					colors={colors.hair}
 					active={colorToKey(companion.properties.hair, colors.hair)}
@@ -372,8 +390,7 @@ export default function Editor({
 						});
 					}}
 				/>
-			</div>
-			<hr />
+			</OptionsContainer>
 			{selectables.filter((attribute) => attribute.key === "hair")}
 		</>
 	);
@@ -432,12 +449,11 @@ export default function Editor({
 			children: React.ReactNode;
 		}) => (
 			<div
-				className={
-					"font-mono py-3 px-5 transition-transform transform-gpu rounded-full text-lg font-semibold cursor-pointer border-4 border-transparent" +
-					(category === viewing
-						? ` ${highlightColor || "bg-clothing-orange"} duration-0 border-black`
-						: ` hover:bg-gray-50 duration-75 hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0`)
-				}
+				className={`
+				relative flex-grow
+				py-2 px-4 rounded-full
+				text-center border-2
+					${category === viewing ? "border-background-red" : "border-transparent text-gray-400"}`}
 				onClick={(e) => {
 					e.preventDefault();
 					setViewing(category);
@@ -450,24 +466,36 @@ export default function Editor({
 		return (
 			<div className="w-full relative">
 				<div
-					className={`pointer-events-none rounded-t-xl z-10 transition-opacity duration-300 absolute left-0 w-16 h-full bg-gradient-to-r from-white to-transparent text-center flex justify-center items-center ${
-						moreLeft ? "opacity-100" : "opacity-0"
-					}`}
+					className={`
+						pointer-events-none 
+						z-10 
+						transition-opacity duration-300 
+						absolute left-0 w-16 h-full 
+						bg-gradient-to-r from-clothing-black to-transparent 
+						${moreLeft ? "opacity-100" : "opacity-0"}
+					`}
 					aria-hidden="true"
 				></div>
 				<div
-					className={`pointer-events-none rounded-t-xl z-10 transition-opacity duration-300 absolute right-0 w-16 h-full bg-gradient-to-l from-white to-transparent text-center flex justify-center items-center ${
-						moreRight ? "opacity-100" : "opacity-0"
-					}`}
+					className={`
+						pointer-events-none 
+						rounded-t-xl 
+						z-10 
+						transition-opacity duration-300 
+						absolute right-0 w-16 h-full 
+						bg-gradient-to-l from-clothing-black to-transparent  
+						${moreRight ? "opacity-100" : "opacity-0"}
+					`}
 					aria-hidden="true"
 				></div>
 				<div
 					ref={scrollableArea}
 					onScroll={checkMore}
-					className="w-full overflow-x-scroll hide-scrollbar py-4"
+					className="w-full overflow-x-scroll hide-scrollbar"
 				>
-					<div className="w-max min-w-full flex gap-4 justify-center">
-						<span className="w-4 h-4 inline-block" aria-hidden="true" ref={leftPlaceholder} />
+					<div className="w-max min-w-full flex justify-center relative">
+						<div className="absolute left-2 right-2 h-full z-0 rounded-full border-gray-600 border-2"></div>
+						<span className="w-2 h-4 inline-block" aria-hidden="true" ref={leftPlaceholder} />
 						<CategoryLink category="general" highlightColor="bg-background-red">
 							General
 						</CategoryLink>
@@ -483,7 +511,7 @@ export default function Editor({
 						<CategoryLink category="accessories" highlightColor="bg-clothing-red">
 							Accessories
 						</CategoryLink>
-						<span className="w-4 h-4 inline-block" aria-hidden="true" ref={rightPlaceholder} />
+						<span className="w-2 h-4 inline-block" aria-hidden="true" ref={rightPlaceholder} />
 					</div>
 				</div>
 			</div>

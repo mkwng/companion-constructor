@@ -9,71 +9,99 @@ import { apiToKeys, colorToKey, keysToCompanion } from "../data/helpers";
 import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
 
-const ControlPanel = ({ setCustomizing, handleRandomize }) => {
+const ControlPanel = ({
+	handleCustomize,
+	handleRandomize,
+}: {
+	handleCustomize: () => void;
+	handleRandomize: () => void;
+}) => {
+	const [expanded, setExpanded] = useState<boolean>(true);
+	const [activeSection, setActiveSection] = useState<"playground" | "myCompanions">(
+		"playground"
+	);
 	return (
 		<>
-			<div className="bg-background-yellow p-2 text-clothing-black">
-				<button
-					className={`
+			<div className="flex items-center p-2">
+				<div
+					className="w-4 h-4 rounded-full bg-background-yellow"
+					onClick={() => {
+						setExpanded((prev) => !prev);
+					}}
+				></div>
+				<div className="text-center flex-grow text-gray-500">Control panel</div>
+				<div className="w-4 h-4">&nbsp;</div>
+			</div>
+			<div className={`${expanded ? "" : "hidden"}`}>
+				<div className="bg-background-yellow p-2 text-clothing-black">
+					<button
+						className={`
 								w-full
 								flex justify-center items-center 
 								border-clothing-black border-2 
 								py-2 gap-2 rounded-full`}
-				>
-					<span>Connect wallet</span>
-					<span className="text-xs inline-block px-2 py-0.5 bg-clothing-black text-background-yellow rounded-full">
-						soon
-					</span>
-				</button>
-			</div>
-			<div className="p-2">
-				<div className="flex w-full rounded-full relative">
-					<div className="absolute w-full h-full z-0 rounded-full border-gray-600 border-2"></div>
-					<button
-						className={`
-									relative flex-grow
-									py-2 rounded-full
-									text-center border-2
-									${true ? "border-background-red" : "border-transparent text-gray-400"}
-								`}
 					>
-						Playground
-					</button>
-					<button
-						className={`
-									relative flex-grow
-									py-2 rounded-full
-									text-center border-2
-									${false ? "border-background-red" : "border-transparent text-gray-400"}
-								`}
-					>
-						My companions
+						<span>Connect wallet</span>
+						<span className="text-xs inline-block px-2 py-0.5 bg-clothing-black text-background-yellow rounded-full">
+							soon
+						</span>
 					</button>
 				</div>
-			</div>
-			<div className="p-2 pt-0 flex flex-col justify-items-stretch gap-2">
-				<button
-					className={`
+				<div className="p-2">
+					<div className="flex w-full rounded-full relative">
+						<div className="absolute w-full h-full z-0 rounded-full border-gray-600 border-2"></div>
+						<button
+							className={`
+									relative flex-grow
+									py-2 rounded-full
+									text-center border-2
+									${activeSection === "playground" ? "border-background-red" : "border-transparent text-gray-400"}
+								`}
+							onClick={() => setActiveSection("playground")}
+						>
+							Playground
+						</button>
+						<button
+							className={`
+									relative flex-grow
+									py-2 rounded-full
+									text-center border-2
+									${
+										activeSection === "myCompanions"
+											? "border-background-red"
+											: "border-transparent text-gray-400"
+									}
+								`}
+							onClick={() => setActiveSection("myCompanions")}
+						>
+							My companions
+						</button>
+					</div>
+				</div>
+				<div className="p-2 pt-0 flex flex-col justify-items-stretch gap-2">
+					<button
+						className={`
 									relative
 									py-2 rounded-full
 									text-center
 									border-2 border-gray-600
 								`}
-					onClick={setCustomizing(true)}
-				>
-					Customize
-				</button>
-				<button
-					className={`
+						onClick={handleCustomize}
+					>
+						Customize
+					</button>
+					<button
+						className={`
 									relative
 									py-2 rounded-full
 									text-center
 									border-2 border-gray-600
 								`}
-					onClick={handleRandomize}
-				>
-					Randomize
-				</button>
+						onClick={handleRandomize}
+					>
+						Randomize
+					</button>
+				</div>
 			</div>
 		</>
 	);
@@ -122,15 +150,31 @@ export default function Constructor() {
 					w-full lg:${customizing ? "w-1/3" : "w-1/4"} lg:h-full`}
 				>
 					<div className={`bg-clothing-black text-white rounded-xl overflow-y-scroll text-xs `}>
-						<div className="flex items-center p-2">
-							<div className="w-4 h-4 rounded-full bg-background-yellow"></div>
-							<div className="text-center flex-grow text-gray-500">Control panel</div>
-							<div className="w-4 h-4">&nbsp;</div>
-						</div>
-						<ControlPanel
-							setCustomizing={setCustomizing}
-							handleRandomize={() => setCompanion(randomCompanion())}
-						/>
+						{customizing ? (
+							<>
+								<div className="p-2">
+									<button
+										className={`
+									relative
+									py-2 px-4 rounded-full
+									text-center
+									border-2 border-gray-600
+								`}
+										onClick={() => setCustomizing(false)}
+									>
+										← Cancel
+									</button>
+								</div>
+								<div className="py-2">
+									<Editor companionState={[companion, setCompanion]} />
+								</div>
+							</>
+						) : (
+							<ControlPanel
+								handleCustomize={() => setCustomizing(true)}
+								handleRandomize={() => setCompanion(randomCompanion())}
+							/>
+						)}
 					</div>
 				</div>
 				<div className="h-screen pointer-events-none">&nbsp;</div>
