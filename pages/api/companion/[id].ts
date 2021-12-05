@@ -37,9 +37,7 @@ export default async function apiCompanions(req, res) {
 				const response = {
 					token_id: companionKeys.id,
 					name: companion.name || `Companion #${companionKeys.id}`,
-					image: `${process.env.RAILWAY_STATIC_URL}/api/companion.png?${companionToUrl(
-						companion
-					)}`,
+					image: `${process.env.RAILWAY_STATIC_URL}/api/companion.png?id=${companionKeys.id}`,
 					external_url: `${process.env.RAILWAY_STATIC_URL}/companion/${companionKeys.id}`,
 					background_color: rgbToHex(companion.properties.background),
 					description: "Boxed in a small, wooden box, this companion is a bit of a mystery.",
