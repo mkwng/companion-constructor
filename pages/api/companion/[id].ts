@@ -24,7 +24,17 @@ export default async function apiCompanions(req, res) {
 					shoesColors,
 					...rest
 				} = companionKeys;
-				const attributes = [];
+				const attributes: {
+					display_type?: string;
+					trait_type: string;
+					value: string | number;
+				}[] = [
+					{
+						display_type: "date",
+						trait_type: "birthday",
+						value: createdAt.getTime(),
+					},
+				];
 				for (const key in rest) {
 					if (rest[key]) {
 						attributes.push({
@@ -35,15 +45,15 @@ export default async function apiCompanions(req, res) {
 				}
 				const companion = keysToCompanion(apiToKeys(companionKeys));
 				const response = {
-					token_id: companionKeys.id,
-					name: companion.name || `Companion #${companionKeys.id}`,
-					image: `${process.env.RAILWAY_STATIC_URL}/api/companion.png?id=${companionKeys.id}`,
-					external_url: `${process.env.RAILWAY_STATIC_URL}/companion/${companionKeys.id}`,
+					token_id: id,
+					name: companion.name || `Companion #${id}`,
+					image: `${process.env.RAILWAY_STATIC_URL}/api/companion.png?id=${id}`,
+					external_url: `${process.env.RAILWAY_STATIC_URL}/companion/${id}`,
 					background_color: rgbToHex(companion.properties.background),
 					description: "Boxed in a small, wooden box, this companion is a bit of a mystery.",
 					attributes,
 				};
-				res.status(200).json(companion);
+				res.status(200).json(response);
 			} catch (e) {
 				res.status(500).json({ message: e.message });
 			}
