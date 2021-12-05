@@ -3,7 +3,7 @@ import { selectableAttributesArray } from "../data/attributes";
 import { colors } from "../data/colors";
 import { colorsRequired, colorToKey, getRestrictions, isCompatible } from "../data/helpers";
 import { randomProperty } from "../data/random";
-import { Companion, Pose, Restrictions, RGBColor } from "../data/types";
+import { Companion, Pose, Restrictions, RGBColor, Variant } from "../data/types";
 
 const OptionsContainer = ({
 	title,
@@ -117,7 +117,12 @@ const AttributeSelector = ({
 	active,
 	onSelect,
 }: {
-	variants: string[] | number[];
+	variants:
+		| Variant[]
+		| {
+				name: string | number;
+				rarity?: string;
+		  }[];
 	active?: string | number;
 	onSelect: (variant: string | number) => void;
 }) => {
@@ -126,20 +131,28 @@ const AttributeSelector = ({
 			{variants.map((variant) => {
 				return (
 					<div
-						key={variant}
-						onClick={() => onSelect(variant)}
+						key={variant.name}
+						onClick={variant.rarity === "mythic" ? () => {} : () => onSelect(variant.name)}
+						title={
+							variant.rarity === "mythic"
+								? "You can only mint this attribute randomly"
+								: variant.name
+						}
 						className={`
 							flex justify-center content-center 
 							cursor-pointer   
 							border-2 border-transparent rounded-full 
 							px-4 py-2
+							${variant.rarity === "mythic" ? "opacity-50 cursor-not-allowed" : ""} 
 							${
-								variant === active
-									? "border-hair-lightblue text-hair-lightblue"
-									: "text-gray-400 border-gray-600"
+								variant.name === active
+									? `border-hair-lightblue text-hair-lightblue`
+									: `text-gray-400 border-gray-600`
 							}`}
 					>
-						<p className="text-center m-auto">{variant}</p>
+						<p className="text-center m-auto">
+							{variant.rarity === "mythic" ? "???" : variant.name}
+						</p>
 					</div>
 				);
 			})}
@@ -241,7 +254,7 @@ export default function Editor({
 				</div>
 			</div>
 			<AttributeSelector
-				variants={attribute.variants.map((variant) => variant.name)}
+				variants={attribute.variants}
 				active={companion.attributes[attribute.name]?.name || ""}
 				onSelect={(selected) => {
 					if (typeof selected !== "string") {
@@ -310,7 +323,7 @@ export default function Editor({
 		<>
 			<OptionsContainer title="Pose">
 				<AttributeSelector
-					variants={[1, 2, 3, 4]}
+					variants={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4, rarity: "mythic" }]}
 					active={companion.properties.pose}
 					onSelect={(pose) => {
 						setCompanion((old) => {
@@ -368,7 +381,7 @@ export default function Editor({
 		<>
 			<OptionsContainer title="Face shape">
 				<AttributeSelector
-					variants={["m", "f"]}
+					variants={[{ name: "m" }, { name: "f" }]}
 					active={companion.properties.gender}
 					onSelect={(gender) => {
 						setCompanion((old) => {
