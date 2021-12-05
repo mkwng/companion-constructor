@@ -3,8 +3,8 @@ module.exports = {
 		content: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
 		options: {
 			safelist: [
-				"w-1/3",
-				"w-1/4",
+				"lg:w-1/3",
+				"lg:w-1/4",
 				"bg-hair-lightblue",
 				"bg-hair-gray",
 				"bg-hair-yellow",
