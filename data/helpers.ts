@@ -14,6 +14,7 @@ import {
 	RGBColor,
 	Variant,
 } from "./types";
+import { Companion as PrismaCompanion } from ".prisma/client";
 
 const getVariants = (companion: Companion): Variant[] => {
 	const pose = poses[companion.properties.pose];
@@ -314,7 +315,7 @@ export const companionToUrl = (companion: Companion): string => {
 
 const colorRegEx = /Color\d/g;
 
-export const apiToKeys = (data) => {
+export const apiToKeys = (data: PrismaCompanion) => {
 	const {
 		id,
 		createdAt,

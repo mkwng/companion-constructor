@@ -1,5 +1,14 @@
 import { RGBColor } from "./types";
 
+function componentToHex(c) {
+	var hex = c.toString(16);
+	return hex.length == 1 ? "0" + hex : hex;
+}
+
+export function rgbToHex(color: RGBColor) {
+	return "" + componentToHex(color.r) + componentToHex(color.g) + componentToHex(color.b);
+}
+
 export const colors: {
 	[key: string]: { [key: string]: RGBColor };
 } = {
