@@ -1,151 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import Button from "../components/button";
+import { ControlPanel } from "../components/controlPanel";
 import Editor from "../components/editor";
 import Marketing from "../components/marketing";
-import MyCompanions from "../components/myCompanions";
 import Renderer from "../components/renderer";
 import { colors } from "../data/colors";
 import { apiToKeys, colorToKey, keysToCompanion } from "../data/helpers";
 import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
-
-const ControlPanel = ({
-	handleCustomize,
-	handleRandomize,
-}: {
-	handleCustomize: () => void;
-	handleRandomize: () => void;
-}) => {
-	const [expanded, setExpanded] = useState<boolean>(true);
-	const [activeSection, setActiveSection] = useState<"playground" | "myCompanions">(
-		"playground"
-	);
-	return (
-		<>
-			<div className="flex items-center justify-center p-4">
-				<div className="w-5 h-5">
-					<div
-						className={`absolute w-5 h-5 rounded-full pointer-events-none ${
-							expanded ? "bg-yellow-400" : "bg-green-300"
-						}`}
-					></div>
-					<a
-						className="absolute w-5 h-5 opacity-0 hover:opacity-100 flex justify-center items-center cursor-default active:bg-green-400"
-						onClick={() => {
-							setExpanded((prev) => !prev);
-						}}
-					>
-						<div
-							className={`pointer-events-none absolute w-2 h-0.5 ${
-								expanded ? "bg-yellow-600" : "bg-green-500"
-							}`}
-						></div>
-						{!expanded && (
-							<div className="pointer-events-none absolute w-0.5 h-2 bg-green-500"></div>
-						)}
-					</a>
-				</div>
-				<div className="text-center flex-grow text-gray-500">Control panel</div>
-				<div className="w-4 h-4">&nbsp;</div>
-			</div>
-			<div className={`${expanded ? "" : "hidden"}`}>
-				<div className="bg-background-yellow p-2 text-clothing-black">
-					<button
-						className={`
-								w-full
-								flex justify-center items-center 
-								border-clothing-black border-2 
-								py-2 gap-2 rounded-full`}
-					>
-						<span>Connect wallet</span>
-						<span className="text-xs inline-block px-2 py-0.5 bg-clothing-black text-background-yellow rounded-full">
-							soon
-						</span>
-					</button>
-				</div>
-				<div className="p-2">
-					<div className="flex w-full rounded-full relative">
-						<div className="absolute w-full h-full z-0 rounded-full border-gray-600 border-2"></div>
-						<button
-							className={`
-									relative flex-grow
-									py-2 rounded-full
-									text-center border-2
-									${activeSection === "playground" ? "border-background-red" : "border-transparent text-gray-400"}
-								`}
-							onClick={() => setActiveSection("playground")}
-						>
-							Playground
-						</button>
-						<button
-							className={`
-									relative flex-grow
-									py-2 rounded-full
-									text-center border-2
-									${
-										activeSection === "myCompanions"
-											? "border-background-red"
-											: "border-transparent text-gray-400"
-									}
-								`}
-							onClick={() => setActiveSection("myCompanions")}
-						>
-							My companions
-						</button>
-					</div>
-				</div>
-				{activeSection === "playground" && (
-					<div className="p-2 pt-0 flex flex-col justify-items-stretch gap-2">
-						<button
-							className={`
-									relative
-									py-2 rounded-full
-									text-center
-									border-2 border-gray-600
-								`}
-							onClick={handleCustomize}
-						>
-							Customize
-						</button>
-						<button
-							className={`
-									relative
-									py-2 rounded-full
-									text-center
-									border-2 border-gray-600
-								`}
-							onClick={handleRandomize}
-						>
-							Randomize
-						</button>
-					</div>
-				)}
-
-				{activeSection === "myCompanions" && (
-					<div className="p-4 pt-0 flex flex-col justify-items-stretch gap-2">
-						<div className="text-center mx-4 my-1">
-							<h3 className="font-bold mb-2">You don&apos;t have any Companions yet!</h3>
-							<p className="text-gray-400">
-								When you own some Companions, they will show up here
-							</p>
-						</div>
-						<button
-							className={`
-									relative
-									py-2 rounded-full
-									text-center
-									border-2 border-gray-600
-								`}
-							onClick={() => {}}
-						>
-							Mint
-						</button>
-					</div>
-				)}
-			</div>
-		</>
-	);
-};
 
 export default function Constructor() {
 	const [companion, setCompanion] = useState<Companion | null>(null);
@@ -182,6 +43,42 @@ export default function Constructor() {
 					customizing ? "overflow-y-hidden" : ""
 				}`}
 			>
+				{!customizing ? (
+					<div className="fixed z-0 left-1/2 w-full max-w-xl transform -translate-x-1/2 bottom-24 p-2 pt-0 flex flex-col justify-items-stretch gap-1 text-xs">
+						<button
+							className={`
+									relative
+									py-2 rounded-full
+									text-center
+									border-2 border-clothing-black
+								`}
+							onClick={() => {
+								scrollableArea.current?.scrollTo({
+									top: window.innerHeight - 96,
+									behavior: "smooth",
+								});
+							}}
+						>
+							Learn more
+						</button>
+						<button
+							className={`
+									relative
+									py-2 rounded-full
+									flex justify-center items-center gap-2
+									text-center
+									bg-clothing-orange
+									border-2 border-clothing-black
+								`}
+							onClick={() => {}}
+						>
+							<span>Mint</span>
+							<span className="text-xs inline-block px-2 py-0.5 bg-clothing-black text-clothing-orange rounded-full">
+								soon
+							</span>
+						</button>
+					</div>
+				) : null}
 				<div
 					className={`
 					transition-all
@@ -196,7 +93,7 @@ export default function Constructor() {
 						bg-clothing-black text-white 
 						lg:rounded-lg 
 						overflow-y-scroll hide-scrollbar 
-						text-xs relative rounded-t-lg`}
+						text-xs relative`}
 					>
 						{customizing ? (
 							<>
@@ -213,15 +110,23 @@ export default function Constructor() {
 										← Cancel
 									</button>
 								</div>
-								<div className="lg:py-2">
+								<div className="lg:pb-2">
 									<Editor companionState={[companion, setCompanion]} />
 								</div>
 							</>
 						) : (
-							<ControlPanel
-								handleCustomize={() => setCustomizing(true)}
-								handleRandomize={() => setCompanion(randomCompanion())}
-							/>
+							<>
+								<ControlPanel
+									handleCustomize={() => {
+										setCustomizing(true);
+										scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
+									}}
+									handleRandomize={() => {
+										setCompanion(randomCompanion());
+										scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
+									}}
+								/>
+							</>
 						)}
 					</div>
 				</div>
@@ -260,9 +165,12 @@ export default function Constructor() {
 				)}`}
 			>
 				<div
-					className={`transition-all fixed w-screen z-0 h-full flex justify-center left-0 lg:top-0 ${
-						customizing ? "lg:w-2/3" : "pb-24 h-full w-screen"
-					}`}
+					className={`
+					transition-all 
+					fixed z-0 flex justify-center 
+					w-screen left-0 lg:h-full
+					overflow-hidden
+					${customizing ? "lg:w-2/3 h-4/6" : "h-5/6"}`}
 				>
 					<Renderer showTitle={!customizing} companion={companion} hideBackground={true} />
 				</div>

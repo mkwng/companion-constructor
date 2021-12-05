@@ -13,7 +13,7 @@ const OptionsContainer = ({
 	children: React.ReactNode;
 }) => {
 	return (
-		<div className="mt-4 mb-2 text-gray-400">
+		<div className="mb-6 text-gray-400">
 			<div className="px-4 w-full flex justify-between font-bold ">{title}</div>
 			{children}
 		</div>
@@ -33,6 +33,8 @@ const ColorSelector = ({
 	const rightPlaceholder = useRef<HTMLDivElement>(null);
 	const [moreLeft, setMoreLeft] = useState(false);
 	const [moreRight, setMoreRight] = useState(false);
+	const scrollableArea = useRef<HTMLDivElement>(null);
+	const activeDiv = useRef<HTMLDivElement>(null);
 
 	const checkMore = () => {
 		if (leftPlaceholder.current.getBoundingClientRect().right > 0) {
@@ -46,6 +48,15 @@ const ColorSelector = ({
 			setMoreRight(true);
 		}
 	};
+
+	useEffect(() => {
+		scrollableArea.current.scrollTo({
+			left:
+				activeDiv.current.offsetLeft -
+				scrollableArea.current.offsetWidth / 2 +
+				activeDiv.current.offsetWidth / 2,
+		});
+	}, []);
 
 	useEffect(() => {
 		checkMore();
@@ -71,13 +82,18 @@ const ColorSelector = ({
 					${moreRight ? "opacity-100" : "opacity-0"}`}
 				aria-hidden="true"
 			></div>
-			<div className="w-100 overflow-x-scroll scroll hide-scrollbar" onScroll={checkMore}>
+			<div
+				ref={scrollableArea}
+				className="w-100 overflow-x-scroll scroll hide-scrollbar"
+				onScroll={checkMore}
+			>
 				<div className="w-max flex">
 					<span className="w-4 h-4 inline-block" aria-hidden="true" ref={leftPlaceholder} />
 					{Object.keys(colors).map((color) => {
 						const rgb = `rgb(${colors[color].r},${colors[color].g},${colors[color].b})`;
 						return (
 							<div
+								ref={color === active ? activeDiv : null}
 								key={color}
 								onClick={() => onSelect(color)}
 								className="w-8 h-8 inline-block rounded-full m-2 cursor-pointer hover:opacity-90"
@@ -142,11 +158,17 @@ export default function Editor({
 	const [viewing, setViewing] = useState<
 		"general" | "face" | "hair" | "clothing" | "accessories"
 	>("general");
+	const scrollableCategoryRef = useRef<HTMLDivElement>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
 
 	const companionRestrictions = useMemo<Restrictions[]>(
 		() => getRestrictions(companion),
 		[companion]
 	);
+
+	useEffect(() => {
+		containerRef.current.parentElement.parentElement.scrollTo(0, 0);
+	}, [viewing]);
 
 	const skinOptions = [];
 	const hairOptions = [];
@@ -418,7 +440,6 @@ export default function Editor({
 	);
 
 	const CategorySelector = () => {
-		const scrollableArea = useRef<HTMLDivElement>(null);
 		const leftPlaceholder = useRef<HTMLDivElement>(null);
 		const rightPlaceholder = useRef<HTMLDivElement>(null);
 		const [moreLeft, setMoreLeft] = useState(false);
@@ -442,21 +463,22 @@ export default function Editor({
 
 		const CategoryLink = ({
 			category,
-			highlightColor,
 			children,
 		}: {
 			category: "general" | "face" | "hair" | "accessories" | "clothing";
-			highlightColor?: string;
 			children: React.ReactNode;
 		}) => (
 			<div
 				className={`
 				relative flex-grow
 				py-2 px-4 rounded-full
-				text-center border-2
+				text-center border-2 
 					${category === viewing ? "border-background-red" : "border-transparent text-gray-400"}`}
-				onClick={(e) => {
-					e.preventDefault();
+				onClick={() => {
+					sessionStorage.setItem(
+						"categoryPosition",
+						scrollableCategoryRef.current.scrollLeft + ""
+					);
 					setViewing(category);
 				}}
 			>
@@ -464,8 +486,14 @@ export default function Editor({
 			</div>
 		);
 
+		useEffect(() => {
+			scrollableCategoryRef.current.scrollTo({
+				left: parseInt(sessionStorage.getItem("categoryPosition")) || 0,
+			});
+		}, []);
+
 		return (
-			<div className="w-full">
+			<div className="relative w-full">
 				<div
 					className={`
 						pointer-events-none 
@@ -489,26 +517,26 @@ export default function Editor({
 					aria-hidden="true"
 				></div>
 				<div
-					ref={scrollableArea}
+					ref={scrollableCategoryRef}
 					onScroll={checkMore}
 					className="w-full overflow-x-scroll hide-scrollbar"
 				>
 					<div className="w-max min-w-full flex justify-center relative">
-						<div className="absolute left-2 right-2 h-full z-0 rounded-full border-gray-600 border-2"></div>
+						<div className="absolute left-2 right-2 h-full z-0 rounded-full border-gray-600 border-2 bg-clothing-black"></div>
 						<span className="w-2 h-4 inline-block" aria-hidden="true" ref={leftPlaceholder} />
-						<CategoryLink category="general" highlightColor="bg-background-red">
+						<CategoryLink key="general" category="general">
 							General
 						</CategoryLink>
-						<CategoryLink category="hair" highlightColor="bg-hair-lightblue">
+						<CategoryLink key="hair" category="hair">
 							Hair
 						</CategoryLink>
-						<CategoryLink category="face" highlightColor="bg-clothing-yellow">
+						<CategoryLink key="face" category="face">
 							Face
 						</CategoryLink>
-						<CategoryLink category="clothing" highlightColor="bg-clothing-green">
+						<CategoryLink key="clothing" category="clothing">
 							Clothing
 						</CategoryLink>
-						<CategoryLink category="accessories" highlightColor="bg-clothing-red">
+						<CategoryLink key="accessories" category="accessories">
 							Accessories
 						</CategoryLink>
 						<span className="w-2 h-4 inline-block" aria-hidden="true" ref={rightPlaceholder} />
@@ -520,31 +548,33 @@ export default function Editor({
 
 	return (
 		<div
-			className={`${
+			ref={containerRef}
+			className={`transition-all ${
 				expanded
-					? "min-h-screen lg:min-h-0 max-h-screen"
-					: "max-h-12 overflow-hidden lg:max-h-full lg:overflow-visible"
+					? "pt-4 max-h-1/2-screen lg:max-h-screen h-1/2-screen lg:h-auto"
+					: "max-h-0 lg:max-h-full"
 			}`}
 		>
 			<div
-				className={`z-30 fixed lg:hidden bottom-0 w-full p-2 bg-background-yellow text-clothing-black`}
+				className={`z-30 fixed lg:hidden bottom-0 w-full p-2 text-white bg-clothing-black shadow-md`}
 			>
 				<button
 					className={`
 									relative w-full
 									py-2 rounded-full
 									text-center
-									border-2 border-gray-600
+									border-2 border-background-yellow
 								`}
 					onClick={() => {
 						setExpanded((prev) => !prev);
 					}}
 				>
-					{expanded ? "Hide controls" : "Show controls"}
+					{expanded ? "Hide editor" : "Show editor"}
 				</button>
 			</div>
-			<div className="h-14 w-full lg:hidden"></div>
-			<CategorySelector />
+			<div className="sticky float-left top-4 px-2 mb-4 lg:top-16 w-full">
+				<CategorySelector />
+			</div>
 			{(() => {
 				switch (viewing) {
 					case "general":
@@ -561,6 +591,7 @@ export default function Editor({
 						return null;
 				}
 			})()}
+			<div className="h-14 lg:hidden" />
 		</div>
 	);
 }
