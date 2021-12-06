@@ -115,9 +115,9 @@ export const ControlPanel = ({
 								border-clothing-black border-2 
 								py-2 gap-2 rounded-full`}
 						onClick={() => {
-							setLatestConnector(ConnectorNames.Injected);
-							setLatestOp(W3Operations.Connect);
-							web3React.activate(injected);
+							// setLatestConnector(ConnectorNames.Injected);
+							// setLatestOp(W3Operations.Connect);
+							// web3React.activate(injected);
 						}}
 					>
 						<span>Connect wallet</span>
