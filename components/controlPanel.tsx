@@ -1,4 +1,19 @@
+import { useWeb3React } from "@web3-react/core";
+import { InjectedConnector } from "@web3-react/injected-connector";
 import { useEffect, useState } from "react";
+import Web3 from "web3";
+import useLocalStorage from "../hooks/useLocalStorage";
+import { abi, contractAddress } from "./contract";
+
+const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42] });
+const ConnectorNames = {
+	Injected: "injected",
+	WalletConnect: "walletconnect",
+};
+const W3Operations = {
+	Connect: "connect",
+	Disconnect: "disconnect",
+};
 
 export const ControlPanel = ({
 	handleCustomize,
@@ -11,12 +26,58 @@ export const ControlPanel = ({
 	const [activeSection, setActiveSection] = useState<"playground" | "myCompanions">(
 		"playground"
 	);
+	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
+	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
+	const web3React = useWeb3React();
+	const { active, activate, error } = web3React;
+	const [web3, setWeb3] = useState(null);
+	const [contract, setContract] = useState(null);
+
+	const [ownedCompanions, setOwnedCompanions] = useState<Set<number>>(new Set());
+
+	useEffect(() => {
+		if (active) {
+			let w3 = new Web3(web3React.library.provider);
+			setWeb3(w3);
+			let c = new w3.eth.Contract(abi, contractAddress);
+			console.log(c);
+			setContract(c);
+		} else {
+			setContract(null);
+		}
+	}, [active, web3React]);
+
+	const getUserBalance = () => {
+		if (contract && contract.methods) {
+			return contract.methods
+				.balanceOf(web3React.account)
+				.call()
+				.then((result) => {
+					for (let i = 0; i < result; i++) {
+						contract.methods
+							.tokenOfOwnerByIndex(web3React.account, i)
+							.call()
+							.then((tokenId) => {
+								setOwnedCompanions((ownedCompanions) => {
+									ownedCompanions.add(tokenId);
+									console.log(ownedCompanions);
+									return ownedCompanions;
+								});
+							});
+					}
+				});
+		} else {
+			return;
+		}
+	};
 
 	useEffect(() => {
 		if (window.outerWidth < 768) {
 			setExpanded(false);
 		}
+		getUserBalance();
 	}, []);
+
 	return (
 		<>
 			<div
@@ -53,6 +114,11 @@ export const ControlPanel = ({
 								flex justify-center items-center 
 								border-clothing-black border-2 
 								py-2 gap-2 rounded-full`}
+						onClick={() => {
+							setLatestConnector(ConnectorNames.Injected);
+							setLatestOp(W3Operations.Connect);
+							web3React.activate(injected);
+						}}
 					>
 						<span>Connect wallet</span>
 						<span className="text-xs inline-block px-2 py-0.5 bg-clothing-black text-background-yellow rounded-full">
@@ -125,6 +191,7 @@ export const ControlPanel = ({
 							<p className="text-gray-400">
 								When you own some Companions, they will show up here
 							</p>
+							<p>{ownedCompanions}</p>
 						</div>
 						<button
 							className={`

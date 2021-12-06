@@ -1,6 +1,6 @@
 import { Companion as PrismaCompanion } from ".prisma/client";
-import { colors, rgbToHex } from "../../../data/colors";
-import { apiToKeys, companionToUrl, keysToCompanion } from "../../../data/helpers";
+import { rgbToHex } from "../../../data/colors";
+import { apiToKeys, keysToCompanion } from "../../../data/helpers";
 import prisma from "../../../lib/prisma";
 
 export default async function apiCompanions(req, res) {
@@ -8,9 +8,14 @@ export default async function apiCompanions(req, res) {
 	switch (method) {
 		case "GET":
 			try {
-				const companionKeys: PrismaCompanion = await prisma.companion.findUnique({
+				let companionKeys: PrismaCompanion = await prisma.companion.findUnique({
 					where: { id: parseInt(req.query.id) },
 				});
+				if (!companionKeys) {
+					return res.status(404).json({
+						error: "Companion not found",
+					});
+				}
 				const {
 					id,
 					createdAt,

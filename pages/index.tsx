@@ -1,4 +1,9 @@
+import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
+import { InjectedConnector } from "@web3-react/injected-connector";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { useEffect, useRef, useState } from "react";
+import Button from "../components/button";
 import { ControlPanel } from "../components/controlPanel";
 import Editor from "../components/editor";
 import Marketing from "../components/marketing";
@@ -7,13 +12,44 @@ import { colors } from "../data/colors";
 import { apiToKeys, colorToKey, keysToCompanion } from "../data/helpers";
 import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
+import useLocalStorage from "../hooks/useLocalStorage";
 
-export default function Constructor() {
+const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42] });
+const wcConnector = new WalletConnectConnector({
+	infuraId: "517bf3874a6848e58f99fa38ccf9fce4",
+});
+
+const preferredNetwork = 1;
+
+function getLibrary(provider) {
+	const library = new Web3Provider(provider);
+	// library.pollingInterval = 12000;
+	return library;
+}
+
+export default function WrapperHome() {
+	return (
+		<Web3ReactProvider getLibrary={getLibrary}>
+			<Constructor />
+		</Web3ReactProvider>
+	);
+}
+
+function Constructor() {
 	const [companion, setCompanion] = useState<Companion | null>(null);
 	const [connected, setConnected] = useState(false);
 	const [customizing, setCustomizing] = useState<boolean>(false);
 	const [selectedCompanion, setSelectedCompanion] = useState<number | null>(null);
 	const scrollableArea = useRef<HTMLDivElement>(null);
+
+	const web3React = useWeb3React();
+	const { active, activate, error } = web3React;
+	const [loaded, setLoaded] = useState(false);
+
+	const [contract, setContract] = useState(null);
+	const [hash, setHash] = useState(null);
+	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
+	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
 
 	useEffect(() => {
 		if (selectedCompanion) {
@@ -29,6 +65,24 @@ export default function Constructor() {
 			setCompanion(randomCompanion());
 		}
 	}, [selectedCompanion]);
+
+	useEffect(() => {
+		if (latestOp == "connect" && latestConnector == "injected") {
+			injected
+				.isAuthorized()
+				.then((isAuthorized) => {
+					setLoaded(true);
+					if (isAuthorized && !web3React.active && !web3React.error) {
+						web3React.activate(injected);
+					}
+				})
+				.catch(() => {
+					setLoaded(true);
+				});
+		} else if (latestOp == "connect" && latestConnector == "walletconnect") {
+			web3React.activate(wcConnector);
+		}
+	}, []);
 
 	if (!companion) {
 		return <>Loading..</>;
@@ -136,8 +190,10 @@ export default function Constructor() {
 						customizing ? "pointer-events-none opacity-0 duration-75 " : ""
 					}`}
 				>
-					{/* <div className="w-full min-h-full bg-clothing-white rounded-xl shadow-2xl px-4 lg:px-8 py-16 max-w-6xl mx-auto text-lg grid-cols-1 md:grid-cols-5 items-center mb-8 flex justify-center">
-						<Button className="bg-hair-lightblue">View on OpenSea</Button>
+					<div className="w-full min-h-full bg-clothing-white rounded-xl shadow-2xl px-4 lg:px-8 py-16 max-w-6xl mx-auto text-lg grid-cols-1 md:grid-cols-5 items-center mb-8 flex justify-center">
+						<Button className="bg-hair-lightblue" onClick={() => {}}>
+							View on OpenSea
+						</Button>
 						<Button
 							className="bg-hair-yellow"
 							onClick={async () => {
@@ -153,8 +209,7 @@ export default function Constructor() {
 						>
 							Save
 						</Button>
-						<a href={`/api/companion.png?faceOnly=true&${companionToUrl(companion)}`}>Link</a>
-					</div> */}
+					</div>
 					<Marketing />
 				</div>
 			</div>
