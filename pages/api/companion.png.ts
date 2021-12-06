@@ -108,7 +108,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					await axios({
 						url:
 							"https://" +
-							process.env.RAILWAY_STATIC_URL +
+							(process.env.RAILWAY_STATIC_URL || process.env.NEXT_PUBLIC_URL) +
 							getPath(layer, companion.properties.pose),
 						responseType: "arraybuffer",
 					})
