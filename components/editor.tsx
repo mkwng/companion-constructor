@@ -379,9 +379,9 @@ export default function Editor({
 
 	const FaceOptions = () => (
 		<>
-			<OptionsContainer title="Face shape">
+			<OptionsContainer title="Shape">
 				<AttributeSelector
-					variants={[{ name: "m" }, { name: "f" }]}
+					variants={[{ name: "m" }, { name: "f" }, { name: "n", rarity: "mythic" }]}
 					active={companion.properties.gender}
 					onSelect={(gender) => {
 						setCompanion((old) => {
