@@ -66,23 +66,23 @@ function Constructor() {
 		}
 	}, [selectedCompanion]);
 
-	useEffect(() => {
-		if (latestOp == "connect" && latestConnector == "injected") {
-			injected
-				.isAuthorized()
-				.then((isAuthorized) => {
-					setLoaded(true);
-					if (isAuthorized && !web3React.active && !web3React.error) {
-						web3React.activate(injected);
-					}
-				})
-				.catch(() => {
-					setLoaded(true);
-				});
-		} else if (latestOp == "connect" && latestConnector == "walletconnect") {
-			web3React.activate(wcConnector);
-		}
-	}, []);
+	// useEffect(() => {
+	// 	if (latestOp == "connect" && latestConnector == "injected") {
+	// 		injected
+	// 			.isAuthorized()
+	// 			.then((isAuthorized) => {
+	// 				setLoaded(true);
+	// 				if (isAuthorized && !web3React.active && !web3React.error) {
+	// 					web3React.activate(injected);
+	// 				}
+	// 			})
+	// 			.catch(() => {
+	// 				setLoaded(true);
+	// 			});
+	// 	} else if (latestOp == "connect" && latestConnector == "walletconnect") {
+	// 		web3React.activate(wcConnector);
+	// 	}
+	// }, []);
 
 	if (!companion) {
 		return <>Loading..</>;
@@ -190,7 +190,7 @@ function Constructor() {
 						customizing ? "pointer-events-none opacity-0 duration-75 " : ""
 					}`}
 				>
-					<div className="w-full min-h-full bg-clothing-white rounded-xl shadow-2xl px-4 lg:px-8 py-16 max-w-6xl mx-auto text-lg grid-cols-1 md:grid-cols-5 items-center mb-8 flex justify-center">
+					{/* <div className="w-full min-h-full bg-clothing-white rounded-xl shadow-2xl px-4 lg:px-8 py-16 max-w-6xl mx-auto text-lg grid-cols-1 md:grid-cols-5 items-center mb-8 flex justify-center">
 						<Button className="bg-hair-lightblue" onClick={() => {}}>
 							View on OpenSea
 						</Button>
@@ -209,7 +209,7 @@ function Constructor() {
 						>
 							Save
 						</Button>
-					</div>
+					</div> */}
 					<Marketing />
 				</div>
 			</div>

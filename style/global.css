@@ -42,3 +42,11 @@ body {
 .shadow-high {
 	box-shadow: var(--shadow-elevation-high);
 }
+
+.force-ratio::after {
+	content: "";
+	display: block;
+	height: 0;
+	width: 0;
+	padding-bottom: calc(100%);
+}

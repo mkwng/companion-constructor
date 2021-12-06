@@ -35,47 +35,47 @@ export const ControlPanel = ({
 
 	const [ownedCompanions, setOwnedCompanions] = useState<Set<number>>(new Set());
 
-	useEffect(() => {
-		if (active) {
-			let w3 = new Web3(web3React.library.provider);
-			setWeb3(w3);
-			let c = new w3.eth.Contract(abi, contractAddress);
-			console.log(c);
-			setContract(c);
-		} else {
-			setContract(null);
-		}
-	}, [active, web3React]);
+	// useEffect(() => {
+	// 	if (active) {
+	// 		let w3 = new Web3(web3React.library.provider);
+	// 		setWeb3(w3);
+	// 		let c = new w3.eth.Contract(abi, contractAddress);
+	// 		console.log(c);
+	// 		setContract(c);
+	// 	} else {
+	// 		setContract(null);
+	// 	}
+	// }, [active, web3React]);
 
-	const getUserBalance = () => {
-		if (contract && contract.methods) {
-			return contract.methods
-				.balanceOf(web3React.account)
-				.call()
-				.then((result) => {
-					for (let i = 0; i < result; i++) {
-						contract.methods
-							.tokenOfOwnerByIndex(web3React.account, i)
-							.call()
-							.then((tokenId) => {
-								setOwnedCompanions((ownedCompanions) => {
-									ownedCompanions.add(tokenId);
-									console.log(ownedCompanions);
-									return ownedCompanions;
-								});
-							});
-					}
-				});
-		} else {
-			return;
-		}
-	};
+	// const getUserBalance = () => {
+	// 	if (contract && contract.methods) {
+	// 		return contract.methods
+	// 			.balanceOf(web3React.account)
+	// 			.call()
+	// 			.then((result) => {
+	// 				for (let i = 0; i < result; i++) {
+	// 					contract.methods
+	// 						.tokenOfOwnerByIndex(web3React.account, i)
+	// 						.call()
+	// 						.then((tokenId) => {
+	// 							setOwnedCompanions((ownedCompanions) => {
+	// 								ownedCompanions.add(tokenId);
+	// 								console.log(ownedCompanions);
+	// 								return ownedCompanions;
+	// 							});
+	// 						});
+	// 				}
+	// 			});
+	// 	} else {
+	// 		return;
+	// 	}
+	// };
 
 	useEffect(() => {
 		if (window.outerWidth < 768) {
 			setExpanded(false);
 		}
-		getUserBalance();
+		// getUserBalance();
 	}, []);
 
 	return (

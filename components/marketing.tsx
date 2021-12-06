@@ -12,20 +12,12 @@ export default function Marketing() {
 					ERC-721 token and is completely and utterly one-of-a-kind.
 				</p>
 			</div>
-			<div className="md:col-span-2 p-4 md:p-8 order-1 md:order-2 relative aspect-w-1 aspect-h-1">
-				<Image
-					src="/attributes/pose1/00-background/bg-v_background.png"
-					alt="placeholder"
-					layout="fill"
-				/>
+			<div className="md:col-span-2 p-4 md:p-8 order-1 md:order-2 relative aspect-w-1 aspect-h-1 force-ratio">
+				<Image src="/examples/4.png" alt="placeholder" layout="fill" />
 			</div>
 
-			<div className="md:col-span-2 p-4 md:p-8 order-3 relative  aspect-w-1 aspect-h-1">
-				<Image
-					src="/attributes/pose1/00-background/bg-v_background.png"
-					alt="placeholder"
-					layout="fill"
-				/>
+			<div className="md:col-span-2 p-4 md:p-8 order-3 relative  aspect-w-1 aspect-h-1 force-ratio">
+				<Image src="/examples/3.png" alt="placeholder" layout="fill" />
 			</div>
 			<div className="md:col-span-3 p-4 md:p-8 order-4">
 				<h1 className="font-bold mb-2 text-lg lg:text-xl">Not just another floating head</h1>
@@ -42,20 +34,12 @@ export default function Marketing() {
 					customize your companion&apos;s attributes.
 				</p>
 			</div>
-			<div className="md:col-span-2 p-4 md:p-8 order-5 md:order-6 relative aspect-w-1 aspect-h-1">
-				<Image
-					src="/attributes/pose1/00-background/bg-v_background.png"
-					alt="placeholder"
-					layout="fill"
-				/>
+			<div className="md:col-span-2 p-4 md:p-8 order-5 md:order-6 relative force-ratio">
+				<Image src="/examples/2.png" alt="placeholder" layout="fill" />
 			</div>
 
-			<div className="md:col-span-2 p-4 md:p-8 order-7 relative aspect-w-1 aspect-h-1">
-				<Image
-					src="/attributes/pose1/00-background/bg-v_background.png"
-					alt="placeholder"
-					layout="fill"
-				/>
+			<div className="md:col-span-2 p-4 md:p-8 order-7 relative force-ratio">
+				<Image src="/examples/1.png" alt="placeholder" layout="fill" />
 			</div>
 			<div className="md:col-span-3 p-4 md:p-8 order-8">
 				<h1 className="font-bold mb-2 text-lg lg:text-xl">Enter the box universe</h1>

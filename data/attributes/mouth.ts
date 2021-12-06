@@ -370,6 +370,24 @@ export const mouth: AttributeDictionary = {
 				},
 			],
 		},
+
+		{
+			attribute: "mouth",
+			name: "beardsmile",
+			layers: [
+				{
+					path: "/attributes/face/08-mouth/beard2_1-c_shadow-g_m.png",
+					color: colors.skin["1"],
+					blendMode: "multiply",
+				},
+				{ path: "/attributes/face/08-mouth/beard2_2-v_hair-g_m.png", colorType: "hair" },
+				{ path: "/attributes/face/08-mouth/beard2_3-c_white.png", color: colors.default.white },
+				{
+					path: "/attributes/face/08-mouth/beard2_4-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
 	],
 };
 
