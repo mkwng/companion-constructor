@@ -1,190 +1,210 @@
 import axios from "axios";
+import { NextApiRequest, NextApiResponse } from "next";
 import NodeCache from "node-cache";
 import sharp from "sharp";
-import { colors } from "../../data/colors";
-import { companionExample } from "../../data/example";
-import { getColor, getLayers, getPath, selectableAttributes } from "../../data/helpers";
-import { Pose, RGBColor } from "../../data/types";
+import { apiToKeys, drawLayer, getLayers, getPath, keysToCompanion } from "../../data/helpers";
+import { AttributeSelection, Companion, LayerWithData, Pose, RGBColor } from "../../data/types";
+import prisma from "../../lib/prisma";
 
 const imageCache = new NodeCache();
+const applyColor = async (input: Buffer, color: RGBColor): Promise<Buffer> => {
+	return await sharp(input)
+		.composite([
+			{
+				input: await sharp({
+					create: {
+						width: 2048,
+						height: 2048,
+						channels: 3,
+						background: color,
+					},
+				})
+					.png()
+					.toBuffer(),
+				blend: "in",
+			},
+		])
+		.toBuffer();
+};
+const applyTransformation = async (input: Buffer, pose: Pose): Promise<Buffer> => {
+	switch (pose) {
+		case 1:
+			return await sharp({
+				create: {
+					width: 2048,
+					height: 2048,
+					channels: 4,
+					background: { r: 255, g: 255, b: 255, alpha: 0 },
+				},
+			})
+				.png()
+				.composite([{ input: await sharp(input).flop().toBuffer(), top: -15, left: -261 }])
+				.toBuffer();
+		case 2:
+			return input;
+		case 3:
+			return await sharp({
+				create: {
+					width: 2048,
+					height: 2048,
+					channels: 4,
+					background: { r: 255, g: 255, b: 255, alpha: 0 },
+				},
+			})
+				.png()
+				.composite([{ input, left: 521, top: -313 }])
+				.toBuffer();
+		case 4:
+			return await sharp({
+				create: {
+					width: 2048,
+					height: 2048,
+					channels: 4,
+					background: { r: 255, g: 255, b: 255, alpha: 0 },
+				},
+			})
+				.png()
+				.composite([
+					{ input: await sharp(input).flip().rotate(90).toBuffer(), top: 0, left: 246 },
+				])
+				.toBuffer();
+	}
+};
 
-const colorRegEx = /Color\d/g;
-
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Example url query:
 	// http://localhost:3000/api/companion.png?pose=2&gender=m&skinColor=0&hairColor=purple&backgroundColor=yellow&hair=crop&eyes=open&brows=bushy&mouth=handlebars&nose=hook&headwear=cap&headwearColor1=red&headwearColor2=blue
 	// http://localhost:3000/api/companion.png?pose=2&gender=f&skinColor=0&hairColor=purple&backgroundColor=bga&hair=crop&eyes=dart&brows=bushy&mouth=handlebars&nose=hook&headwear=cap&headwearColor1=red&headwearColor2=blue
-	const companion = companionExample;
-	for (const key in req.query) {
-		switch (key) {
-			case "pose":
-				if (!(req.query[key] in Pose)) {
-					throw new Error(`${key} not valid`);
-				}
-				companion.properties.pose = Number(req.query[key]);
-				break;
-			case "gender":
-				if (req.query[key] !== "f" && req.query[key] !== "m") {
-					throw new Error(`${key} not valid`);
-				}
-				companion.properties.gender = req.query[key];
-				break;
-			case "skinColor":
-			case "hairColor":
-			case "backgroundColor":
-				const propName = key.replace("Color", "");
-				const color = colors[propName][req.query[key]];
-				if (!color) {
-					throw new Error(`${key} not valid`);
-				}
-				companion.properties[propName] = color;
-				break;
-			default:
-				if (key.match(colorRegEx)) {
-					continue;
-				}
-				if (!(key in selectableAttributes)) {
-					throw new Error(`${key} not valid`);
-				}
-				const match = selectableAttributes[key].variants.find(
-					(variant) => variant.name === req.query[key]
-				);
-				if (!match) {
-					throw new Error(`${key} not valid`);
-				}
-				companion.attributes[key] = {
-					name: req.query[key],
-				};
-				let i = 1;
-				let colorList: RGBColor[] = [];
-				while (req.query[key + "Color" + i]) {
-					colorList.push(colors.clothing[req.query[key + "Color" + i++]]);
-				}
-				if (colorList.length > 0) {
-					companion.attributes[key].color = colorList;
-				}
-		}
+
+	const { faceOnly, ...query } = req.query;
+	let optimized: Buffer = await imageCache.get(req.url);
+
+	if (optimized) {
+		console.log(`Successfully used cache for ${req.url}`);
 	}
-	const layers = getLayers(companion);
 
-	const imageBuffers = layers.map(async ([layer]) => {
-		const path = getPath(layer, companion.properties.pose);
-		let imageBuffer: Buffer = await imageCache.get(path);
-		if (!imageBuffer) {
-			imageBuffer = (
-				await axios({
-					url: process.env.NEXT_PUBLIC_URL + getPath(layer, companion.properties.pose),
-					responseType: "arraybuffer",
-				})
-			).data as Buffer;
-			imageCache.set(path, imageBuffer);
+	if (!optimized) {
+		let companion: Companion | null;
+		const batches: string[] = [];
+		if (query.id && typeof query.id === "string") {
+			const result = await prisma.companion.findUnique({
+				where: { id: parseInt(query.id) },
+			});
+			companion = keysToCompanion(apiToKeys(result));
+		} else {
+			companion = keysToCompanion(query);
 		}
-		return imageBuffer;
-	});
-	const results = await Promise.all(imageBuffers);
+		if (!companion?.properties?.pose) {
+			res.status(404).send("No companion found");
+			return;
+		}
+		const layers = getLayers(companion);
 
-	const final = await results.reduce(
-		async (current, next, i) => {
-			let color: RGBColor | undefined;
-			const [layer, selection, needsTranslation] = layers[i];
-
-			if ("color" in layer) {
-				color = layer.color;
-			} else if ("colorType" in layer) {
-				color = getColor(layer, companion, selection?.color);
+		const imageBuffers = layers.map(async ([layer]) => {
+			const path = getPath(layer, companion.properties.pose);
+			let imageBuffer: Buffer = await imageCache.get(path);
+			if (!imageBuffer) {
+				imageBuffer = (
+					await axios({
+						url:
+							"https://" +
+							(process.env.RAILWAY_STATIC_URL || process.env.NEXT_PUBLIC_URL) +
+							getPath(layer, companion.properties.pose),
+						responseType: "arraybuffer",
+					})
+				).data as Buffer;
+				imageCache.set(path, imageBuffer);
 			}
+			return imageBuffer;
+		});
+		const results = await Promise.all(imageBuffers);
 
-			let input: Buffer = next;
-
-			if (color) {
-				input = await sharp(input)
-					.composite([
-						{
-							input: await sharp({
-								create: {
-									width: 2048,
-									height: 2048,
-									channels: 3,
-									background: color,
-								},
-							})
-								.png()
-								.toBuffer(),
-							blend: "in",
-						},
-					])
-					.toBuffer();
+		const layersWithData: [LayerWithData, AttributeSelection?, boolean?][] = layers.map(
+			([layer, ...rest], i) => {
+				return [
+					{
+						imgData: results[i],
+						...layer,
+					},
+					...rest,
+				];
 			}
-			if (needsTranslation) {
-				switch (companion.properties.pose) {
-					case 1:
-						input = await sharp({
-							create: {
-								width: 2048,
-								height: 2048,
-								channels: 4,
-								background: { r: 255, g: 255, b: 255, alpha: 0 },
-							},
-						})
-							.png()
-							.composite([
-								{ input: await sharp(input).flop().toBuffer(), top: -15, left: -261 },
-							])
-							.toBuffer();
-						break;
-					case 2:
-						break;
-					case 3:
-						input = await sharp({
-							create: {
-								width: 2048,
-								height: 2048,
-								channels: 4,
-								background: { r: 255, g: 255, b: 255, alpha: 0 },
-							},
-						})
-							.png()
-							.composite([{ input, left: 521, top: -313 }])
-							.toBuffer();
-						break;
-					case 4:
-						input = await sharp({
-							create: {
-								width: 2048,
-								height: 2048,
-								channels: 4,
-								background: { r: 255, g: 255, b: 255, alpha: 0 },
-							},
-						})
-							.png()
-							.composite([
-								{ input: await sharp(input).flip().rotate(90).toBuffer(), top: 0, left: 246 },
-							])
-							.toBuffer();
-						break;
+		);
+
+		const final = await layers.reduce(
+			async (canvas, [layer], i) => {
+				if (layer.batch) {
+					if (batches.includes(layer.batch)) {
+						return canvas;
+					}
+					batches.push(layer.batch);
 				}
-			}
-			return sharp(await current)
-				.composite([{ input, blend: layer.blendMode || "over" }])
-				.toBuffer();
-		},
-		sharp({
-			create: {
-				width: 2048,
-				height: 2048,
-				channels: 4,
-				background: { r: 255, g: 255, b: 255, alpha: 0 },
-			},
-		})
-			.png()
-			.toBuffer()
-	);
 
-	const optimized = await sharp(final)
-		.resize({ width: 960 })
-		.flatten()
-		.png({ compressionLevel: 8, quality: 80 })
-		.toBuffer();
+				return await drawLayer({
+					companion,
+					canvas: await canvas,
+					layers: layersWithData,
+					drawIndex: i,
+					recurseBatches: true,
+					paint: (input, target, blendMode) => {
+						target = target as Buffer;
+						input = input as Buffer;
+						const blend = blendMode
+							? ((): "multiply" | "dest-over" | "over" => {
+									switch (layer.blendMode) {
+										case "multiply":
+											return "multiply";
+										case "destination-over":
+											return "dest-over";
+										default:
+											return "over";
+									}
+							  })()
+							: "over";
+						return sharp(target).composite([{ input, blend }]).toBuffer();
+					},
+					createCanvas: () => {
+						return sharp({
+							create: {
+								width: 2048,
+								height: 2048,
+								channels: 4,
+								background: { r: 255, g: 255, b: 255, alpha: 0 },
+							},
+						})
+							.png()
+							.toBuffer();
+					},
+					replaceColor: applyColor,
+					translateImage: applyTransformation,
+				});
+			},
+			sharp({
+				create: {
+					width: 2048,
+					height: 2048,
+					channels: 4,
+					background: { r: 255, g: 255, b: 255, alpha: 0 },
+				},
+			})
+				.png()
+				.toBuffer()
+		);
+
+		optimized = await sharp(final as Buffer)
+			.flatten()
+			.png({ compressionLevel: 8, quality: 80 })
+			.toBuffer();
+
+		imageCache.set(req.url, optimized);
+	}
+
+	if (faceOnly) {
+		optimized = await sharp(optimized)
+			.extract({ left: 65, top: 371, width: 960, height: 960 })
+			.png()
+			.toBuffer();
+	}
 
 	res.setHeader("Content-Type", "image/png");
 	res.setHeader("Content-Length", optimized.length);

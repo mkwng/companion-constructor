@@ -1,3 +1,4 @@
+import { AccessoryVariant } from "./attributes/accessory";
 import { BlemishVariant } from "./attributes/blemish";
 import { BottomVariant } from "./attributes/bottom";
 import { BrowsVariant } from "./attributes/brows";
@@ -5,8 +6,10 @@ import { EyesVariant } from "./attributes/eyes";
 import { EyewearVariant } from "./attributes/eyewear";
 import { HairVariant } from "./attributes/hair";
 import { HeadwearVariant } from "./attributes/headwear";
+import { MaskVariant } from "./attributes/mask";
 import { MouthVariant } from "./attributes/mouth";
 import { NoseVariant } from "./attributes/nose";
+import { ShoesVariant } from "./attributes/shoes";
 import { TopVariant } from "./attributes/top";
 
 export enum Pose {
@@ -32,47 +35,68 @@ export type AttributeType =
 	| "nose"
 	| "bodyFront"
 	| "top"
-	| "bottom";
+	| "bottom"
+	| "mask"
+	| "shoes"
+	| "accessory";
 
 type Gender = "m" | "f";
 type HeadShape = "big" | "flat";
 type ProfileShape = "flat" | "encroached";
+type Rarity = "common" | "uncommon" | "rare" | "mythic";
 
 export interface Variant {
+	attribute?: AttributeType;
 	name?: string;
 	restrictions?: Restrictions;
 	layers: Layer[];
+	rarity?: Rarity;
+	hides?: AttributeType[];
 }
-interface Restrictions {
+export interface Restrictions {
 	gender?: Gender;
 	pose?: Pose;
 	headShape?: HeadShape;
 	profileShape?: ProfileShape;
 }
 interface LayerBase {
-	blendMode?: "multiply";
+	blendMode?: "multiply" | "destination-over";
 	path:
 		| string
 		| {
-				"1": string;
-				"2": string;
-				"3": string;
-				"4": string;
+				"1"?: string;
+				"2"?: string;
+				"3"?: string;
+				"4"?: string;
 		  };
+	batch?: string;
 }
-interface LayerDynamic extends LayerBase {
-	colorType: "hair" | "skin" | "clothing" | "background";
+export interface LayerDynamic extends LayerBase {
+	colorType: "hair" | "skin" | "clothing" | "background" | "inherit";
 }
-interface LayerStatic extends LayerBase {
+export interface LayerStatic extends LayerBase {
 	color: RGBColor;
 }
 
 export type Layer = LayerBase | LayerDynamic | LayerStatic;
 
+interface LayerBaseWithData extends LayerBase {
+	imgData: HTMLImageElement | HTMLCanvasElement | Buffer;
+}
+export interface LayerDynamicWithData extends LayerBaseWithData {
+	colorType: "hair" | "skin" | "clothing" | "background" | "inherit";
+}
+export interface LayerStaticWithData extends LayerBaseWithData {
+	color: RGBColor;
+}
+
+export type LayerWithData = LayerBaseWithData | LayerDynamicWithData | LayerStaticWithData;
+
 export interface AttributeDictionary {
-	name: string;
+	name: AttributeType;
 	needsTranslation?: boolean;
 	isOptional?: boolean;
+	appearsIn?: number;
 	variants: Variant[];
 }
 export interface RGBColor {
@@ -83,6 +107,7 @@ export interface RGBColor {
 
 export interface AttributeSelectionBase {
 	color?: RGBColor[];
+	colorIndex?: number;
 }
 interface BlemishSelection extends AttributeSelectionBase {
 	name: BlemishVariant;
@@ -114,6 +139,15 @@ interface TopSelection extends AttributeSelectionBase {
 interface BottomSelection extends AttributeSelectionBase {
 	name: BottomVariant;
 }
+interface MaskSelection extends AttributeSelectionBase {
+	name: MaskVariant;
+}
+interface ShoesSelection extends AttributeSelectionBase {
+	name: ShoesVariant;
+}
+interface AccessorySelection extends AttributeSelectionBase {
+	name: AccessoryVariant;
+}
 
 export type AttributeSelection =
 	| AttributeSelectionBase
@@ -126,7 +160,9 @@ export type AttributeSelection =
 	| HeadwearSelection
 	| NoseSelection
 	| TopSelection
-	| BottomSelection;
+	| BottomSelection
+	| MaskSelection
+	| ShoesSelection;
 
 export interface Companion {
 	name: string;
@@ -148,5 +184,8 @@ export interface Companion {
 		nose: NoseSelection;
 		top?: TopSelection;
 		bottom?: BottomSelection;
+		mask?: MaskSelection;
+		shoes?: ShoesSelection;
+		accessory?: AccessorySelection;
 	};
 }

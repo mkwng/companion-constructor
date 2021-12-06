@@ -6,19 +6,21 @@ export const outline: AttributeDictionary = {
 	needsTranslation: true,
 	variants: [
 		{
+			attribute: "outline",
 			restrictions: { gender: "f" },
 			layers: [
 				{
-					path: "face/03-outline/fhead-g_f-c_outline.png",
+					path: "/attributes/face/03-outline/fhead-g_f-c_outline.png",
 					color: colors.default.black,
 				},
 			],
 		},
 		{
+			attribute: "outline",
 			restrictions: { gender: "m" },
 			layers: [
 				{
-					path: "face/03-outline/mhead-g_m-c_outline.png",
+					path: "/attributes/face/03-outline/mhead-g_m-c_outline.png",
 					color: colors.default.black,
 				},
 			],

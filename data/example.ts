@@ -2,7 +2,7 @@ import { colors } from "./colors";
 import { Companion } from "./types";
 
 export const companionExample: Companion = {
-	name: "Companion 1",
+	name: null,
 	properties: {
 		gender: "m",
 		pose: 2,

@@ -6,96 +6,189 @@ export const bottom: AttributeDictionary = {
 	// isOptional: true,
 	variants: [
 		{
+			attribute: "bottom",
 			name: "cropped",
-			restrictions: { pose: 2 },
+			rarity: "uncommon",
 			layers: [
 				{
-					path: "pose2/02-bottoms/cropped_1-v_clothing.png",
+					path: {
+						1: "/attributes/pose1/02-bottom/cropped_1-v_clothing.png",
+						2: "/attributes/pose2/02-bottoms/cropped_1-v_clothing.png",
+						3: "/attributes/pose3/10-bottom/cropped_1-v_clothing.png",
+					},
 					colorType: "clothing",
 				},
 				{
-					path: "pose2/02-bottoms/cropped_2-c_shadow.png",
+					path: {
+						1: "/attributes/pose1/02-bottom/cropped_2-c_shadow.png",
+						2: "/attributes/pose2/02-bottoms/cropped_2-c_shadow.png",
+						3: "/attributes/pose3/10-bottom/cropped_2-c_shadow.png",
+					},
 					color: colors.default.gray,
 					blendMode: "multiply",
 				},
 				{
-					path: "pose2/02-bottoms/cropped_3-c_outline.png",
+					path: {
+						1: "/attributes/pose1/02-bottom/cropped_3-c_outline.png",
+						2: "/attributes/pose2/02-bottoms/cropped_3-c_outline.png",
+						3: "/attributes/pose3/10-bottom/cropped_3-c_outline.png",
+					},
 					color: colors.default.black,
 				},
 			],
 		},
 		{
+			attribute: "bottom",
 			name: "panties",
-			restrictions: { gender: "f", pose: 2 },
+			rarity: "rare",
+			restrictions: { gender: "f" },
 			layers: [
 				{
-					path: "pose2/02-bottoms/panties_1-g_f.png",
-					color: colors.default.black,
+					path: {
+						2: "/attributes/pose2/02-bottoms/panties_1-g_f.png",
+					},
+					colorType: "clothing",
 				},
 				{
-					path: "pose2/02-bottoms/panties_2-c_outline.png",
+					path: {
+						2: "/attributes/pose2/02-bottoms/panties_2-c_outline.png",
+					},
 					color: colors.default.black,
 				},
 			],
 		},
 		{
+			attribute: "bottom",
 			name: "shortshorts",
-			restrictions: { gender: "f", pose: 2 },
+			rarity: "uncommon",
+			restrictions: { gender: "f" },
 			layers: [
 				{
-					path: "pose2/02-bottoms/shortshorts_1-v_clothing.png",
+					path: {
+						1: "/attributes/pose1/02-bottom/shortshorts_1-v_clothing-g_f.png",
+						2: "/attributes/pose2/02-bottoms/shortshorts_1-v_clothing.png",
+						3: "/attributes/pose3/10-bottom/shortshorts_1-v_clothing.png",
+					},
 					colorType: "clothing",
 				},
 				{
-					path: "pose2/02-bottoms/shortshorts_2-c_shadow.png",
+					path: {
+						1: "/attributes/pose1/02-bottom/shortshorts_2-c_shadow.png",
+						2: "/attributes/pose2/02-bottoms/shortshorts_2-c_shadow.png",
+						3: "/attributes/pose3/10-bottom/shortshorts_2-c_shadow.png",
+					},
 					color: colors.default.gray,
 					blendMode: "multiply",
 				},
 				{
-					path: "pose2/02-bottoms/shortshorts_3-c_outline.png",
+					path: {
+						1: "/attributes/pose1/02-bottom/shortshorts_3-c_outline.png",
+						2: "/attributes/pose2/02-bottoms/shortshorts_3-c_outline.png",
+						3: "/attributes/pose3/10-bottom/shortshorts_3-c_outline.png",
+					},
 					color: colors.default.black,
 				},
 			],
 		},
 		{
+			attribute: "bottom",
 			name: "skirt",
-			restrictions: { gender: "f", pose: 2 },
+			rarity: "uncommon",
+			restrictions: { gender: "f" },
 			layers: [
 				{
-					path: "pose2/02-bottoms/skirt_1-v_skin-b_multiply-g_f.png",
-					color: colors.default.gray,
+					path: {
+						2: "/attributes/pose2/02-bottoms/skirt_1-v_skin-b_multiply-g_f.png",
+					},
+					color: colors.skin["1"],
 					blendMode: "multiply",
 				},
 				{
-					path: "pose2/02-bottoms/skirt_2-v_clothing.png",
+					path: {
+						1: "/attributes/pose1/02-bottom/skirt_1-v_clothing.png",
+						2: "/attributes/pose2/02-bottoms/skirt_2-v_clothing.png",
+						3: "/attributes/pose3/10-bottom/skirt_1-v_clothing-g_f.png",
+					},
 					colorType: "clothing",
 				},
 				{
-					path: "pose2/02-bottoms/skirt_3-c_shadow.png",
+					path: {
+						1: "/attributes/pose1/02-bottom/skirt_2-c_shadow.png",
+						2: "/attributes/pose2/02-bottoms/skirt_3-c_shadow.png",
+						3: "/attributes/pose3/10-bottom/skirt_2-c_shadow.png",
+					},
 					color: colors.default.gray,
 					blendMode: "multiply",
 				},
 				{
-					path: "pose2/02-bottoms/skirt_4-c_outline.png",
+					path: {
+						1: "/attributes/pose1/02-bottom/skirt_3-c_outline.png",
+						2: "/attributes/pose2/02-bottoms/skirt_4-c_outline.png",
+						3: "/attributes/pose3/10-bottom/skirt_3-c_outline.png",
+					},
 					color: colors.default.black,
 				},
 			],
 		},
 		{
+			attribute: "bottom",
 			name: "waist",
-			restrictions: { pose: 2 },
+			rarity: "uncommon",
 			layers: [
 				{
-					path: "pose2/02-bottoms/waist_1-v_clothing-g_f.png",
+					path: {
+						1: "/attributes/pose1/02-bottom/pants_1-v_clothing.png",
+						2: "/attributes/pose2/02-bottoms/waist_1-v_clothing-g_f.png",
+						3: "/attributes/pose3/10-bottom/cropped_1-v_clothing.png",
+					},
 					colorType: "clothing",
 				},
 				{
-					path: "pose2/02-bottoms/waist_2-c_shadow.png",
+					path: {
+						1: "/attributes/pose1/02-bottom/pants_2-c_shadow.png",
+						2: "/attributes/pose2/02-bottoms/waist_2-c_shadow.png",
+						3: "/attributes/pose3/10-bottom/cropped_2-c_shadow.png",
+					},
 					color: colors.default.gray,
 					blendMode: "multiply",
 				},
 				{
-					path: "pose2/02-bottoms/waist_3-c_outline.png",
+					path: {
+						1: "/attributes/pose1/02-bottom/pants_3-c_outline.png",
+						2: "/attributes/pose2/02-bottoms/waist_3-c_outline.png",
+						3: "/attributes/pose3/10-bottom/cropped_3-c_outline.png",
+					},
+					color: colors.default.black,
+				},
+			],
+		},
+		{
+			attribute: "bottom",
+			name: "pants",
+			layers: [
+				{
+					path: {
+						1: "/attributes/pose1/02-bottom/pants_1-v_clothing.png",
+						2: "/attributes/pose2/02-bottoms/pants_1-v_clothing.png",
+						3: "/attributes/pose3/10-bottom/cropped_1-v_clothing.png",
+					},
+					colorType: "clothing",
+				},
+				{
+					path: {
+						1: "/attributes/pose1/02-bottom/pants_2-c_shadow.png",
+						2: "/attributes/pose2/02-bottoms/pants_2-c_shadow.png",
+						3: "/attributes/pose3/10-bottom/cropped_2-c_shadow.png",
+					},
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{
+					path: {
+						1: "/attributes/pose1/02-bottom/pants_3-c_outline.png",
+						2: "/attributes/pose2/02-bottoms/pants_3-c_outline.png",
+						3: "/attributes/pose3/10-bottom/cropped_3-c_outline.png",
+					},
 					color: colors.default.black,
 				},
 			],
@@ -103,5 +196,5 @@ export const bottom: AttributeDictionary = {
 	],
 };
 
-let bottomVariants = ["cropped", "panties", "shortshorts", "skirt", "waist"] as const;
+let bottomVariants = ["cropped", "panties", "shortshorts", "skirt", "waist", "pants"] as const;
 export type BottomVariant = typeof bottomVariants[number];
