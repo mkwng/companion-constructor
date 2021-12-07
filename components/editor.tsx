@@ -138,8 +138,8 @@ const AttributeSelector = ({
 				return (
 					<div
 						key={variant.name}
-						// onClick={variant.rarity === "mythic" ? () => {} : () => onSelect(variant.name)}
-						onClick={() => onSelect(variant.name)}
+						onClick={variant.rarity === "mythic" ? () => {} : () => onSelect(variant.name)}
+						// onClick={() => onSelect(variant.name)}
 						title={
 							variant.rarity === "mythic"
 								? "You can only mint this attribute randomly"
@@ -158,8 +158,7 @@ const AttributeSelector = ({
 							}`}
 					>
 						<p className="text-center m-auto">
-							{/* {variant.rarity === "mythic" ? "???" : variant.name} */}
-							{variant.name}
+							{variant.name !== active && variant.rarity === "mythic" ? "???" : variant.name}
 						</p>
 					</div>
 				);
@@ -395,7 +394,7 @@ export default function Editor({
 		<>
 			<OptionsContainer title="Shape">
 				<AttributeSelector
-					variants={[{ name: "m" }, { name: "f" }, { name: "w" }]}
+					variants={[{ name: "m" }, { name: "f" }, { name: "w", rarity: "mythic" }]}
 					active={companion.properties.gender}
 					onSelect={(gender) => {
 						setCompanion((old) => {

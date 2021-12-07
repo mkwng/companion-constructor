@@ -3,6 +3,22 @@ import Image from "next/image";
 export default function Marketing() {
 	return (
 		<div className="w-full min-h-full bg-clothing-white rounded-xl shadow-2xl px-4 lg:px-8 py-16 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-5 items-center">
+			<div className="md:col-span-5">
+				<a
+					href="https://twitter.com/companioninabox"
+					target="_blank"
+					rel="noopener noreferrer"
+					className={`
+									inline-block relative w-full
+									mb-8 py-2 px-4 rounded-full
+									text-center
+									border-2 border-clothing-black
+								`}
+					onClick={() => {}}
+				>
+					Follow with us on Twitter
+				</a>
+			</div>
 			<div className="md:col-span-3 p-4 md:p-8 order-2 md:order-1">
 				<h1 className="font-bold mb-2 text-lg lg:text-xl">
 					Get in, we&apos;re all hanging out in boxes
@@ -48,6 +64,22 @@ export default function Marketing() {
 					access to future box-themed launches, including upcoming customization mechanics,
 					breeding, and more.
 				</p>
+			</div>
+			<div className="md:col-span-5 order-9">
+				<a
+					href="https://twitter.com/companioninabox"
+					target="_blank"
+					rel="noopener noreferrer"
+					className={`
+									inline-block relative w-full
+									mt-8 py-2 px-4 rounded-full
+									text-center
+									border-2 border-clothing-black
+								`}
+					onClick={() => {}}
+				>
+					Follow with us on Twitter
+				</a>
 			</div>
 		</div>
 	);
