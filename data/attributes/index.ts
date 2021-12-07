@@ -2,7 +2,7 @@ import { blemish } from "./blemish";
 import { hair } from "./hair";
 import { eyes } from "./eyes";
 import { brows } from "./brows";
-import { mouth } from "./mouth";
+import { mouth, facialhair } from "./mouth";
 import { eyewear } from "./eyewear";
 import { headwear } from "./headwear";
 import { nose } from "./nose";
@@ -31,6 +31,7 @@ export const allAttributes: {
 	eyes,
 	brows,
 	mouth,
+	facialhair,
 	eyewear,
 	headwear,
 	nose,
@@ -48,6 +49,7 @@ export const selectableAttributes: { [key: string]: AttributeDictionary } = {
 	eyes,
 	brows,
 	mouth,
+	facialhair,
 	eyewear,
 	headwear,
 	nose,
@@ -63,6 +65,7 @@ export const selectableAttributesArray: AttributeDictionary[] = [
 	eyes,
 	brows,
 	mouth,
+	facialhair,
 	eyewear,
 	headwear,
 	nose,

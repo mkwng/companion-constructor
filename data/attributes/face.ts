@@ -37,5 +37,21 @@ export const face: AttributeDictionary = {
 				},
 			],
 		},
+		{
+			restrictions: {
+				gender: "w",
+			},
+			layers: [
+				{
+					path: "/attributes/face/01-base/chead_1-v_skin.png",
+					colorType: "skin",
+				},
+				{
+					path: "/attributes/face/01-base/chead_2-c_skin-b_multiply.png",
+					color: colors.skin["1"],
+					blendMode: "multiply",
+				},
+			],
+		},
 	],
 };

@@ -381,7 +381,7 @@ export default function Editor({
 		<>
 			<OptionsContainer title="Shape">
 				<AttributeSelector
-					variants={[{ name: "m" }, { name: "f" }, { name: "n", rarity: "mythic" }]}
+					variants={[{ name: "m" }, { name: "f" }, { name: "w" }]}
 					active={companion.properties.gender}
 					onSelect={(gender) => {
 						setCompanion((old) => {
@@ -389,7 +389,7 @@ export default function Editor({
 								...old,
 								properties: {
 									...old.properties,
-									gender: gender as "m" | "f",
+									gender: gender as "m" | "f" | "w",
 								},
 							};
 						});
@@ -403,7 +403,8 @@ export default function Editor({
 					attribute.key === "brows" ||
 					attribute.key === "eyes" ||
 					attribute.key === "nose" ||
-					attribute.key === "mouth"
+					attribute.key === "mouth" ||
+					attribute.key === "facialhair"
 			)}
 		</>
 	);

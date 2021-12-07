@@ -25,5 +25,15 @@ export const outline: AttributeDictionary = {
 				},
 			],
 		},
+		{
+			attribute: "outline",
+			restrictions: { gender: "w" },
+			layers: [
+				{
+					path: "/attributes/face/03-outline/chead-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
 	],
 };
