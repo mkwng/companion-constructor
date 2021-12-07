@@ -171,7 +171,6 @@ export default function Renderer({
 					canvas,
 					layers: layersWithData,
 					drawIndex: i,
-					recurseBatches: true,
 					usedBatches: batches,
 					paint: (input, canvas, blendMode) => {
 						canvas = canvas as HTMLCanvasElement;

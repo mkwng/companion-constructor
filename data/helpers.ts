@@ -441,7 +441,6 @@ export const drawLayer = async ({
 	canvas,
 	layers,
 	drawIndex,
-	recurseBatches,
 	usedBatches,
 	paint,
 	createCanvas,
@@ -452,7 +451,6 @@ export const drawLayer = async ({
 	canvas: HTMLCanvasElement | Buffer;
 	layers: [LayerWithData, AttributeSelection?, boolean?][];
 	drawIndex: number;
-	recurseBatches?: boolean;
 	usedBatches: Set<string>;
 	paint: (
 		input: HTMLImageElement | HTMLCanvasElement | Buffer,
@@ -472,7 +470,7 @@ export const drawLayer = async ({
 	const [layer, selection, needsTranslation] = layers[drawIndex];
 	let imageToDraw: HTMLImageElement | HTMLCanvasElement | Buffer;
 
-	if (layer.batch?.length && recurseBatches) {
+	if (layer.batch?.length) {
 		const tempCanvas = await createCanvas();
 		usedBatches.add(layer.batch[0]);
 
@@ -517,7 +515,6 @@ export const drawLayer = async ({
 					canvas: tempCanvas,
 					layers: batchLayers,
 					drawIndex: batchIndices[j],
-					recurseBatches: true,
 					usedBatches,
 					paint,
 					createCanvas,

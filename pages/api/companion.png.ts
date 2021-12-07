@@ -144,7 +144,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					canvas: await canvas,
 					layers: layersWithData,
 					drawIndex: i,
-					recurseBatches: true,
 					usedBatches: batches,
 					paint: (input: Buffer, target: Buffer, blendMode) => {
 						const blend = blendMode
