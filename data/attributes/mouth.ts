@@ -307,6 +307,17 @@ export const mouth: AttributeDictionary = {
 				},
 			],
 		},
+		{
+			attribute: "mouth",
+			name: "openteeth",
+			layers: [
+				{ path: "/attributes/face/08-mouth/beard2_3-c_white.png", color: colors.default.white },
+				{
+					path: "/attributes/face/08-mouth/beard2_4-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
 	],
 };
 
@@ -432,5 +443,6 @@ let mouthVariants = [
 	"teethy",
 	"tongue",
 	"widesmile",
+	"openteeth",
 ] as const;
 export type MouthVariant = typeof mouthVariants[number];

@@ -362,10 +362,10 @@ export const keysToCompanion = (companionQuery): Companion => {
 		properties: { ...companionExample.properties },
 		attributes: {
 			hair: { name: "crop" },
-			eyes: { name: "open" },
-			brows: { name: "bushy" },
-			mouth: { name: "handlebars" },
-			nose: { name: "hook" },
+			eyes: { name: "default" },
+			brows: { name: "neutral" },
+			mouth: { name: "neutral" },
+			nose: { name: "longstraight" },
 		},
 	};
 	for (const key in companionQuery) {
@@ -430,6 +430,7 @@ export const drawLayer = async ({
 	layers,
 	drawIndex,
 	recurseBatches,
+	usedBatches,
 	paint,
 	createCanvas,
 	replaceColor,
@@ -440,6 +441,7 @@ export const drawLayer = async ({
 	layers: [LayerWithData, AttributeSelection?, boolean?][];
 	drawIndex: number;
 	recurseBatches?: boolean;
+	usedBatches: Set<string>;
 	paint: (
 		input: HTMLImageElement | HTMLCanvasElement | Buffer,
 		target: HTMLCanvasElement | Buffer,
@@ -458,40 +460,53 @@ export const drawLayer = async ({
 	const [layer, selection, needsTranslation] = layers[drawIndex];
 	let imageToDraw: HTMLImageElement | HTMLCanvasElement | Buffer;
 
-	if (layer.batch && recurseBatches) {
+	if (layer.batch?.length && recurseBatches) {
 		const tempCanvas = await createCanvas();
+		usedBatches.add(layer.batch[0]);
 
 		const batchIndices = layers.reduce<number[]>((indices, curr, k) => {
-			if (curr[0].batch === layer.batch) {
+			if (curr[0].batch?.length && curr[0].batch.indexOf(layer.batch[0]) !== -1) {
 				indices.push(k);
 			}
 			return indices;
 		}, []);
 
-		const batchLayers = layers
-			.map((l, k) => {
-				if ("colorType" in l[0] && l[0].colorType === "inherit") {
-					const { colorType, ...rest } = l[0];
-					return [
-						{
-							color: getColor(layers[k + 1][0], companion, layers[k + 1][1]),
-							...rest,
-						} as LayerStaticWithData,
-						l[1],
-						l[2],
-					] as [LayerStaticWithData, AttributeSelection?, boolean?];
+		const batchLayers = layers.map((l, k) => {
+			const { batch, ...rest } = l[0];
+			let newBatch = [...(batch || [])];
+			if (batch?.length) {
+				const currentBatchIndex = batch?.indexOf(layer.batch[0]);
+				if (currentBatchIndex > -1) {
+					newBatch.splice(currentBatchIndex, 1);
 				}
-				return l;
-			})
-			.filter((_, i) => batchIndices.includes(i));
+			}
+			if ("colorType" in rest && rest.colorType === "inherit") {
+				return [
+					{
+						color: getColor(layers[k + 1][0], companion, layers[k + 1][1]),
+						batch: newBatch,
+						...rest,
+					} as LayerStaticWithData,
+					l[1],
+					l[2],
+				] as [LayerStaticWithData, AttributeSelection?, boolean?];
+			}
+			return [{ batch: newBatch, ...rest }, l[1], l[2]] as [
+				LayerStaticWithData,
+				AttributeSelection?,
+				boolean?
+			];
+		});
 
-		if (batchLayers.length) {
-			for (let j = 0; j < batchLayers.length; j++) {
+		if (batchIndices.length) {
+			for (let j = 0; j < batchIndices.length; j++) {
 				await drawLayer({
 					companion,
 					canvas: tempCanvas,
 					layers: batchLayers,
-					drawIndex: j,
+					drawIndex: batchIndices[j],
+					recurseBatches: true,
+					usedBatches,
 					paint,
 					createCanvas,
 					replaceColor,

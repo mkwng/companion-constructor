@@ -127,6 +127,7 @@ export const headwear: AttributeDictionary = {
 					path: "/attributes/face/10-accessories/hijab_1-v_clothing-destination_over.png",
 					colorType: "inherit",
 					blendMode: "destination-over",
+					batch: ["head"],
 				},
 				{
 					path: "/attributes/face/10-accessories/hijab_1-v_clothing-g_f-a_1.png",
@@ -184,6 +185,7 @@ export const headwear: AttributeDictionary = {
 					path: "/attributes/face/10-accessories/turban_1-v_clothing-destination_over.png",
 					colorType: "inherit",
 					blendMode: "destination-over",
+					batch: ["head"],
 				},
 				{
 					path: "/attributes/face/10-accessories/turban_1-v_clothing-g_m-a_1.png",
@@ -210,7 +212,7 @@ export const headwear: AttributeDictionary = {
 					path: "/attributes/face/10-accessories/bucket_2-v_clothing-destination_over.png",
 					colorType: "inherit",
 					blendMode: "destination-over",
-					batch: "hat",
+					batch: ["head", "hat"],
 				},
 				{
 					path: "/attributes/face/10-accessories/bucket_2-v_clothing.png",
@@ -233,7 +235,7 @@ export const headwear: AttributeDictionary = {
 					path: "/attributes/face/10-accessories/bucket_3-c_shadow.png",
 					color: colors.default.gray,
 					blendMode: "multiply",
-					batch: "hat",
+					batch: ["head", "hat"],
 				},
 			],
 		},

@@ -132,7 +132,8 @@ const AttributeSelector = ({
 				return (
 					<div
 						key={variant.name}
-						onClick={variant.rarity === "mythic" ? () => {} : () => onSelect(variant.name)}
+						// onClick={variant.rarity === "mythic" ? () => {} : () => onSelect(variant.name)}
+						onClick={() => onSelect(variant.name)}
 						title={
 							variant.rarity === "mythic"
 								? "You can only mint this attribute randomly"
@@ -151,7 +152,8 @@ const AttributeSelector = ({
 							}`}
 					>
 						<p className="text-center m-auto">
-							{variant.rarity === "mythic" ? "???" : variant.name}
+							{/* {variant.rarity === "mythic" ? "???" : variant.name} */}
+							{variant.name}
 						</p>
 					</div>
 				);

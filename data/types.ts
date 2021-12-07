@@ -70,7 +70,7 @@ interface LayerBase {
 				"3"?: string;
 				"4"?: string;
 		  };
-	batch?: string;
+	batch?: string[];
 }
 export interface LayerDynamic extends LayerBase {
 	colorType: "hair" | "skin" | "clothing" | "background" | "inherit";
