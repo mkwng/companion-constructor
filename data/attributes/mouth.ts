@@ -93,6 +93,22 @@ export const mouth: AttributeDictionary = {
 				},
 			],
 		},
+		{
+			attribute: "mouth",
+			name: "colorlips",
+			restrictions: { gender: "f" },
+			layers: [
+				{
+					path: "/attributes/face/08-mouth/neutrallips_1-c_skin-b_multiply-g_f.png",
+					colorType: "clothing",
+					blendMode: "multiply",
+				},
+				{
+					path: "/attributes/face/08-mouth/neutrallips_2-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
 
 		{
 			attribute: "mouth",
@@ -205,6 +221,22 @@ export const mouth: AttributeDictionary = {
 		{
 			attribute: "mouth",
 			name: "smilelips",
+			restrictions: { gender: "f" },
+			layers: [
+				{
+					path: "/attributes/face/08-mouth/smilelips_1-c_skin-b_multiply-g_f.png",
+					color: colors.skin["1"],
+					blendMode: "multiply",
+				},
+				{
+					path: "/attributes/face/08-mouth/smilelips_2-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
+		{
+			attribute: "mouth",
+			name: "colorsmilelips",
 			restrictions: { gender: "f" },
 			layers: [
 				{
