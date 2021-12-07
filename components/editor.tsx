@@ -1,7 +1,13 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { selectableAttributesArray } from "../data/attributes";
 import { colors } from "../data/colors";
-import { colorsRequired, colorToKey, getRestrictions, isCompatible } from "../data/helpers";
+import {
+	colorsRequired,
+	colorToKey,
+	getAllHides,
+	getRestrictions,
+	isCompatible,
+} from "../data/helpers";
 import { randomProperty } from "../data/random";
 import { Companion, Pose, Restrictions, RGBColor, Variant } from "../data/types";
 
@@ -180,6 +186,7 @@ export default function Editor({
 		() => getRestrictions(companion),
 		[companion]
 	);
+	const hides = useMemo<Set<string>>(() => getAllHides(companion), [companion]);
 
 	useEffect(() => {
 		containerRef.current.parentElement.parentElement.scrollTo(0, 0);
@@ -233,7 +240,12 @@ export default function Editor({
 							})?.restrictions,
 							companionRestrictions
 						) && <>⚠️</>}
-						{attribute.name.charAt(0).toUpperCase() + attribute.name.slice(1)}
+						<span className={`${hides.has(attribute.name) ? "line-through" : ""}`}>
+							{`${attribute.name.charAt(0).toUpperCase()}${attribute.name.slice(1)}`}
+						</span>
+						{hides.has(attribute.name) ? (
+							<span className="font-normal ml-2">Hidden</span>
+						) : null}
 					</div>
 					{attribute.isOptional && companion.attributes[attribute.name]?.name && (
 						<div

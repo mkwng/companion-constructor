@@ -207,6 +207,7 @@ export const headwear: AttributeDictionary = {
 					path: "/attributes/face/10-accessories/bucket_1-v_skin-b_multiply.png",
 					color: colors.skin["1"],
 					blendMode: "multiply",
+					batch: ["head"],
 				},
 				{
 					path: "/attributes/face/10-accessories/bucket_2-v_clothing-destination_over.png",
@@ -230,12 +231,6 @@ export const headwear: AttributeDictionary = {
 				{
 					path: "/attributes/face/10-accessories/bucket_5-c_outline.png",
 					color: colors.default.black,
-				},
-				{
-					path: "/attributes/face/10-accessories/bucket_3-c_shadow.png",
-					color: colors.default.gray,
-					blendMode: "multiply",
-					batch: ["head", "hat"],
 				},
 			],
 		},

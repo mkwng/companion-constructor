@@ -208,6 +208,18 @@ export const isCompatible = (
 	return true;
 };
 
+export const getAllHides = (companion: Companion): Set<string> => {
+	let hides: Set<string> = new Set();
+	getVariants(companion).forEach((variant) => {
+		if (variant?.hides?.length) {
+			variant.hides.forEach((hide) => {
+				hides.add(hide);
+			});
+		}
+	});
+	return hides;
+};
+
 export const getRestrictions = (companion: Companion): Restrictions[] => {
 	if (!companion) {
 		return [];
