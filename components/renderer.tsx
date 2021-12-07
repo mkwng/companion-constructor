@@ -132,7 +132,7 @@ export default function Renderer({
 
 		const imagePaths = layers.map(([layer]) => getPath(layer, companion.properties.pose));
 
-		setIsLoading(false);
+		setIsLoading(true);
 
 		(async () => {
 			const batches: Set<string> = new Set();
