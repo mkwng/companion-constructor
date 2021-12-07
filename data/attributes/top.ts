@@ -58,6 +58,7 @@ export const top: AttributeDictionary = {
 					},
 					colorType: "inherit",
 					blendMode: "destination-over",
+					batch: ["head"],
 				},
 				{
 					path: {
@@ -447,6 +448,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/13-top/jacket_1-v_clothing.png",
 						2: "/attributes/pose2/05-tops/jacket_3-v_clothing.png",
+						3: "/attributes/pose3/03-top/jacket_1-v_clothing.png",
 					},
 					colorType: "clothing",
 				},
@@ -454,6 +456,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/13-top/jacket_2-c_shadow.png",
 						2: "/attributes/pose2/05-tops/jacket_4-c_shadow.png",
+						3: "/attributes/pose3/03-top/jacket_2-c_shadow.png",
 					},
 					color: colors.default.gray,
 					blendMode: "multiply",
@@ -462,6 +465,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/13-top/jacket_3-c_outline.png",
 						2: "/attributes/pose2/05-tops/jacket_5-c_outline.png",
+						3: "/attributes/pose3/03-top/jacket_3-c_outline.png",
 					},
 					color: colors.default.black,
 				},
@@ -805,6 +809,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/13-top/turtle_1-v_clothing.png",
 						2: "/attributes/pose2/05-tops/turtle_1-v_clothing.png",
+						3: "/attributes/pose3/03-top/longt_1-v_clothing.png",
 					},
 					colorType: "clothing",
 				},
@@ -812,6 +817,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/13-top/turtle_2-c_shadow.png",
 						2: "/attributes/pose2/05-tops/turtle_2-c_shadow.png",
+						3: "/attributes/pose3/03-top/longt_2-c_shadow.png",
 					},
 					color: colors.default.gray,
 					blendMode: "multiply",
@@ -820,6 +826,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/13-top/turtle_3-c_outline.png",
 						2: "/attributes/pose2/05-tops/turtle_3-c_outline.png",
+						3: "/attributes/pose3/03-top/longt_3-c_outline.png",
 					},
 					color: colors.default.black,
 				},
@@ -960,12 +967,14 @@ export const top: AttributeDictionary = {
 			layers: [
 				{
 					path: {
+						1: "/attributes/pose1/13-top/summer_1-v_clothing.png",
 						2: "/attributes/pose2/05-tops/beach_1-v_clothing.png",
 					},
 					colorType: "clothing",
 				},
 				{
 					path: {
+						1: "/attributes/pose1/13-top/summer_2-c_shadow.png",
 						2: "/attributes/pose2/05-tops/beach_2-c_shadow.png",
 					},
 					color: colors.default.gray,
@@ -973,6 +982,7 @@ export const top: AttributeDictionary = {
 				},
 				{
 					path: {
+						1: "/attributes/pose1/13-top/summer_3-c_outline.png",
 						2: "/attributes/pose2/05-tops/beach_3-c_outline.png",
 					},
 					color: colors.default.black,

@@ -12,6 +12,7 @@ export const outline: AttributeDictionary = {
 				{
 					path: "/attributes/face/03-outline/fhead-g_f-c_outline.png",
 					color: colors.default.black,
+					batch: ["head"],
 				},
 			],
 		},
@@ -22,6 +23,18 @@ export const outline: AttributeDictionary = {
 				{
 					path: "/attributes/face/03-outline/mhead-g_m-c_outline.png",
 					color: colors.default.black,
+					batch: ["head"],
+				},
+			],
+		},
+		{
+			attribute: "outline",
+			restrictions: { gender: "w" },
+			layers: [
+				{
+					path: "/attributes/face/03-outline/chead-c_outline.png",
+					color: colors.default.black,
+					batch: ["head"],
 				},
 			],
 		},

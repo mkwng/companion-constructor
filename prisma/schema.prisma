@@ -22,12 +22,13 @@ model Companion {
   pose            String
   gender          String
 
-  blemish String?
-  hair    String
-  brows   String
-  eyes    String
-  nose    String
-  mouth   String
+  blemish    String?
+  hair       String
+  brows      String
+  eyes       String
+  nose       String
+  mouth      String
+  facialhair String?
 
   headwear String?
   eyewear  String?

@@ -7,7 +7,7 @@ import { EyewearVariant } from "./attributes/eyewear";
 import { HairVariant } from "./attributes/hair";
 import { HeadwearVariant } from "./attributes/headwear";
 import { MaskVariant } from "./attributes/mask";
-import { MouthVariant } from "./attributes/mouth";
+import { FacialhairVariant, MouthVariant } from "./attributes/mouth";
 import { NoseVariant } from "./attributes/nose";
 import { ShoesVariant } from "./attributes/shoes";
 import { TopVariant } from "./attributes/top";
@@ -30,6 +30,7 @@ export type AttributeType =
 	| "eyes"
 	| "brows"
 	| "mouth"
+	| "facialhair"
 	| "eyewear"
 	| "headwear"
 	| "nose"
@@ -40,7 +41,7 @@ export type AttributeType =
 	| "shoes"
 	| "accessory";
 
-type Gender = "m" | "f";
+type Gender = "m" | "f" | "w";
 type HeadShape = "big" | "flat";
 type ProfileShape = "flat" | "encroached";
 type Rarity = "common" | "uncommon" | "rare" | "mythic";
@@ -69,7 +70,7 @@ interface LayerBase {
 				"3"?: string;
 				"4"?: string;
 		  };
-	batch?: string;
+	batch?: string[];
 }
 export interface LayerDynamic extends LayerBase {
 	colorType: "hair" | "skin" | "clothing" | "background" | "inherit";
@@ -124,6 +125,9 @@ interface BrowsSelection extends AttributeSelectionBase {
 interface MouthSelection extends AttributeSelectionBase {
 	name: MouthVariant;
 }
+interface FacialhairSelection extends AttributeSelectionBase {
+	name: FacialhairVariant;
+}
 interface EyewearSelection extends AttributeSelectionBase {
 	name: EyewearVariant;
 }
@@ -156,6 +160,7 @@ export type AttributeSelection =
 	| EyesSelection
 	| BrowsSelection
 	| MouthSelection
+	| FacialhairSelection
 	| EyewearSelection
 	| HeadwearSelection
 	| NoseSelection
@@ -179,6 +184,7 @@ export interface Companion {
 		eyes: EyesSelection;
 		brows: BrowsSelection;
 		mouth: MouthSelection;
+		facialhair?: FacialhairSelection;
 		eyewear?: EyewearSelection;
 		headwear?: HeadwearSelection;
 		nose: NoseSelection;

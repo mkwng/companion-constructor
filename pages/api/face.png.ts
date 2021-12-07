@@ -83,7 +83,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	if (!optimized) {
 		let companion: Companion | null;
-		const batches: string[] = [];
+		const batches: Set<string> = new Set();
 		if (req.query.id && typeof req.query.id === "string") {
 			const result = await prisma.companion.findUnique({
 				where: { id: parseInt(req.query.id) },
@@ -132,18 +132,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		const final = await layers.reduce(
 			async (canvas, [layer], i) => {
 				if (layer.batch) {
-					if (batches.includes(layer.batch)) {
+					if (layer.batch?.length && layer.batch.some((item) => batches.has(item))) {
 						return canvas;
 					}
-					batches.push(layer.batch);
 				}
-
 				return await drawLayer({
 					companion,
 					canvas: await canvas,
 					layers: layersWithData,
 					drawIndex: i,
-					recurseBatches: true,
+					usedBatches: batches,
 					paint: (input, target, blendMode) => {
 						target = target as Buffer;
 						input = input as Buffer;

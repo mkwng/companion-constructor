@@ -23,18 +23,6 @@ export const mouth: AttributeDictionary = {
 
 		{
 			attribute: "mouth",
-			name: "beard",
-			restrictions: { gender: "m" },
-			layers: [
-				{
-					path: "/attributes/face/08-mouth/beard-v_hair-g_m.png",
-					colorType: "hair",
-				},
-			],
-		},
-
-		{
-			attribute: "mouth",
 			name: "bigsmile",
 			layers: [
 				{
@@ -55,23 +43,6 @@ export const mouth: AttributeDictionary = {
 
 		{
 			attribute: "mouth",
-			name: "fumanchu",
-			restrictions: { gender: "m" },
-			layers: [
-				{
-					path: "/attributes/face/08-mouth/fumanchu_1-v_hair-g_m.png",
-					colorType: "hair",
-				},
-				{
-					path: "/attributes/face/08-mouth/fumanchu_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
-					blendMode: "multiply",
-				},
-			],
-		},
-
-		{
-			attribute: "mouth",
 			name: "grimace",
 			layers: [
 				{
@@ -86,23 +57,6 @@ export const mouth: AttributeDictionary = {
 				{
 					path: "/attributes/face/08-mouth/grimace_3-c_outline.png",
 					color: colors.default.black,
-				},
-			],
-		},
-
-		{
-			attribute: "mouth",
-			name: "handlebars",
-			restrictions: { gender: "m" },
-			layers: [
-				{
-					path: "/attributes/face/08-mouth/handlebars_1-v_hair-g_m.png",
-					colorType: "hair",
-				},
-				{
-					path: "/attributes/face/08-mouth/handlebars_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
-					blendMode: "multiply",
 				},
 			],
 		},
@@ -131,6 +85,22 @@ export const mouth: AttributeDictionary = {
 				{
 					path: "/attributes/face/08-mouth/neutrallips_1-c_skin-b_multiply-g_f.png",
 					color: colors.skin["1"],
+					blendMode: "multiply",
+				},
+				{
+					path: "/attributes/face/08-mouth/neutrallips_2-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
+		{
+			attribute: "mouth",
+			name: "colorlips",
+			restrictions: { gender: "f" },
+			layers: [
+				{
+					path: "/attributes/face/08-mouth/neutrallips_1-c_skin-b_multiply-g_f.png",
+					colorType: "clothing",
 					blendMode: "multiply",
 				},
 				{
@@ -255,6 +225,22 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/smilelips_1-c_skin-b_multiply-g_f.png",
+					color: colors.skin["1"],
+					blendMode: "multiply",
+				},
+				{
+					path: "/attributes/face/08-mouth/smilelips_2-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
+		{
+			attribute: "mouth",
+			name: "colorsmilelips",
+			restrictions: { gender: "f" },
+			layers: [
+				{
+					path: "/attributes/face/08-mouth/smilelips_1-c_skin-b_multiply-g_f.png",
 					colorType: "clothing",
 				},
 				{
@@ -340,8 +326,92 @@ export const mouth: AttributeDictionary = {
 
 		{
 			attribute: "mouth",
+			name: "widesmile",
+			layers: [
+				{
+					path: "/attributes/face/08-mouth/widesmile_1-c_outline.png",
+					color: colors.default.black,
+				},
+				{
+					path: "/attributes/face/08-mouth/widesmile_2-c_skin-b_multiply.png",
+					color: colors.skin["1"],
+					blendMode: "multiply",
+				},
+			],
+		},
+		{
+			attribute: "mouth",
+			name: "openteeth",
+			layers: [
+				{ path: "/attributes/face/08-mouth/beard2_3-c_white.png", color: colors.default.white },
+				{
+					path: "/attributes/face/08-mouth/beard2_4-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
+	],
+};
+
+export const facialhair: AttributeDictionary = {
+	name: "facialhair",
+	isOptional: true,
+	appearsIn: 0.05,
+	needsTranslation: true,
+	variants: [
+		{
+			attribute: "facialhair",
+			name: "beard",
+			restrictions: { gender: "m" },
+			hides: ["mouth"],
+			layers: [
+				{
+					path: "/attributes/face/08-mouth/beard-v_hair-g_m.png",
+					colorType: "hair",
+				},
+			],
+		},
+
+		{
+			attribute: "facialhair",
+			name: "fumanchu",
+			restrictions: { gender: "m" },
+			hides: ["mouth"],
+			layers: [
+				{
+					path: "/attributes/face/08-mouth/fumanchu_1-v_hair-g_m.png",
+					colorType: "hair",
+				},
+				{
+					path: "/attributes/face/08-mouth/fumanchu_2-c_skin-b_multiply.png",
+					color: colors.skin["1"],
+					blendMode: "multiply",
+				},
+			],
+		},
+
+		{
+			attribute: "facialhair",
+			name: "handlebars",
+			restrictions: { gender: "m" },
+			hides: ["mouth"],
+			layers: [
+				{
+					path: "/attributes/face/08-mouth/handlebars_1-v_hair-g_m.png",
+					colorType: "hair",
+				},
+				{
+					path: "/attributes/face/08-mouth/handlebars_2-c_skin-b_multiply.png",
+					color: colors.skin["1"],
+					blendMode: "multiply",
+				},
+			],
+		},
+		{
+			attribute: "facialhair",
 			name: "thinpatch",
 			restrictions: { gender: "m" },
+			hides: ["mouth"],
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/thinpatch_1-v_hair.png",
@@ -356,24 +426,10 @@ export const mouth: AttributeDictionary = {
 		},
 
 		{
-			attribute: "mouth",
-			name: "widesmile",
-			layers: [
-				{
-					path: "/attributes/face/08-mouth/widesmile_1-c_outline.png",
-					color: colors.default.black,
-				},
-				{
-					path: "/attributes/face/08-mouth/widesmile_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
-					blendMode: "multiply",
-				},
-			],
-		},
-
-		{
-			attribute: "mouth",
+			attribute: "facialhair",
 			name: "beardsmile",
+			restrictions: { gender: "m" },
+			hides: ["mouth"],
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/beard2_1-c_shadow-g_m.png",
@@ -391,13 +447,19 @@ export const mouth: AttributeDictionary = {
 	],
 };
 
+let facialhairVariants = [
+	"beard",
+	"fumanchu",
+	"handlebars",
+	"thinpatch",
+	"beardsmile",
+] as const;
+export type FacialhairVariant = typeof facialhairVariants[number];
+
 let mouthVariants = [
 	"aged",
-	"beard",
 	"bigsmile",
-	"fumanchu",
 	"grimace",
-	"handlebars",
 	"neutral",
 	"neutrallips",
 	"nyan",
@@ -412,7 +474,7 @@ let mouthVariants = [
 	"subtlesmile",
 	"teethy",
 	"tongue",
-	"thinpatch",
 	"widesmile",
+	"openteeth",
 ] as const;
 export type MouthVariant = typeof mouthVariants[number];

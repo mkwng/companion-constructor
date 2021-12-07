@@ -3,12 +3,11 @@ import {
 	AttributeSelection,
 	Companion,
 	Layer,
-	LayerStatic,
 	LayerWithData,
 	Pose,
 	RGBColor,
 } from "../data/types";
-import { colorToKey, drawLayer, getColor, getLayers, getPath } from "../data/helpers";
+import { colorToKey, drawLayer, getLayers, getPath } from "../data/helpers";
 import { colors } from "../data/colors";
 
 const imgLoadToPromise = (src): Promise<HTMLImageElement> => {
@@ -133,10 +132,10 @@ export default function Renderer({
 
 		const imagePaths = layers.map(([layer]) => getPath(layer, companion.properties.pose));
 
-		setIsLoading(true);
+		setIsLoading(false);
 
 		(async () => {
-			const batches = [];
+			const batches: Set<string> = new Set();
 			const imgs = await loadImages(imagePaths);
 			const layersWithData: [LayerWithData, AttributeSelection?, boolean?][] = layers.map(
 				([layer, ...rest], i) => {
@@ -151,7 +150,7 @@ export default function Renderer({
 			);
 			for (let i = 0; i < layersWithData.length; i++) {
 				const [layer] = layersWithData[i];
-				if (layer.batch && batches.includes(layer.batch)) {
+				if (layer.batch?.length && layer.batch.some((item) => batches.has(item))) {
 					continue;
 				}
 
@@ -172,7 +171,7 @@ export default function Renderer({
 					canvas,
 					layers: layersWithData,
 					drawIndex: i,
-					recurseBatches: true,
+					usedBatches: batches,
 					paint: (input, canvas, blendMode) => {
 						canvas = canvas as HTMLCanvasElement;
 						input = input as HTMLImageElement | HTMLCanvasElement;
@@ -191,9 +190,6 @@ export default function Renderer({
 					replaceColor,
 					translateImage: applyTransform,
 				});
-				if (layer.batch) {
-					batches.push(layer.batch);
-				}
 			}
 			setIsLoading(false);
 		})();

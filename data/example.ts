@@ -12,9 +12,9 @@ export const companionExample: Companion = {
 	},
 	attributes: {
 		hair: { name: "crop" },
-		eyes: { name: "open" },
-		brows: { name: "bushy" },
-		mouth: { name: "handlebars" },
-		nose: { name: "hook" },
+		eyes: { name: "default" },
+		brows: { name: "neutral" },
+		mouth: { name: "neutral" },
+		nose: { name: "longstraight" },
 	},
 };
