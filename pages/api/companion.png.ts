@@ -76,14 +76,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	// http://localhost:3000/api/companion.png?pose=2&gender=m&skinColor=0&hairColor=purple&backgroundColor=yellow&hair=crop&eyes=open&brows=bushy&mouth=handlebars&nose=hook&headwear=cap&headwearColor1=red&headwearColor2=blue
 	// http://localhost:3000/api/companion.png?pose=2&gender=f&skinColor=0&hairColor=purple&backgroundColor=bga&hair=crop&eyes=dart&brows=bushy&mouth=handlebars&nose=hook&headwear=cap&headwearColor1=red&headwearColor2=blue
 
-	const { faceOnly, ...query } = req.query;
-	let optimized: Buffer = await imageCache.get(req.url);
+	let optimized: Buffer = req.query.refresh ? null : await imageCache.get(req.url);
 
 	if (optimized) {
 		console.log(`Successfully used cache for ${req.url}`);
 	}
 
 	if (!optimized) {
+		const { faceOnly, ...query } = req.query;
 		let companion: Companion | null;
 		const batches: Set<string> = new Set();
 		if (query.id && typeof query.id === "string") {
@@ -205,14 +205,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			.png({ compressionLevel: 8, quality: 80 })
 			.toBuffer();
 
-		imageCache.set(req.url, optimized);
-	}
+		if (faceOnly) {
+			optimized = await sharp(optimized)
+				.extract({ left: 65, top: 371, width: 960, height: 960 })
+				.png()
+				.toBuffer();
+		}
 
-	if (faceOnly) {
-		optimized = await sharp(optimized)
-			.extract({ left: 65, top: 371, width: 960, height: 960 })
-			.png()
-			.toBuffer();
+		imageCache.set(req.url, optimized);
 	}
 
 	res.setHeader("Content-Type", "image/png");

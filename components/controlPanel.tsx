@@ -249,7 +249,7 @@ export const ControlPanel = ({
 										>
 											{/* eslint-disable */}
 											<img
-												src={`/api/face.png?id=${tokenId}`}
+												src={`/api/companion.png?faceOnly=true&id=${tokenId}`}
 												alt={`Companion #${tokenId}`}
 												className="w-full h-full"
 											/>
