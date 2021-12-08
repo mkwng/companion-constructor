@@ -135,7 +135,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			layersWithData.splice(
 				0,
 				layersWithData.length,
-				...layersWithData.filter(([_, __, needsTranslation]) => needsTranslation)
+				...layersWithData.filter(([layer, _, needsTranslation]) => {
+					if (layer.path === "/attributes/pose1/00-background/bg-v_background.png") {
+						return true;
+					}
+					if (needsTranslation) {
+						return true;
+					}
+					return false;
+				})
 			);
 		}
 

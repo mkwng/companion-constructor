@@ -3,6 +3,7 @@ import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { useEffect, useRef, useState } from "react";
+import { ToastContainer } from "react-toastify";
 import Button from "../components/button";
 import { ControlPanel } from "../components/controlPanel";
 import Editor from "../components/editor";
@@ -199,6 +200,7 @@ function Constructor() {
 					<Renderer showTitle={!customizing} companion={companion} hideBackground={true} />
 				</div>
 			</div>
+			<ToastContainer position="bottom-left" autoClose={0} />
 		</>
 	);
 }

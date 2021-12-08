@@ -1,5 +1,6 @@
 import "../style/global.css";
 import "tailwindcss/tailwind.css";
+import "react-toastify/dist/ReactToastify.css";
 import NextHead from "next/head";
 
 function MyApp({ Component, pageProps }) {

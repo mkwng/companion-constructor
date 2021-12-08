@@ -1,6 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
 import { messageToSign } from "../data/helpers";
 import useLocalStorage from "../hooks/useLocalStorage";
@@ -138,15 +139,30 @@ export const ControlPanel = ({
 									border-2 border-gray-600
 								`}
 								onClick={async () => {
-									const signature = await web3.eth.personal.sign(
-										messageToSign,
-										web3React.account,
-										"test"
-									);
-									const result = await fetch(
-										`/api/sign?address=${web3React.account}&signature=${signature}`
-									);
-									console.log(await result.json());
+									try {
+										const signature = await web3.eth.personal.sign(
+											messageToSign,
+											web3React.account,
+											"test"
+										);
+										const response = await (
+											await fetch(
+												`/api/sign?address=${web3React.account}&signature=${signature}`
+											)
+										).json();
+										if (response.error) {
+											return toast(response.error, {
+												type: "error",
+											});
+										}
+										return toast("Signed!", {
+											type: "success",
+										});
+									} catch (error) {
+										return toast(error, {
+											type: "error",
+										});
+									}
 								}}
 							>
 								Verify/sign
