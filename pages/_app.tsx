@@ -9,6 +9,10 @@ function MyApp({ Component, pageProps }) {
 				<title>Companion-in-a-Box</title>
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 
+				<meta name="twitter:card" content="summary"></meta>
+				<meta name="twitter:site" content="@companioninabox" />
+				<meta name="twitter:creator" content="@mkwng" />
+
 				<meta property="og:image" content="/social.png" />
 				<meta property="og:title" content="Companion-in-a-Box" />
 				<meta
