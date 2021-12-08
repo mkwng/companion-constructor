@@ -127,8 +127,41 @@ export const ControlPanel = ({
 					{active ? (
 						<>
 							<p className="inline-block w-full overflow-ellipsis">{web3React.account}</p>
+
+							<button
+								className={`
+									relative
+									w-full mt-2 py-2 rounded-full
+									text-center
+									flex gap-2 justify-center items-center
+									border-2 border-gray-600
+								`}
+								onClick={async () => {
+									const signature = web3.eth
+										.sign("Box me up!", web3React.account)
+										.then((result) => {
+											console.log(result);
+										})
+										.catch((e) => {
+											console.log(e);
+										});
+									const result = await fetch(
+										`/api/sign?address=${web3React.account}&signature=${await signature}`
+									);
+									console.log("hello", result);
+								}}
+							>
+								Verify/sign
+							</button>
 							<a
 								href="#"
+								className={`
+									relative
+									mt-2 py-2 rounded-full
+									text-center
+									flex gap-2 justify-center items-center
+									border-2 border-gray-600
+								`}
 								onClick={() => {
 									setContract(null);
 									setLatestOp(W3Operations.Disconnect);
