@@ -139,7 +139,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			);
 		}
 
-		const final = await layers.reduce(
+		const final = await layersWithData.reduce(
 			async (canvas, [layer], i) => {
 				if (layer.batch) {
 					if (layer.batch?.length && layer.batch.some((item) => batches.has(item))) {

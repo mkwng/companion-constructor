@@ -249,7 +249,7 @@ export const ControlPanel = ({
 										>
 											{/* eslint-disable */}
 											<img
-												src={`/api/companion.png?faceOnly=true&id=${tokenId}`}
+												src={`https://${process.env.RAILWAY_URL}/api/companion.png?faceOnly=true&id=${tokenId}`}
 												alt={`Companion #${tokenId}`}
 												className="w-full h-full"
 											/>
