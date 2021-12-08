@@ -126,6 +126,7 @@ export default function Renderer({
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
+		let active = true;
 		const canvas = canvasRef.current;
 		canvas.getContext("2d")!.clearRect(0, 0, canvas.width, canvas.height);
 		const layers: [Layer, AttributeSelection?, boolean?][] = getLayers(companion);
@@ -133,8 +134,12 @@ export default function Renderer({
 		const imagePaths = layers.map(([layer]) => getPath(layer, companion.properties.pose));
 
 		setIsLoading(true);
+		load();
+		return () => {
+			active = false;
+		};
 
-		(async () => {
+		async function load() {
 			const batches: Set<string> = new Set();
 			const imgs = await loadImages(imagePaths);
 			const layersWithData: [LayerWithData, AttributeSelection?, boolean?][] = layers.map(
@@ -153,12 +158,14 @@ export default function Renderer({
 				if (layer.batch?.length && layer.batch.some((item) => batches.has(item))) {
 					continue;
 				}
-
 				if (
 					layer.path == "/attributes/pose1/00-background/bg-v_background.png" &&
 					hideBackground
 				) {
 					continue;
+				}
+				if (!active) {
+					return;
 				}
 				// TODO: This doesn't work for some reason...
 				setLoadingText(
@@ -172,9 +179,7 @@ export default function Renderer({
 					layers: layersWithData,
 					drawIndex: i,
 					usedBatches: batches,
-					paint: (input, canvas, blendMode) => {
-						canvas = canvas as HTMLCanvasElement;
-						input = input as HTMLImageElement | HTMLCanvasElement;
+					paint: (input: HTMLCanvasElement, canvas: HTMLCanvasElement, blendMode) => {
 						if (!canvas.getContext) throw new Error("No canvas context");
 						const ctx = canvas.getContext("2d");
 						ctx.globalCompositeOperation = blendMode || "source-over";
@@ -191,8 +196,11 @@ export default function Renderer({
 					translateImage: applyTransform,
 				});
 			}
+			if (!active) {
+				return;
+			}
 			setIsLoading(false);
-		})();
+		}
 	}, [companion, hideBackground]);
 
 	const bgColorKey = colorToKey(companion.properties.background, colors.background);
@@ -236,7 +244,7 @@ export default function Renderer({
 							<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
 						</svg>
 					</div>
-					<div className="absolute w-12 h-12 left-1/2 top-1/2 -ml-6 mt-16 text-center flex justify-center items-center">
+					<div className="absolute w-12 h-12 left-1/2 top-1/2 -ml-6 mt-16 text-center flex justify-center items-center text-xs">
 						{/* {loadingText} */}
 					</div>
 				</>

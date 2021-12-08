@@ -131,6 +131,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			}
 		);
 
+		if (faceOnly) {
+			layersWithData.splice(
+				0,
+				layersWithData.length,
+				...layersWithData.filter(([_, __, needsTranslation]) => needsTranslation)
+			);
+		}
+
 		const final = await layers.reduce(
 			async (canvas, [layer], i) => {
 				if (layer.batch) {
@@ -173,7 +181,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 							.toBuffer();
 					},
 					replaceColor: applyColor,
-					translateImage: applyTransformation,
+					translateImage: faceOnly
+						? async (input: Buffer, pose) => {
+								return input;
+						  }
+						: applyTransformation,
 				});
 			},
 			sharp({
