@@ -28,7 +28,7 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/05-hair/flip_1-c_skin-b_multiply-a_0.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},
@@ -149,7 +149,7 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/05-hair/dreads_1-c_skin-b_multiply-g_m-a_0.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},
@@ -228,7 +228,7 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/05-hair/kpop_1-c_skin-b_multiply-g_m-a_0.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},
@@ -308,7 +308,7 @@ export const hair: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/05-hair/anime_1-c_skin-b_multiply-g_f-a_0.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},
@@ -418,7 +418,7 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/05-hair/kunoichi_1-c_skin-b_multiply-g_f-a_0.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},
@@ -447,7 +447,7 @@ export const hair: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/05-hair/kunoichilong_1-c_skin-b_multiply-g_f-a_0.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},
@@ -493,7 +493,7 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/05-hair/longstraight_1-c_skin-b_multiply-g_f-a_0.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},
@@ -539,7 +539,7 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/05-hair/ponylong_1-c_skin-b_multiply-g_f-a_0.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},
@@ -591,7 +591,7 @@ export const hair: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/05-hair/waveshort_1-c_skin-b_multiply-g_f-a_0.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},

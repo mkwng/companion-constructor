@@ -18,7 +18,7 @@ export const eyes: AttributeDictionary = {
 				{
 					path: "/attributes/face/06-eyes/bags_2-c_skin-b_multiply.png",
 
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 			],
@@ -36,7 +36,7 @@ export const eyes: AttributeDictionary = {
 				{
 					path: "/attributes/face/06-eyes/closed_2-c_skin-b_multiply.png",
 
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 			],
@@ -116,7 +116,7 @@ export const eyes: AttributeDictionary = {
 				{
 					path: "/attributes/face/06-eyes/squint_2-c_skin-b_multiply.png",
 
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 			],
@@ -129,7 +129,7 @@ export const eyes: AttributeDictionary = {
 				{
 					path: "/attributes/face/06-eyes/tired_1-c_skin-b_multiply.png",
 
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{

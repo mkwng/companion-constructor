@@ -24,7 +24,7 @@ export const bodyBack: AttributeDictionary = {
 						4: "/attributes/pose4/01-body/base_2-c_skin-b_multiply.png",
 					},
 
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -58,7 +58,7 @@ export const bodyFront: AttributeDictionary = {
 						1: "/attributes/pose1/12-torso/base_2-c_skin-b_multiply.png",
 						3: "/attributes/pose3/09-body/base_2-c_skin-b_multiply.png",
 					},
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{

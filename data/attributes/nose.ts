@@ -22,7 +22,7 @@ export const nose: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/11-nose/dotline_1-c_skin-b_multiply-g_f.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -38,7 +38,7 @@ export const nose: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/11-nose/dotshadow_1-c_skin-b_multiply-g_f.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -54,7 +54,7 @@ export const nose: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/11-nose/freckly_1-c_skin-b_multiply-g_f.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -74,7 +74,7 @@ export const nose: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/11-nose/hook_1-c_skin-b_multiply-g_m.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -94,7 +94,7 @@ export const nose: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/11-nose/longdown_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -114,7 +114,7 @@ export const nose: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/11-nose/longstraight_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -134,7 +134,7 @@ export const nose: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/11-nose/longup_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -161,7 +161,7 @@ export const nose: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/11-nose/pointed_1-c_skin-b_multiply-g_m.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -177,7 +177,7 @@ export const nose: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/11-nose/wavenarrow_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -193,7 +193,7 @@ export const nose: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/11-nose/wavewide_1-c_skin-b_multiply-g_m.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -209,7 +209,7 @@ export const nose: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/11-nose/wobble_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{

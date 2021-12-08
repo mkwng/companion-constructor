@@ -17,7 +17,7 @@ export const face: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/01-base/mhead_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},
@@ -35,7 +35,7 @@ export const face: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/01-base/fhead_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},
@@ -53,7 +53,7 @@ export const face: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/01-base/chead_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},

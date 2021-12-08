@@ -30,7 +30,7 @@ export const headwear: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/10-accessories/cap_1-c_skin-b_multiply-a_1.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -205,7 +205,7 @@ export const headwear: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/10-accessories/bucket_1-v_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},

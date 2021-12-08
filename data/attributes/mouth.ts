@@ -11,7 +11,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/aged_1-c_skin-b_multiply-g_m.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -27,7 +27,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/bigsmile_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -47,7 +47,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/grimace_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -67,7 +67,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/neutral_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -84,7 +84,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/neutrallips_1-c_skin-b_multiply-g_f.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -128,7 +128,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/openfrown_1-c_skin-b_multiply-g_m.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -144,7 +144,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/opensmile_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -160,7 +160,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/pout_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -176,7 +176,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/slightfrown_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -192,7 +192,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/slightsmile_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -208,7 +208,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/slighttilt_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -225,7 +225,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/smilelips_1-c_skin-b_multiply-g_f.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -255,7 +255,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/smileside_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -275,7 +275,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/subtlesmile_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -291,7 +291,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/teethy_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -311,7 +311,7 @@ export const mouth: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/tongue_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -334,7 +334,7 @@ export const mouth: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/08-mouth/widesmile_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 			],
@@ -384,7 +384,7 @@ export const facialhair: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/08-mouth/fumanchu_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 			],
@@ -402,7 +402,7 @@ export const facialhair: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/08-mouth/handlebars_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 			],
@@ -419,7 +419,7 @@ export const facialhair: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/08-mouth/thinpatch_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 			],
@@ -433,7 +433,7 @@ export const facialhair: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/beard2_1-c_shadow-g_m.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{ path: "/attributes/face/08-mouth/beard2_2-v_hair-g_m.png", colorType: "hair" },

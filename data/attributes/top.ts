@@ -48,7 +48,7 @@ export const top: AttributeDictionary = {
 						1: "/attributes/pose1/13-top/hoodie_0-c_skinshadow.png",
 						2: "/attributes/pose2/05-tops/hoodie_1-v_skin-b_multiply.png",
 					},
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 
@@ -251,7 +251,7 @@ export const top: AttributeDictionary = {
 					path: {
 						2: "/attributes/pose2/05-tops/schoolgirl_1-v_skin-b_multiply-g_f.png",
 					},
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
@@ -885,7 +885,7 @@ export const top: AttributeDictionary = {
 					path: {
 						2: "/attributes/pose2/05-tops/northstar_6-c_skinshadow.png",
 					},
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{

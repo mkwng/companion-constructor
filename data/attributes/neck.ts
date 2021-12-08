@@ -16,7 +16,7 @@ export const neck: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/pose2/02-neck/fneck_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},
@@ -34,7 +34,7 @@ export const neck: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/pose2/02-neck/mneck_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},
@@ -51,7 +51,7 @@ export const neck: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/pose2/02-neck/mneck_2-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 					batch: ["head"],
 				},

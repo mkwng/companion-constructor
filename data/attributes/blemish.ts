@@ -15,6 +15,7 @@ export const blemish: AttributeDictionary = {
 				{
 					path: "/attributes/face/02-blemish/bandage-c_white.png",
 					color: colors.default.white,
+					batch: ["head"],
 				},
 			],
 		},
@@ -25,8 +26,9 @@ export const blemish: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/02-blemish/beautyeye-c_skindark-b_multiply.png",
-					color: colors.skin["2"],
+					color: colors.skin["6"],
 					blendMode: "multiply",
+					batch: ["head"],
 				},
 			],
 		},
@@ -37,8 +39,9 @@ export const blemish: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/02-blemish/beautymouth-c_skindark-b_multiply.png",
-					color: colors.skin["2"],
+					color: colors.skin["6"],
 					blendMode: "multiply",
+					batch: ["head"],
 				},
 			],
 		},
@@ -50,6 +53,7 @@ export const blemish: AttributeDictionary = {
 				{
 					path: "/attributes/face/02-blemish/blush-c_red.png",
 					color: colors.default.red,
+					batch: ["head"],
 				},
 			],
 		},
@@ -60,8 +64,9 @@ export const blemish: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/02-blemish/eyescar-c_skin-b_multiply.png",
-					color: colors.skin["2"],
+					color: colors.skin["6"],
 					blendMode: "multiply",
+					batch: ["head"],
 				},
 			],
 		},
@@ -72,8 +77,9 @@ export const blemish: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/02-blemish/freckles-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
+					batch: ["head"],
 				},
 			],
 		},
@@ -86,6 +92,7 @@ export const blemish: AttributeDictionary = {
 				{
 					path: "/attributes/face/02-blemish/stubblelg-v_hair-g_m.png",
 					colorType: "hair",
+					batch: ["head"],
 				},
 			],
 		},
@@ -98,6 +105,7 @@ export const blemish: AttributeDictionary = {
 				{
 					path: "/attributes/face/02-blemish/stubblemd-v_hair-g_m.png",
 					colorType: "hair",
+					batch: ["head"],
 				},
 			],
 		},
@@ -110,6 +118,7 @@ export const blemish: AttributeDictionary = {
 				{
 					path: "/attributes/face/02-blemish/stubblesm-v_hair-g_m.png",
 					colorType: "hair",
+					batch: ["head"],
 				},
 			],
 		},
@@ -120,8 +129,9 @@ export const blemish: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/02-blemish/tattoos-c_skindark-b_multiply.png",
-					color: colors.skin["2"],
+					color: colors.skin["6"],
 					blendMode: "multiply",
+					batch: ["head"],
 				},
 			],
 			// },

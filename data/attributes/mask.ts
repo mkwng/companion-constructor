@@ -63,7 +63,7 @@ export const mask: AttributeDictionary = {
 				},
 				{
 					path: "/attributes/face/11-nose/mask_2.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{

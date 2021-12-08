@@ -134,7 +134,7 @@ export const eyewear: AttributeDictionary = {
 			layers: [
 				{
 					path: "/attributes/face/09-eyewear/vr_1-c_skin-b_multiply.png",
-					color: colors.skin["1"],
+					color: colors.skin["5"],
 					blendMode: "multiply",
 				},
 				{
