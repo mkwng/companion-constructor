@@ -14,16 +14,8 @@ import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
 import useLocalStorage from "../hooks/useLocalStorage";
 
-const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42] });
-const wcConnector = new WalletConnectConnector({
-	infuraId: "517bf3874a6848e58f99fa38ccf9fce4",
-});
-
-const preferredNetwork = 1;
-
 function getLibrary(provider) {
 	const library = new Web3Provider(provider);
-	// library.pollingInterval = 12000;
 	return library;
 }
 
@@ -37,25 +29,19 @@ export default function WrapperHome() {
 
 function Constructor() {
 	const [companion, setCompanion] = useState<Companion | null>(null);
-	const [connected, setConnected] = useState(false);
 	const [customizing, setCustomizing] = useState<boolean>(false);
 	const [selectedCompanion, setSelectedCompanion] = useState<number | null>(null);
 	const scrollableArea = useRef<HTMLDivElement>(null);
 
-	const web3React = useWeb3React();
-	const { active, activate, error } = web3React;
-	const [loaded, setLoaded] = useState(false);
-
-	const [contract, setContract] = useState(null);
-	const [hash, setHash] = useState(null);
-	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
-	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
-
 	useEffect(() => {
 		if (selectedCompanion) {
-			fetch(`/api/companion/${selectedCompanion}`).then((res) => {
+			fetch(`/api/companion/${selectedCompanion}?format=keys`).then((res) => {
 				res.json().then((data) => {
-					const fetchedCompanion = keysToCompanion(apiToKeys(data));
+					console.log(data);
+					if (data.error) {
+						return alert("Oops! Something went wrong. Please try again later.");
+					}
+					const fetchedCompanion = keysToCompanion(data);
 					fetchedCompanion.name = `Companion #${selectedCompanion}`;
 					setCompanion({ ...fetchedCompanion });
 					scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
@@ -65,24 +51,6 @@ function Constructor() {
 			setCompanion(randomCompanion());
 		}
 	}, [selectedCompanion]);
-
-	// useEffect(() => {
-	// 	if (latestOp == "connect" && latestConnector == "injected") {
-	// 		injected
-	// 			.isAuthorized()
-	// 			.then((isAuthorized) => {
-	// 				setLoaded(true);
-	// 				if (isAuthorized && !web3React.active && !web3React.error) {
-	// 					web3React.activate(injected);
-	// 				}
-	// 			})
-	// 			.catch(() => {
-	// 				setLoaded(true);
-	// 			});
-	// 	} else if (latestOp == "connect" && latestConnector == "walletconnect") {
-	// 		web3React.activate(wcConnector);
-	// 	}
-	// }, []);
 
 	if (!companion) {
 		return <>Loading..</>;
@@ -179,6 +147,7 @@ function Constructor() {
 										setCompanion(randomCompanion());
 										scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
 									}}
+									handleCompanionId={setSelectedCompanion}
 								/>
 							</>
 						)}

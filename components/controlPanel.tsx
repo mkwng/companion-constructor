@@ -1,7 +1,8 @@
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import Web3 from "web3";
+import { Companion } from "../data/types";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { abi, contractAddress } from "./contract";
 
@@ -18,9 +19,11 @@ const W3Operations = {
 export const ControlPanel = ({
 	handleCustomize,
 	handleRandomize,
+	handleCompanionId,
 }: {
 	handleCustomize: () => void;
 	handleRandomize: () => void;
+	handleCompanionId: (companionId?: number) => void;
 }) => {
 	const [expanded, setExpanded] = useState<boolean>(true);
 	const [activeSection, setActiveSection] = useState<"playground" | "myCompanions">(
@@ -30,53 +33,66 @@ export const ControlPanel = ({
 	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
 	const web3React = useWeb3React();
 	const { active, activate, error } = web3React;
-	const [web3, setWeb3] = useState(null);
+	const [web3, setWeb3] = useState<Web3>(null);
 	const [contract, setContract] = useState(null);
 
 	const [ownedCompanions, setOwnedCompanions] = useState<Set<number>>(new Set());
+	const [selected, setSelected] = useState<number | null>(null);
 
-	// useEffect(() => {
-	// 	if (active) {
-	// 		let w3 = new Web3(web3React.library.provider);
-	// 		setWeb3(w3);
-	// 		let c = new w3.eth.Contract(abi, contractAddress);
-	// 		console.log(c);
-	// 		setContract(c);
-	// 	} else {
-	// 		setContract(null);
-	// 	}
-	// }, [active, web3React]);
+	useEffect(() => {
+		if (active) {
+			let w3 = new Web3(web3React.library.provider);
+			setWeb3(w3);
+			let c = new w3.eth.Contract(abi, contractAddress);
+			setContract(c);
+		} else {
+			setOwnedCompanions(new Set());
+			setContract(null);
+		}
+	}, [active, web3React]);
 
-	// const getUserBalance = () => {
-	// 	if (contract && contract.methods) {
-	// 		return contract.methods
-	// 			.balanceOf(web3React.account)
-	// 			.call()
-	// 			.then((result) => {
-	// 				for (let i = 0; i < result; i++) {
-	// 					contract.methods
-	// 						.tokenOfOwnerByIndex(web3React.account, i)
-	// 						.call()
-	// 						.then((tokenId) => {
-	// 							setOwnedCompanions((ownedCompanions) => {
-	// 								ownedCompanions.add(tokenId);
-	// 								console.log(ownedCompanions);
-	// 								return ownedCompanions;
-	// 							});
-	// 						});
-	// 				}
-	// 			});
-	// 	} else {
-	// 		return;
-	// 	}
-	// };
+	useEffect(() => {
+		let active = true;
+		if (contract && contract.methods) {
+			load();
+			return () => {
+				active = false;
+			};
+		}
+		async function load() {
+			const result = await contract.methods.balanceOf(web3React.account).call();
+			if (result > 0) {
+				const companionNums = [];
+				for (let i = 0; i < result; i++) {
+					const tokenId = await contract.methods
+						.tokenOfOwnerByIndex(web3React.account, i)
+						.call();
+					companionNums.push(tokenId);
+				}
+				if (!active) {
+					return;
+				}
+				setOwnedCompanions(new Set(companionNums));
+			}
+		}
+	}, [contract, web3React]);
+
+	useEffect(() => {
+		if (ownedCompanions.size > 0) {
+			setActiveSection("myCompanions");
+		}
+	}, [ownedCompanions]);
 
 	useEffect(() => {
 		if (window.outerWidth < 768) {
 			setExpanded(false);
 		}
-		// getUserBalance();
 	}, []);
+
+	const handleCompanionClick = (id: number) => {
+		setSelected(id);
+		handleCompanionId(id);
+	};
 
 	return (
 		<>
@@ -108,23 +124,39 @@ export const ControlPanel = ({
 			</div>
 			<div className={`${expanded ? "" : "hidden"}`}>
 				<div className="bg-background-yellow p-2 text-clothing-black">
-					<button
-						className={`
+					{active ? (
+						<>
+							<p className="inline-block w-full overflow-ellipsis">{web3React.account}</p>
+							<a
+								href="#"
+								onClick={() => {
+									setContract(null);
+									setLatestOp(W3Operations.Disconnect);
+									web3React.deactivate();
+								}}
+							>
+								Sign out
+							</a>
+						</>
+					) : (
+						<button
+							className={`
 								w-full
 								flex justify-center items-center 
 								border-clothing-black border-2 
 								py-2 gap-2 rounded-full`}
-						onClick={() => {
-							// setLatestConnector(ConnectorNames.Injected);
-							// setLatestOp(W3Operations.Connect);
-							// web3React.activate(injected);
-						}}
-					>
-						<span>Connect wallet</span>
-						<span className="text-xs inline-block px-2 py-0.5 bg-clothing-black text-background-yellow rounded-full">
-							soon
-						</span>
-					</button>
+							onClick={() => {
+								setLatestConnector(ConnectorNames.Injected);
+								setLatestOp(W3Operations.Connect);
+								web3React.activate(injected);
+							}}
+						>
+							<span>Connect wallet</span>
+							<span className="text-xs inline-block px-2 py-0.5 bg-clothing-black text-background-yellow rounded-full">
+								soon
+							</span>
+						</button>
+					)}
 				</div>
 				<div className="p-2">
 					<div className="flex w-full rounded-full relative">
@@ -186,12 +218,46 @@ export const ControlPanel = ({
 
 				{activeSection === "myCompanions" && (
 					<div className="p-4 pt-0 flex flex-col justify-items-stretch gap-2">
-						<div className="text-center mx-4 my-1">
-							<h3 className="font-bold mb-2">You don&apos;t have any Companions yet!</h3>
-							<p className="text-gray-400">
-								When you own some Companions, they will show up here
-							</p>
-							<p>{ownedCompanions}</p>
+						<div className="text-center my-2">
+							{ownedCompanions.size === 0 ? (
+								<>
+									<h3 className="font-bold mb-2">You don&apos;t have any Companions yet!</h3>
+									<p className="text-gray-400">
+										When you own some Companions, they will show up here
+									</p>
+								</>
+							) : (
+								<div className="flex justify-start items-center gap-2">
+									{Array.from(ownedCompanions).map((tokenId) => (
+										<div
+											key={tokenId}
+											className={`
+											w-16 h-16 lg:w-12 lg:h-12 xl:w-16 xl:h-16
+											flex justify-center items-center 
+											font-semibold 
+											cursor-pointer 
+											rounded-full overflow-hidden
+											border-2 border-transparent 
+											${
+												selected == tokenId
+													? "border-hair-lightblue text-hair-lightblue"
+													: "text-gray-400 border-gray-600 filter grayscale"
+											}`}
+											onClick={() => {
+												handleCompanionClick(tokenId);
+											}}
+										>
+											{/* eslint-disable */}
+											<img
+												src={`/api/face.png?id=${tokenId}`}
+												alt={`Companion #${tokenId}`}
+												className="w-full h-full"
+											/>
+											{/* eslint-enable */}
+										</div>
+									))}
+								</div>
+							)}
 						</div>
 						<button
 							className={`
