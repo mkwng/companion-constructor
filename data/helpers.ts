@@ -368,7 +368,7 @@ export const apiToKeys = (data: PrismaCompanion) => {
 	return rest;
 };
 
-export const keysToCompanion = (companionQuery): Companion => {
+export const keysToCompanion = (companionQuery: ReturnType<typeof apiToKeys>): Companion => {
 	const companion: Companion = {
 		name: null,
 		properties: { ...companionExample.properties },

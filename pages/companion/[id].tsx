@@ -1,4 +1,4 @@
-import { useRouter } from "next/dist/client/router";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import Editor from "../../components/editor";
@@ -9,9 +9,11 @@ import { fetcher } from "../../lib/swr";
 
 export default function CompanionDetails() {
 	const router = useRouter();
-	const { data, error } = useSWR(`/api/companion/${router.query.id}`, fetcher);
+
+	const { data, error } = useSWR(`/api/companion/${router.query.id}?format=keys`, fetcher);
 	const [companion, setCompanion] = useState<Companion | null>(null);
 	const [isEditing, setIsEditing] = useState(false);
+	console.log(data);
 
 	useEffect(() => {
 		if (!data?.pose) return null;
