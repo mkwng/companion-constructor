@@ -38,6 +38,38 @@ export const top: AttributeDictionary = {
 		},
 		{
 			attribute: "top",
+			name: "fishingvest",
+			rarity: "mythic",
+			layers: [
+				{
+					path: { 2: "/attributes/pose2/05-tops/fisherman_1-v_clothing.png" },
+					colorType: "clothing",
+				},
+				{
+					path: { 2: "/attributes/pose2/05-tops/fisherman_2-v_clothing.png" },
+					colorType: "clothing",
+				},
+				{
+					path: { 2: "/attributes/pose2/05-tops/fisherman_3-v_clothing.png" },
+					colorType: "clothing",
+				},
+				{
+					path: { 2: "/attributes/pose2/05-tops/fisherman_4-c_shadow.png" },
+					color: colors.default.gray,
+					blendMode: "multiply",
+				},
+				{
+					path: { 2: "/attributes/pose2/05-tops/fisherman_5-c_outline.png" },
+					color: colors.default.black,
+				},
+				{
+					path: { 2: "/attributes/pose2/05-tops/fisherman_6-c_outline.png" },
+					colorType: "clothing",
+				},
+			],
+		},
+		{
+			attribute: "top",
 			name: "hoodie",
 			restrictions: { headShape: "flat" },
 			hides: ["headwear", "hair"],
