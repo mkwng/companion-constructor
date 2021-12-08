@@ -1,8 +1,8 @@
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Web3 from "web3";
-import { Companion } from "../data/types";
+import { messageToSign } from "../data/helpers";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { abi, contractAddress } from "./contract";
 
@@ -52,6 +52,7 @@ export const ControlPanel = ({
 	}, [active, web3React]);
 
 	useEffect(() => {
+		setOwnedCompanions(new Set());
 		let active = true;
 		if (contract && contract.methods) {
 			load();
@@ -75,7 +76,7 @@ export const ControlPanel = ({
 				setOwnedCompanions(new Set(companionNums));
 			}
 		}
-	}, [contract, web3React]);
+	}, [contract, web3React.account]);
 
 	useEffect(() => {
 		if (ownedCompanions.size > 0) {
@@ -137,18 +138,15 @@ export const ControlPanel = ({
 									border-2 border-gray-600
 								`}
 								onClick={async () => {
-									const signature = web3.eth
-										.sign("Box me up!", web3React.account)
-										.then((result) => {
-											console.log(result);
-										})
-										.catch((e) => {
-											console.log(e);
-										});
-									const result = await fetch(
-										`/api/sign?address=${web3React.account}&signature=${await signature}`
+									const signature = await web3.eth.personal.sign(
+										messageToSign,
+										web3React.account,
+										"test"
 									);
-									console.log("hello", result);
+									const result = await fetch(
+										`/api/sign?address=${web3React.account}&signature=${signature}`
+									);
+									console.log(await result.json());
 								}}
 							>
 								Verify/sign
@@ -166,6 +164,7 @@ export const ControlPanel = ({
 									setContract(null);
 									setLatestOp(W3Operations.Disconnect);
 									web3React.deactivate();
+									setSelected(null);
 								}}
 							>
 								Sign out
@@ -282,7 +281,7 @@ export const ControlPanel = ({
 										>
 											{/* eslint-disable */}
 											<img
-												src={`https://${process.env.RAILWAY_STATIC_URL}/api/companion.png?faceOnly=true&id=${tokenId}`}
+												src={`https://railway.companioninabox.art/api/companion.png?faceOnly=true&id=${tokenId}`}
 												alt={`Companion #${tokenId}`}
 												className="w-full h-full"
 											/>

@@ -1,14 +1,25 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import Web3 from "web3";
+import { messageToSign } from "../../data/helpers";
 
-export default async function sign(req, res) {
-	console.log(req);
+const web3 = new Web3(new Web3.providers.HttpProvider(process.env.INFURA_ENDPOINT));
+
+export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 	const { method } = req;
 	switch (method) {
 		case "GET":
-			res.status(200).json({
-				message: "Get request received",
-				address: req.address,
-				signature: req.signature,
+			const recover = web3.eth.accounts.recover(messageToSign, req.query.signature as string);
+			if (recover === req.query.address) {
+				const result = {
+					message: "Get request received",
+					address: req.query.address,
+					signature: req.query.signature,
+				};
+				res.status(200).json(result);
+			}
+			// Not allowed
+			res.status(403).json({
+				error: "Signature is not valid",
 			});
 			break;
 		case "POST":

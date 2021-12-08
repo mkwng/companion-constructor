@@ -544,3 +544,6 @@ export const drawLayer = async ({
 	if (!imageToDraw) throw new Error("No image returned");
 	return paint(imageToDraw, canvas, layer.blendMode);
 };
+
+export const messageToSign =
+	"Box me up! \n\nSign this message to prove you own this address. Signing is free and will not cost you any gas.";
