@@ -1,19 +1,15 @@
 import { Web3Provider } from "@ethersproject/providers";
-import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
-import { InjectedConnector } from "@web3-react/injected-connector";
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { Web3ReactProvider } from "@web3-react/core";
 import { useEffect, useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
-import Button from "../components/button";
 import { ControlPanel } from "../components/controlPanel";
 import Editor from "../components/editor";
 import Marketing from "../components/marketing";
 import Renderer from "../components/renderer";
 import { colors } from "../data/colors";
-import { apiToKeys, colorToKey, keysToCompanion } from "../data/helpers";
+import { colorToKey, keysToCompanion } from "../data/helpers";
 import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
-import useLocalStorage from "../hooks/useLocalStorage";
 
 function getLibrary(provider) {
 	const library = new Web3Provider(provider);
