@@ -169,12 +169,15 @@ const AttributeSelector = ({
 
 export default function Editor({
 	companionState,
+	uneditedCompanionState,
 	...props
 }: {
 	companionState: [Companion, Dispatch<SetStateAction<Companion>>];
+	uneditedCompanionState: [Companion, Dispatch<SetStateAction<Companion>>];
 }) {
 	const [expanded, setExpanded] = useState(true);
 	const [companion, setCompanion] = companionState;
+	const [uneditedCompanion, setUneditedCompanion] = uneditedCompanionState;
 	const [viewing, setViewing] = useState<
 		"general" | "face" | "hair" | "clothing" | "accessories"
 	>("general");
@@ -250,6 +253,9 @@ export default function Editor({
 						<div
 							className="cursor-pointer"
 							onClick={() => {
+								if (!uneditedCompanion) {
+									setUneditedCompanion(companion);
+								}
 								setCompanion((old) => {
 									return {
 										...old,
@@ -280,6 +286,9 @@ export default function Editor({
 						color.push(randomProperty(colors.clothing));
 					}
 
+					if (!uneditedCompanion) {
+						setUneditedCompanion(companion);
+					}
 					setCompanion((old) => {
 						return {
 							...old,
@@ -311,6 +320,10 @@ export default function Editor({
 								onSelect={(selected) => {
 									let color = [...companion.attributes[attribute.name].color];
 									color[i] = colors.clothing[selected];
+
+									if (!uneditedCompanion) {
+										setUneditedCompanion(companion);
+									}
 									setCompanion((old) => {
 										return {
 											...old,
@@ -339,6 +352,9 @@ export default function Editor({
 					variants={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4, rarity: "mythic" }]}
 					active={companion.properties.pose}
 					onSelect={(pose) => {
+						if (!uneditedCompanion) {
+							setUneditedCompanion(companion);
+						}
 						setCompanion((old) => {
 							return {
 								...old,
@@ -357,6 +373,9 @@ export default function Editor({
 					colors={colors.background}
 					active={colorToKey(companion.properties.background, colors.background)}
 					onSelect={(color) => {
+						if (!uneditedCompanion) {
+							setUneditedCompanion(companion);
+						}
 						setCompanion((old) => {
 							return {
 								...old,
@@ -375,6 +394,9 @@ export default function Editor({
 					colors={colors.skin}
 					active={colorToKey(companion.properties.skin, colors.skin)}
 					onSelect={(color) => {
+						if (!uneditedCompanion) {
+							setUneditedCompanion(companion);
+						}
 						setCompanion((old) => {
 							return {
 								...old,
@@ -397,6 +419,9 @@ export default function Editor({
 					variants={[{ name: "m" }, { name: "f" }, { name: "w", rarity: "mythic" }]}
 					active={companion.properties.gender}
 					onSelect={(gender) => {
+						if (!uneditedCompanion) {
+							setUneditedCompanion(companion);
+						}
 						setCompanion((old) => {
 							return {
 								...old,
@@ -429,6 +454,9 @@ export default function Editor({
 					colors={colors.hair}
 					active={colorToKey(companion.properties.hair, colors.hair)}
 					onSelect={(color) => {
+						if (!uneditedCompanion) {
+							setUneditedCompanion(companion);
+						}
 						setCompanion((old) => {
 							return {
 								...old,

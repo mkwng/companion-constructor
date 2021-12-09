@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
 import { messageToSign } from "../data/helpers";
+import { Companion } from "../data/types";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { abi, contractAddress } from "./contract";
 
@@ -21,10 +22,14 @@ export const ControlPanel = ({
 	handleCustomize,
 	handleRandomize,
 	handleCompanionId,
+	handleClearUneditedCompanion,
+	uneditedCompanion,
 }: {
 	handleCustomize: () => void;
 	handleRandomize: () => void;
 	handleCompanionId: (companionId?: number) => void;
+	handleClearUneditedCompanion: () => void;
+	uneditedCompanion: Companion;
 }) => {
 	const [expanded, setExpanded] = useState<boolean>(true);
 	const [activeSection, setActiveSection] = useState<"playground" | "myCompanions">(
@@ -54,6 +59,7 @@ export const ControlPanel = ({
 
 	useEffect(() => {
 		setOwnedCompanions(new Set());
+		setSelected(null);
 		let active = true;
 		if (contract && contract.methods) {
 			load();
@@ -93,8 +99,11 @@ export const ControlPanel = ({
 
 	const handleCompanionClick = (id: number) => {
 		setSelected(id);
-		handleCompanionId(id);
 	};
+
+	useEffect(() => {
+		handleCompanionId(selected);
+	}, [selected]);
 
 	return (
 		<>
@@ -210,17 +219,30 @@ export const ControlPanel = ({
 					<div className="flex w-full rounded-full relative">
 						<div className="absolute w-full h-full z-0 rounded-full border-gray-600 border-2"></div>
 						<button
+							disabled={activeSection === "playground"}
 							className={`
 									relative flex-grow
 									py-2 rounded-full
 									text-center border-2
 									${activeSection === "playground" ? "border-background-red" : "border-transparent text-gray-400"}
 								`}
-							onClick={() => setActiveSection("playground")}
+							onClick={() => {
+								if (selected) {
+									if (!!uneditedCompanion && confirm("You'll lose any unsaved changes.")) {
+										handleClearUneditedCompanion();
+									}
+									setSelected(null);
+									handleRandomize();
+									setActiveSection("playground");
+								} else {
+									setActiveSection("playground");
+								}
+							}}
 						>
 							Playground
 						</button>
 						<button
+							disabled={activeSection === "myCompanions"}
 							className={`
 									relative flex-grow
 									py-2 rounded-full
@@ -231,36 +253,41 @@ export const ControlPanel = ({
 											: "border-transparent text-gray-400"
 									}
 								`}
-							onClick={() => setActiveSection("myCompanions")}
+							onClick={() => {
+								handleClearUneditedCompanion();
+								setActiveSection("myCompanions");
+							}}
 						>
 							My companions
 						</button>
 					</div>
 				</div>
 				{activeSection === "playground" && (
-					<div className="p-2 pt-0 flex flex-col justify-items-stretch gap-2">
-						<button
-							className={`
+					<div className="p-2 pl-3 pt-0 ">
+						<div className="pl-2 border-l-4 border-background-sand flex flex-col justify-items-stretch gap-2">
+							<button
+								className={`
 									relative
 									py-2 rounded-full
 									text-center
 									border-2 border-gray-600
 								`}
-							onClick={handleCustomize}
-						>
-							Customize
-						</button>
-						<button
-							className={`
+								onClick={handleCustomize}
+							>
+								Customize
+							</button>
+							<button
+								className={`
 									relative
 									py-2 rounded-full
 									text-center
 									border-2 border-gray-600
 								`}
-							onClick={handleRandomize}
-						>
-							Randomize
-						</button>
+								onClick={handleRandomize}
+							>
+								Randomize
+							</button>
+						</div>
 					</div>
 				)}
 
@@ -306,33 +333,38 @@ export const ControlPanel = ({
 											</div>
 										))}
 									</div>
-									<button
-										disabled={selected === null}
-										className={`
-											relative w-full
-											mt-2 py-2 rounded-full
+
+									<div className="mt-4 pl-2 border-l-4 border-background-sand flex flex-col justify-items-stretch gap-2">
+										<button
+											disabled={selected === null}
+											className={`
+											relative
+											py-2 rounded-full
 											text-center
 											flex gap-2 justify-center items-center
 											border-2 border-gray-600 ${selected === null ? "opacity-20" : ""}
 										`}
-										onClick={() => {}}
-									>
-										<span>Customize</span>
-									</button>
+											onClick={() => {
+												handleCustomize();
+											}}
+										>
+											<span>Customize</span>
+										</button>
 
-									<button
-										disabled={selected === null}
-										className={`
-											relative w-full
-											mt-2 py-2 rounded-full
+										<button
+											disabled={selected === null}
+											className={`
+											relative
+											py-2 rounded-full
 											text-center
 											flex gap-2 justify-center items-center
 											border-2 border-gray-600  ${selected === null ? "opacity-20" : ""}
 										`}
-										onClick={() => {}}
-									>
-										<span>Stake this companion</span>
-									</button>
+											onClick={() => {}}
+										>
+											<span>Stake this companion</span>
+										</button>
+									</div>
 								</>
 							)}
 						</div>

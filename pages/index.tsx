@@ -26,24 +26,28 @@ export default function WrapperHome() {
 
 function Constructor() {
 	const [companion, setCompanion] = useState<Companion | null>(null);
+	const [uneditedCompanion, setUneditedCompanion] = useState<Companion | null>(null);
 	const [customizing, setCustomizing] = useState<boolean>(false);
 	const [selectedCompanion, setSelectedCompanion] = useState<number | null>(null);
 	const scrollableArea = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		if (selectedCompanion) {
-			fetch(`/api/companion/${selectedCompanion}?format=keys`).then((res) => {
-				res.json().then((data) => {
-					console.log(data);
-					if (data.error) {
-						return alert("Oops! Something went wrong. Please try again later.");
-					}
-					const fetchedCompanion = keysToCompanion(data);
-					fetchedCompanion.name = `Companion #${selectedCompanion}`;
-					setCompanion({ ...fetchedCompanion });
-					scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
+			fetch(`/api/companion/${selectedCompanion}?format=keys`)
+				.then((res) => {
+					res.json().then((data) => {
+						if (data.error) {
+							return alert("Oops! Something went wrong. Please try again later.");
+						}
+						const fetchedCompanion = keysToCompanion(data);
+						fetchedCompanion.name = `Companion #${selectedCompanion}`;
+						setCompanion({ ...fetchedCompanion });
+						scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
+					});
+				})
+				.catch((error) => {
+					console.error(error);
 				});
-			});
 		} else {
 			setCompanion(randomCompanion());
 		}
@@ -114,39 +118,72 @@ function Constructor() {
 						overflow-y-scroll hide-scrollbar 
 						text-xs relative`}
 					>
+						<div className={`${customizing ? "hidden" : ""}`}>
+							<ControlPanel
+								handleCustomize={() => {
+									setCustomizing(true);
+									scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
+								}}
+								handleRandomize={() => {
+									setCompanion(randomCompanion());
+									scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
+								}}
+								handleCompanionId={setSelectedCompanion}
+								uneditedCompanion={uneditedCompanion}
+								handleClearUneditedCompanion={() => {
+									setUneditedCompanion(null);
+								}}
+							/>
+						</div>
 						{customizing ? (
 							<>
 								<div className="fixed lg:sticky left-0 top-0 right-0 p-2 bg-clothing-black lg:bg-opacity-70 lg:backdrop-filter lg:backdrop-blur-sm shadow-md z-10">
-									<button
-										className={`
-									relative
-									py-2 px-4 rounded-full
-									text-center
-									border-2 border-gray-600
-								`}
-										onClick={() => setCustomizing(false)}
-									>
-										← Cancel
-									</button>
+									<div className="flex justify-between">
+										<button
+											className={`
+												relative
+												py-2 px-4 rounded-full
+												text-center
+												border-2 border-gray-600
+											`}
+											onClick={() => {
+												if (selectedCompanion && uneditedCompanion) {
+													if (confirm("Are you sure you want to discard your changes?")) {
+														setCompanion(uneditedCompanion);
+														setUneditedCompanion(null);
+														setCustomizing(false);
+													}
+												} else {
+													setCustomizing(false);
+												}
+											}}
+										>
+											{selectedCompanion ? "Cancel" : "← Back"}
+										</button>
+										{selectedCompanion !== null && (
+											<button
+												className={`
+													relative
+													py-2 px-4 rounded-full
+													text-center
+													border-2 border-gray-600
+												`}
+												onClick={() => {}}
+											>
+												Purchase
+											</button>
+										)}
+									</div>
 								</div>
 								<div className="lg:pb-2">
-									<Editor companionState={[companion, setCompanion]} />
+									<Editor
+										companionState={[companion, setCompanion]}
+										uneditedCompanionState={[uneditedCompanion, setUneditedCompanion]}
+									/>
 								</div>
 							</>
 						) : (
-							<>
-								<ControlPanel
-									handleCustomize={() => {
-										setCustomizing(true);
-										scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
-									}}
-									handleRandomize={() => {
-										setCompanion(randomCompanion());
-										scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
-									}}
-									handleCompanionId={setSelectedCompanion}
-								/>
-							</>
+							<></>
 						)}
 					</div>
 				</div>
