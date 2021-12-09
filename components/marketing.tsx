@@ -16,7 +16,7 @@ export default function Marketing() {
 								`}
 					onClick={() => {}}
 				>
-					Follow with us on Twitter
+					Follow us on Twitter
 				</a>
 			</div>
 			<div className="md:col-span-3 p-4 md:p-8 order-2 md:order-1">
@@ -78,7 +78,7 @@ export default function Marketing() {
 								`}
 					onClick={() => {}}
 				>
-					Follow with us on Twitter
+					Follow us on Twitter
 				</a>
 			</div>
 		</div>
