@@ -8,54 +8,35 @@ import { Companion } from "../data/types";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { abi, contractAddress } from "./contract";
 
-const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42] });
-const ConnectorNames = {
-	Injected: "injected",
-	WalletConnect: "walletconnect",
-};
-const W3Operations = {
-	Connect: "connect",
-	Disconnect: "disconnect",
-};
-
 export const ControlPanel = ({
 	handleCustomize,
 	handleRandomize,
 	handleCompanionId,
 	handleClearUneditedCompanion,
+	handleConnectWallet,
+	handleSignOut,
 	uneditedCompanion,
+	web3,
+	contract,
+	account,
 }: {
 	handleCustomize: () => void;
 	handleRandomize: () => void;
 	handleCompanionId: (companionId?: number) => void;
 	handleClearUneditedCompanion: () => void;
+	handleConnectWallet: () => void;
+	handleSignOut: () => void;
 	uneditedCompanion: Companion;
+	web3: Web3;
+	contract: any;
+	account: string;
 }) => {
 	const [expanded, setExpanded] = useState<boolean>(true);
 	const [activeSection, setActiveSection] = useState<"playground" | "myCompanions">(
 		"playground"
 	);
-	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
-	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
-	const web3React = useWeb3React();
-	const { active, activate, error } = web3React;
-	const [web3, setWeb3] = useState<Web3>(null);
-	const [contract, setContract] = useState(null);
-
 	const [ownedCompanions, setOwnedCompanions] = useState<Set<number>>(new Set());
 	const [selected, setSelected] = useState<number | null>(null);
-
-	useEffect(() => {
-		if (active) {
-			let w3 = new Web3(web3React.library.provider);
-			setWeb3(w3);
-			let c = new w3.eth.Contract(abi, contractAddress);
-			setContract(c);
-		} else {
-			setOwnedCompanions(new Set());
-			setContract(null);
-		}
-	}, [active, web3React]);
 
 	useEffect(() => {
 		setOwnedCompanions(new Set());
@@ -68,13 +49,11 @@ export const ControlPanel = ({
 			};
 		}
 		async function load() {
-			const result = await contract.methods.balanceOf(web3React.account).call();
+			const result = await contract.methods.balanceOf(account).call();
 			if (result > 0) {
 				const companionNums = [];
 				for (let i = 0; i < result; i++) {
-					const tokenId = await contract.methods
-						.tokenOfOwnerByIndex(web3React.account, i)
-						.call();
+					const tokenId = await contract.methods.tokenOfOwnerByIndex(account, i).call();
 					companionNums.push(tokenId);
 				}
 				if (!active) {
@@ -83,7 +62,7 @@ export const ControlPanel = ({
 				setOwnedCompanions(new Set(companionNums));
 			}
 		}
-	}, [contract, web3React.account]);
+	}, [contract, account]);
 
 	useEffect(() => {
 		if (ownedCompanions.size > 0) {
@@ -135,9 +114,9 @@ export const ControlPanel = ({
 			</div>
 			<div className={`${expanded ? "" : "hidden"}`}>
 				<div className="bg-background-yellow p-2 text-clothing-black">
-					{active ? (
+					{account ? (
 						<>
-							<p className="inline-block w-full overflow-ellipsis">{web3React.account}</p>
+							<p className="inline-block w-full overflow-ellipsis">{account}</p>
 
 							<button
 								className={`
@@ -151,13 +130,11 @@ export const ControlPanel = ({
 									try {
 										const signature = await web3.eth.personal.sign(
 											messageToSign,
-											web3React.account,
+											account,
 											"test"
 										);
 										const response = await (
-											await fetch(
-												`/api/sign?address=${web3React.account}&signature=${signature}`
-											)
+											await fetch(`/api/sign?address=${account}&signature=${signature}`)
 										).json();
 										if (response.error) {
 											return toast(response.error, {
@@ -185,12 +162,7 @@ export const ControlPanel = ({
 									flex gap-2 justify-center items-center
 									border-2 border-gray-600
 								`}
-								onClick={() => {
-									setContract(null);
-									setLatestOp(W3Operations.Disconnect);
-									web3React.deactivate();
-									setSelected(null);
-								}}
+								onClick={handleSignOut}
 							>
 								Sign out
 							</a>
@@ -202,11 +174,7 @@ export const ControlPanel = ({
 								flex justify-center items-center 
 								border-clothing-black border-2 
 								py-2 gap-2 rounded-full`}
-							onClick={() => {
-								setLatestConnector(ConnectorNames.Injected);
-								setLatestOp(W3Operations.Connect);
-								web3React.activate(injected);
-							}}
+							onClick={handleConnectWallet}
 						>
 							<span>Connect wallet</span>
 							<span className="text-xs inline-block px-2 py-0.5 bg-clothing-black text-background-yellow rounded-full">
@@ -228,9 +196,6 @@ export const ControlPanel = ({
 								`}
 							onClick={() => {
 								if (selected) {
-									if (!!uneditedCompanion && confirm("You'll lose any unsaved changes.")) {
-										handleClearUneditedCompanion();
-									}
 									setSelected(null);
 									handleRandomize();
 									setActiveSection("playground");

@@ -1,7 +1,11 @@
 import { Web3Provider } from "@ethersproject/providers";
-import { Web3ReactProvider } from "@web3-react/core";
+import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
+import { InjectedConnector } from "@web3-react/injected-connector";
 import { useEffect, useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
+import Web3 from "web3";
+import Button from "../components/button";
+import { abi, contractAddress } from "../components/contract";
 import { ControlPanel } from "../components/controlPanel";
 import Editor from "../components/editor";
 import Marketing from "../components/marketing";
@@ -10,6 +14,7 @@ import { colors } from "../data/colors";
 import { colorToKey, keysToCompanion } from "../data/helpers";
 import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 function getLibrary(provider) {
 	const library = new Web3Provider(provider);
@@ -24,12 +29,41 @@ export default function WrapperHome() {
 	);
 }
 
+const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42] });
+const ConnectorNames = {
+	Injected: "injected",
+	WalletConnect: "walletconnect",
+};
+const W3Operations = {
+	Connect: "connect",
+	Disconnect: "disconnect",
+};
+
 function Constructor() {
+	const web3React = useWeb3React();
+	const { active, activate, error } = web3React;
+	const [web3, setWeb3] = useState<Web3>(null);
+	const [contract, setContract] = useState(null);
+	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
+	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
+
 	const [companion, setCompanion] = useState<Companion | null>(null);
 	const [uneditedCompanion, setUneditedCompanion] = useState<Companion | null>(null);
 	const [customizing, setCustomizing] = useState<boolean>(false);
 	const [selectedCompanion, setSelectedCompanion] = useState<number | null>(null);
 	const scrollableArea = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (active) {
+			let w3 = new Web3(web3React.library.provider);
+			setWeb3(w3);
+			let c = new w3.eth.Contract(abi, contractAddress);
+			setContract(c);
+		} else {
+			// setOwnedCompanions(new Set());
+			setContract(null);
+		}
+	}, [active, web3React]);
 
 	useEffect(() => {
 		if (selectedCompanion) {
@@ -57,6 +91,50 @@ function Constructor() {
 		return <>Loading..</>;
 	}
 
+	const handleCustomize = () => {
+		setCustomizing(true);
+		scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
+	};
+	const handleExitCustomization = () => {
+		if (selectedCompanion && uneditedCompanion) {
+			if (confirm("Are you sure you want to discard your changes?")) {
+				setCompanion(uneditedCompanion);
+				setUneditedCompanion(null);
+				setCustomizing(false);
+			}
+		} else {
+			setCustomizing(false);
+		}
+	};
+	const handleRandomize = () => {
+		setCompanion(randomCompanion());
+		scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
+	};
+	const handleClearUneditedCompanion = () => {
+		setUneditedCompanion(null);
+	};
+	const handlePurchase = () => {};
+	const handleSaveToDatabase = async () => {
+		const response = await fetch("/api/companion", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(companion),
+		});
+		console.log((await response.json()).id);
+	};
+	const handleConnectWallet = () => {
+		setLatestConnector(ConnectorNames.Injected);
+		setLatestOp(W3Operations.Connect);
+		web3React.activate(injected);
+	};
+	const handleSignOut = () => {
+		setContract(null);
+		setLatestOp(W3Operations.Disconnect);
+		web3React.deactivate();
+	};
+
 	return (
 		<>
 			<div
@@ -68,13 +146,8 @@ function Constructor() {
 			>
 				{!customizing ? (
 					<div className="fixed z-0 left-1/2 w-full max-w-xl transform -translate-x-1/2 bottom-24 p-2 pt-0 flex flex-col justify-items-stretch gap-1 text-xs">
-						<button
-							className={`
-									relative
-									py-2 rounded-full
-									text-center
-									border-2 border-clothing-black
-								`}
+						<Button
+							className=""
 							onClick={() => {
 								scrollableArea.current?.scrollTo({
 									top: window.innerHeight - 96,
@@ -83,97 +156,62 @@ function Constructor() {
 							}}
 						>
 							Learn more
-						</button>
-						<button
-							className={`
-									relative
-									py-2 rounded-full
-									flex justify-center items-center gap-2
-									text-center
-									bg-clothing-orange
-									border-2 border-clothing-black
-								`}
-							onClick={() => {}}
-						>
+						</Button>
+						<Button className={`bg-clothing-orange border-clothing-black`} onClick={() => {}}>
 							<span>Mint</span>
 							<span className="text-xs inline-block px-2 py-0.5 bg-clothing-black text-clothing-orange rounded-full">
 								soon
 							</span>
-						</button>
+						</Button>
 					</div>
 				) : null}
 				<div
 					className={`
-					transition-all
-					z-40 fixed flex flex-col 
-					max-h-screen
-					bottom-0
-					lg:bottom-auto lg:left-auto lg:right-0 lg:top-0 lg:p-6 
-					w-full lg:${customizing ? "w-1/3" : "w-1/4"} lg:h-full`}
+						transition-all
+						z-40 fixed flex flex-col 
+						max-h-screen
+						bottom-0
+						lg:bottom-auto lg:left-auto lg:right-0 lg:top-0 lg:p-6 
+						w-full lg:${customizing ? "w-1/3" : "w-1/4"} lg:h-full
+					`}
 				>
 					<div
 						className={`
-						bg-clothing-black text-white 
-						lg:rounded-lg 
-						overflow-y-scroll hide-scrollbar 
-						text-xs relative`}
+							bg-clothing-black text-white 
+							lg:rounded-lg 
+							overflow-y-scroll hide-scrollbar 
+							text-xs relative
+						`}
 					>
 						<div className={`${customizing ? "hidden" : ""}`}>
 							<ControlPanel
-								handleCustomize={() => {
-									setCustomizing(true);
-									scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
-								}}
-								handleRandomize={() => {
-									setCompanion(randomCompanion());
-									scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
-								}}
+								handleCustomize={handleCustomize}
+								handleRandomize={handleRandomize}
 								handleCompanionId={setSelectedCompanion}
 								uneditedCompanion={uneditedCompanion}
-								handleClearUneditedCompanion={() => {
-									setUneditedCompanion(null);
-								}}
+								handleClearUneditedCompanion={handleClearUneditedCompanion}
+								handleConnectWallet={handleConnectWallet}
+								handleSignOut={handleSignOut}
+								web3={web3}
+								contract={contract}
+								account={web3React.account}
 							/>
 						</div>
 						{customizing ? (
 							<>
 								<div className="fixed lg:sticky left-0 top-0 right-0 p-2 bg-clothing-black lg:bg-opacity-70 lg:backdrop-filter lg:backdrop-blur-sm shadow-md z-10">
 									<div className="flex justify-between">
-										<button
-											className={`
-												relative
-												py-2 px-4 rounded-full
-												text-center
-												border-2 border-gray-600
-											`}
-											onClick={() => {
-												if (selectedCompanion && uneditedCompanion) {
-													if (confirm("Are you sure you want to discard your changes?")) {
-														setCompanion(uneditedCompanion);
-														setUneditedCompanion(null);
-														setCustomizing(false);
-													}
-												} else {
-													setCustomizing(false);
-												}
-											}}
-										>
+										<Button className="" onClick={handleExitCustomization}>
 											{selectedCompanion ? "Cancel" : "← Back"}
-										</button>
+										</Button>
 										{selectedCompanion !== null && (
-											<button
+											<Button
 												disabled={uneditedCompanion === null}
-												className={`
-													relative
-													py-2 px-4 rounded-full
-													text-center
-													border-2 border-gray-600
-													${uneditedCompanion === null ? "opacity-20" : ""}
-												`}
-												onClick={() => {}}
+												className={`${uneditedCompanion === null ? "opacity-20" : ""}`}
+												onClick={handlePurchase}
 											>
 												Purchase
-											</button>
+											</Button>
 										)}
 									</div>
 								</div>
@@ -195,26 +233,6 @@ function Constructor() {
 						customizing ? "pointer-events-none opacity-0 duration-75 " : ""
 					}`}
 				>
-					{/* <div className="w-full min-h-full bg-clothing-white rounded-xl shadow-2xl px-4 lg:px-8 py-16 max-w-6xl mx-auto text-lg grid-cols-1 md:grid-cols-5 items-center mb-8 flex justify-center">
-						<Button className="bg-hair-lightblue" onClick={() => {}}>
-							View on OpenSea
-						</Button>
-						<Button
-							className="bg-hair-yellow"
-							onClick={async () => {
-								const response = await fetch("/api/companion", {
-									method: "POST",
-									headers: {
-										"Content-Type": "application/json",
-									},
-									body: JSON.stringify(companion),
-								});
-								console.log((await response.json()).id);
-							}}
-						>
-							Save
-						</Button>
-					</div> */}
 					<Marketing />
 				</div>
 			</div>
