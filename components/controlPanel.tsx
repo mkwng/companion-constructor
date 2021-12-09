@@ -275,11 +275,12 @@ export const ControlPanel = ({
 									</p>
 								</>
 							) : (
-								<div className="flex justify-start items-center gap-2">
-									{Array.from(ownedCompanions).map((tokenId) => (
-										<div
-											key={tokenId}
-											className={`
+								<>
+									<div className="flex justify-start items-center gap-2">
+										{Array.from(ownedCompanions).map((tokenId) => (
+											<div
+												key={tokenId}
+												className={`
 											w-16 h-16 lg:w-12 lg:h-12 xl:w-16 xl:h-16
 											flex justify-center items-center 
 											font-semibold 
@@ -291,20 +292,48 @@ export const ControlPanel = ({
 													? "border-hair-lightblue text-hair-lightblue"
 													: "text-gray-400 border-gray-600 filter grayscale"
 											}`}
-											onClick={() => {
-												handleCompanionClick(tokenId);
-											}}
-										>
-											{/* eslint-disable */}
-											<img
-												src={`https://railway.companioninabox.art/api/companion.png?faceOnly=true&id=${tokenId}`}
-												alt={`Companion #${tokenId}`}
-												className="w-full h-full"
-											/>
-											{/* eslint-enable */}
-										</div>
-									))}
-								</div>
+												onClick={() => {
+													handleCompanionClick(tokenId);
+												}}
+											>
+												{/* eslint-disable */}
+												<img
+													src={`https://railway.companioninabox.art/api/companion.png?faceOnly=true&id=${tokenId}`}
+													alt={`Companion #${tokenId}`}
+													className="w-full h-full"
+												/>
+												{/* eslint-enable */}
+											</div>
+										))}
+									</div>
+									<button
+										disabled={selected === null}
+										className={`
+											relative w-full
+											mt-2 py-2 rounded-full
+											text-center
+											flex gap-2 justify-center items-center
+											border-2 border-gray-600 ${selected === null ? "opacity-20" : ""}
+										`}
+										onClick={() => {}}
+									>
+										<span>Customize</span>
+									</button>
+
+									<button
+										disabled={selected === null}
+										className={`
+											relative w-full
+											mt-2 py-2 rounded-full
+											text-center
+											flex gap-2 justify-center items-center
+											border-2 border-gray-600  ${selected === null ? "opacity-20" : ""}
+										`}
+										onClick={() => {}}
+									>
+										<span>Stake this companion</span>
+									</button>
+								</>
 							)}
 						</div>
 						<button
