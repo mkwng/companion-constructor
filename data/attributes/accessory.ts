@@ -9,6 +9,7 @@ export const accessory: AttributeDictionary = {
 		{
 			attribute: "accessory",
 			name: "backpack",
+			rarity: "mythic",
 			layers: [
 				{
 					path: "attributes/pose2/07-backaccessory/backpack_01-v_clothing.png",
@@ -32,6 +33,7 @@ export const accessory: AttributeDictionary = {
 		{
 			attribute: "accessory",
 			name: "sword",
+			rarity: "mythic",
 			layers: [
 				{
 					path: "attributes/pose2/07-backaccessory/sword_0-c_gray.png",
