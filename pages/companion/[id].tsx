@@ -63,8 +63,6 @@ export default function CompanionDetails() {
 		<div>
 			<h1>{companion.name}</h1>
 			<Renderer companion={companion} />
-			<button onClick={() => setIsEditing(!isEditing)}>{isEditing ? "View" : "Edit"}</button>
-			{isEditing && <Editor companionState={[companion, setCompanion]} />}
 		</div>
 	);
 }

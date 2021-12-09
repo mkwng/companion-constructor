@@ -162,11 +162,13 @@ function Constructor() {
 										</button>
 										{selectedCompanion !== null && (
 											<button
+												disabled={uneditedCompanion === null}
 												className={`
 													relative
 													py-2 px-4 rounded-full
 													text-center
 													border-2 border-gray-600
+													${uneditedCompanion === null ? "opacity-20" : ""}
 												`}
 												onClick={() => {}}
 											>
