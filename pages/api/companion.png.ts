@@ -83,7 +83,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	}
 
 	if (!optimized) {
-		const { faceOnly, ...query } = req.query;
+		const query = req.query;
 		let companion: Companion | null;
 		const batches: Set<string> = new Set();
 		if (query.id && typeof query.id === "string") {
@@ -131,22 +131,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			}
 		);
 
-		if (faceOnly) {
-			layersWithData.splice(
-				0,
-				layersWithData.length,
-				...layersWithData.filter(([layer, _, needsTranslation]) => {
-					if (layer.path === "/attributes/pose1/00-background/bg-v_background.png") {
-						return true;
-					}
-					if (needsTranslation) {
-						return true;
-					}
-					return false;
-				})
-			);
-		}
-
 		const final = await layersWithData.reduce(
 			async (canvas, [layer], i) => {
 				if (layer.batch) {
@@ -189,11 +173,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 							.toBuffer();
 					},
 					replaceColor: applyColor,
-					translateImage: faceOnly
-						? async (input: Buffer, pose) => {
-								return input;
-						  }
-						: applyTransformation,
+					translateImage: applyTransformation,
 				});
 			},
 			sharp({
@@ -212,13 +192,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			.flatten()
 			.png({ compressionLevel: 8, quality: 80 })
 			.toBuffer();
-
-		if (faceOnly) {
-			optimized = await sharp(optimized)
-				.extract({ left: 65, top: 371, width: 960, height: 960 })
-				.png()
-				.toBuffer();
-		}
 
 		imageCache.set(req.url, optimized);
 	}
