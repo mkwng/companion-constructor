@@ -52,6 +52,9 @@ module.exports = {
 	darkMode: false, // or 'media' or 'class'
 	theme: {
 		extend: {
+			fontFamily: {
+				display: ["Beni"],
+			},
 			transitionDuration: {
 				0: "0ms",
 			},

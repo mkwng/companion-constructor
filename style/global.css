@@ -1,3 +1,12 @@
+@font-face {
+	font-family: 'Beni';
+	src:  url('/fonts/beni-black.woff2') format('woff2'),
+		  url('/fonts/beni-black.woff') format('woff');
+	font-style: normal;
+	font-weight: 900;
+	font-display: swap;
+}
+
 body {
 	min-height: 100vh;
 }
