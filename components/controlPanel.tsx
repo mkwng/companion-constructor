@@ -12,7 +12,7 @@ export const ControlPanel = ({
 	handleCustomize,
 	handleRandomize,
 	handleCompanionId,
-	handleClearUneditedCompanion,
+	handleCleanSlate,
 	handleConnectWallet,
 	handleSignOut,
 	uneditedCompanion,
@@ -23,7 +23,7 @@ export const ControlPanel = ({
 	handleCustomize: () => void;
 	handleRandomize: () => void;
 	handleCompanionId: (companionId?: number) => void;
-	handleClearUneditedCompanion: () => void;
+	handleCleanSlate: () => void;
 	handleConnectWallet: () => void;
 	handleSignOut: () => void;
 	uneditedCompanion: Companion;
@@ -82,7 +82,7 @@ export const ControlPanel = ({
 
 	useEffect(() => {
 		handleCompanionId(selected);
-	}, [selected]);
+	}, [handleCompanionId, selected]);
 
 	return (
 		<>
@@ -219,7 +219,7 @@ export const ControlPanel = ({
 									}
 								`}
 							onClick={() => {
-								handleClearUneditedCompanion();
+								handleCleanSlate();
 								setActiveSection("myCompanions");
 							}}
 						>

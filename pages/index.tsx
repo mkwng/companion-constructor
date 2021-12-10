@@ -4,6 +4,7 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { useEffect, useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import Web3 from "web3";
+import { Contract } from "web3-eth-contract";
 import Button from "../components/button";
 import { abi, contractAddress } from "../components/contract";
 import { ControlPanel } from "../components/controlPanel";
@@ -43,9 +44,11 @@ function Constructor() {
 	const web3React = useWeb3React();
 	const { active, activate, error } = web3React;
 	const [web3, setWeb3] = useState<Web3>(null);
-	const [contract, setContract] = useState(null);
+	const [contract, setContract] = useState<Contract>(null);
 	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
 	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
+
+	const [minting, setMinting] = useState(false);
 
 	const [companion, setCompanion] = useState<Companion | null>(null);
 	const [uneditedCompanion, setUneditedCompanion] = useState<Companion | null>(null);
@@ -110,7 +113,7 @@ function Constructor() {
 		setCompanion(randomCompanion());
 		scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
 	};
-	const handleClearUneditedCompanion = () => {
+	const handleCleanSlate = () => {
 		setUneditedCompanion(null);
 	};
 	const handlePurchase = () => {};
@@ -133,6 +136,37 @@ function Constructor() {
 		setContract(null);
 		setLatestOp(W3Operations.Disconnect);
 		web3React.deactivate();
+	};
+	const handleMint = async () => {
+		if (minting || !contract) {
+			return false;
+		}
+
+		setMinting(true);
+
+		let encoded = contract.methods.mint().encodeABI();
+		const nonce = await web3.eth.getTransactionCount("asdf", "latest"); //get latest nonce
+
+		let tx = {
+			from: web3React.account,
+			to: contractAddress,
+			data: encoded,
+			nonce,
+		};
+
+		web3React.library.provider
+			.request({
+				method: "eth_sendTransaction",
+				params: [tx],
+			})
+			.then((newHash) => {
+				console.log(newHash);
+				// setHash(newHash);
+			})
+			.catch((err) => {
+				console.error(err);
+				setMinting(false);
+			});
 	};
 
 	return (
@@ -189,7 +223,7 @@ function Constructor() {
 								handleRandomize={handleRandomize}
 								handleCompanionId={setSelectedCompanion}
 								uneditedCompanion={uneditedCompanion}
-								handleClearUneditedCompanion={handleClearUneditedCompanion}
+								handleCleanSlate={handleCleanSlate}
 								handleConnectWallet={handleConnectWallet}
 								handleSignOut={handleSignOut}
 								web3={web3}

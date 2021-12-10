@@ -4,6 +4,8 @@ import { AttributeDictionary } from "../types";
 export const hair: AttributeDictionary = {
 	name: "hair",
 	needsTranslation: true,
+	isOptional: true,
+	appearsIn: 0.99,
 	variants: [
 		{
 			attribute: "hair",
