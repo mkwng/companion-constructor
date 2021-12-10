@@ -15,6 +15,7 @@ export const ControlPanel = ({
 	handleCleanSlate,
 	handleConnectWallet,
 	handleSignOut,
+	handleMint,
 	loading,
 }: {
 	account: string;
@@ -27,6 +28,7 @@ export const ControlPanel = ({
 	handleCleanSlate: () => void;
 	handleConnectWallet: () => void;
 	handleSignOut: () => void;
+	handleMint: () => void;
 	loading: boolean;
 }) => {
 	const [expanded, setExpanded] = useState<boolean>(true);
@@ -77,41 +79,35 @@ export const ControlPanel = ({
 					)}
 				</div>
 				<div className="p-2">
-					<div className="flex w-full rounded-full relative">
+					<div className="flex w-full rounded-full relative justify-items-stretch">
 						<div className="absolute w-full h-full z-0 rounded-full border-ui-black-lightest border-2"></div>
-						<button
+						<Button
 							disabled={activeSection === "playground"}
-							className={`
-									relative flex-grow
-									py-2 rounded-full
-									text-center border-2
-									${activeSection === "playground" ? "border-background-red" : "border-transparent text-gray-400"}
-								`}
+							className={
+								activeSection === "playground"
+									? "border-background-red text-white opacity-100"
+									: "border-transparent text-gray-400"
+							}
 							onClick={() => {
 								setActiveSection("playground");
 							}}
 						>
 							Playground
-						</button>
-						<button
+						</Button>
+						<Button
 							disabled={activeSection === "myCompanions"}
-							className={`
-									relative flex-grow
-									py-2 rounded-full
-									text-center border-2
-									${
-										activeSection === "myCompanions"
-											? "border-background-red"
-											: "border-transparent text-gray-400"
-									}
-								`}
+							className={
+								activeSection === "myCompanions"
+									? "border-background-red text-white opacity-100"
+									: "border-transparent text-gray-400"
+							}
 							onClick={() => {
 								handleCleanSlate();
 								setActiveSection("myCompanions");
 							}}
 						>
 							My companions
-						</button>
+						</Button>
 					</div>
 				</div>
 				{activeSection === "playground" && (
@@ -133,8 +129,11 @@ export const ControlPanel = ({
 					/>
 				)}
 				<div className="p-2 pt-0">
-					<Button className={`bg-ui-orange-default border-ui-black-default`} onClick={() => {}}>
-						<span>Mint is live</span>
+					<Button
+						className={`bg-ui-orange-default border-ui-black-default`}
+						onClick={handleMint}
+					>
+						<span>Mint</span>
 					</Button>
 				</div>
 			</div>

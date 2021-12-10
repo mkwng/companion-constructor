@@ -7,7 +7,7 @@ export default function Button({
 	...props
 }) {
 	return (
-		<div className="relative">
+		<div className="relative w-full">
 			<button
 				disabled={disabled}
 				className={`

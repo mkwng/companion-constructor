@@ -10,6 +10,7 @@ import { abi, contractAddress } from "../components/contract";
 import { ControlPanel } from "../components/controlPanel";
 import Editor from "../components/editor";
 import Marketing from "../components/marketing";
+import { MintDialog } from "../components/mintDialog";
 import Renderer from "../components/renderer";
 import { colors } from "../data/colors";
 import { colorToKey, keysToCompanion, messageToSign } from "../data/helpers";
@@ -51,6 +52,7 @@ function Constructor() {
 
 	// State & minting
 	const [retrieving, setRetrieving] = useState(false);
+	const [showMinter, setShowMinter] = useState(false);
 	const [minting, setMinting] = useState(false);
 	const [txnHash, setTxnHash] = useState(null);
 	const [customizing, setCustomizing] = useState<boolean>(false);
@@ -293,7 +295,9 @@ function Constructor() {
 						<Button
 							loading={minting}
 							className={`bg-ui-orange-default border-ui-black-default`}
-							onClick={() => {}}
+							onClick={() => {
+								setShowMinter(true);
+							}}
 						>
 							<span>Mint</span>
 						</Button>
@@ -306,7 +310,7 @@ function Constructor() {
 						max-h-screen
 						bottom-0
 						lg:bottom-auto lg:left-auto lg:right-0 lg:top-0 lg:p-6 
-						w-full lg:${customizing ? "w-1/3" : "w-1/4"} lg:h-full
+						w-full lg:${customizing ? "w-1/3" : "w-1/4"} lg:max-h-full
 					`}
 				>
 					<div
@@ -329,6 +333,9 @@ function Constructor() {
 								handleCleanSlate={handleCleanSlate}
 								handleConnectWallet={handleConnectWallet}
 								handleSignOut={handleSignOut}
+								handleMint={() => {
+									setShowMinter(true);
+								}}
 								loading={retrieving}
 							/>
 						</div>
@@ -368,11 +375,6 @@ function Constructor() {
 						customizing ? "pointer-events-none opacity-0 duration-75 " : ""
 					}`}
 				>
-					<div className="bg-white w-full p-4">
-						<Button className="" onClick={() => handleMint(1)}>
-							Mint
-						</Button>
-					</div>
 					<Marketing />
 				</div>
 			</div>
@@ -393,6 +395,14 @@ function Constructor() {
 					<Renderer showTitle={!customizing} companion={companion} hideBackground={true} />
 				</div>
 			</div>
+			{showMinter ? (
+				<MintDialog
+					companion={companion}
+					handleClose={() => {
+						setShowMinter(false);
+					}}
+				/>
+			) : null}
 			<ToastContainer position="bottom-left" autoClose={0} />
 		</>
 	);
