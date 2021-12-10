@@ -2,7 +2,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { useEffect, useRef, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
 import Button from "../components/button";
@@ -12,7 +12,7 @@ import Editor from "../components/editor";
 import Marketing from "../components/marketing";
 import Renderer from "../components/renderer";
 import { colors } from "../data/colors";
-import { colorToKey, keysToCompanion } from "../data/helpers";
+import { colorToKey, keysToCompanion, messageToSign } from "../data/helpers";
 import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
 import useLocalStorage from "../hooks/useLocalStorage";
@@ -41,33 +41,75 @@ const W3Operations = {
 };
 
 function Constructor() {
+	// Web 3, contract & operations
 	const web3React = useWeb3React();
-	const { active, activate, error } = web3React;
 	const [web3, setWeb3] = useState<Web3>(null);
 	const [contract, setContract] = useState<Contract>(null);
 	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
 	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
 
+	// State & minting
+	const [retrieving, setRetrieving] = useState(false);
 	const [minting, setMinting] = useState(false);
+	const [txnHash, setTxnHash] = useState(null);
+	const [customizing, setCustomizing] = useState<boolean>(false);
 
+	// Companion
 	const [companion, setCompanion] = useState<Companion | null>(null);
 	const [uneditedCompanion, setUneditedCompanion] = useState<Companion | null>(null);
-	const [customizing, setCustomizing] = useState<boolean>(false);
+
+	// Wallet
+	const [ownedCompanions, setOwnedCompanions] = useState<Set<number>>(new Set());
 	const [selectedCompanion, setSelectedCompanion] = useState<number | null>(null);
+
+	// Ref
 	const scrollableArea = useRef<HTMLDivElement>(null);
 
+	// Connect to web3 and get contract info
 	useEffect(() => {
-		if (active) {
+		if (web3React.active) {
 			let w3 = new Web3(web3React.library.provider);
 			setWeb3(w3);
 			let c = new w3.eth.Contract(abi, contractAddress);
 			setContract(c);
 		} else {
-			// setOwnedCompanions(new Set());
 			setContract(null);
 		}
-	}, [active, web3React]);
+	}, [web3React.active, web3React]);
 
+	// Retrieve owned companions
+	const retrieveCompanions = () => {
+		setRetrieving(true);
+		setOwnedCompanions(new Set());
+		setSelectedCompanion(null);
+		let isRunning = true;
+		if (contract && contract.methods) {
+			load();
+			return () => {
+				isRunning = false;
+			};
+		}
+		async function load() {
+			const result = await contract.methods.balanceOf(web3React.account).call();
+			if (result > 0) {
+				const companionNums = [];
+				for (let i = 0; i < result; i++) {
+					const tokenId = await contract.methods
+						.tokenOfOwnerByIndex(web3React.account, i)
+						.call();
+					companionNums.push(tokenId);
+				}
+				if (!isRunning) {
+					return;
+				}
+				setOwnedCompanions(new Set(companionNums));
+				setRetrieving(false);
+			}
+		}
+	};
+	useEffect(retrieveCompanions, [contract, web3React.account]);
+
+	// Handle when a new companion is selected
 	useEffect(() => {
 		if (selectedCompanion) {
 			fetch(`/api/companion/${selectedCompanion}?format=keys`)
@@ -89,6 +131,25 @@ function Constructor() {
 			setCompanion(randomCompanion());
 		}
 	}, [selectedCompanion]);
+
+	const checkMintStatus = () => {
+		if (txnHash && minting) {
+			console.log("Checking mint status...");
+			web3.eth.getTransaction(txnHash).then((result) => {
+				console.log(result);
+				if (result.transactionIndex) {
+					console.log(result.transactionIndex);
+					retrieveCompanions();
+					setMinting(false);
+				} else {
+					setTimeout(checkMintStatus, 5000);
+				}
+			});
+		} else {
+			console.log("No hash/not minting");
+		}
+	};
+	useEffect(checkMintStatus, [txnHash]);
 
 	if (!companion) {
 		return <>Loading..</>;
@@ -137,36 +198,52 @@ function Constructor() {
 		setLatestOp(W3Operations.Disconnect);
 		web3React.deactivate();
 	};
-	const handleMint = async () => {
-		if (minting || !contract) {
-			return false;
-		}
-
+	const handleMint = async (qty: number) => {
 		setMinting(true);
 
-		let encoded = contract.methods.mint().encodeABI();
-		const nonce = await web3.eth.getTransactionCount("asdf", "latest"); //get latest nonce
+		try {
+			let encoded = contract.methods.mint(qty).encodeABI();
+			const nonce = await web3.eth.getTransactionCount(web3React.account, "latest"); //get latest nonce
+			const wei = parseInt(web3.utils.toWei(0.08 * qty + "", "ether"));
 
-		let tx = {
-			from: web3React.account,
-			to: contractAddress,
-			data: encoded,
-			nonce,
-		};
+			let tx = {
+				from: web3React.account,
+				to: contractAddress,
+				data: encoded,
+				nonce: nonce + "",
+				value: web3.utils.toHex(wei),
+			};
 
-		web3React.library.provider
-			.request({
+			const hash = await web3React.library.provider.request({
 				method: "eth_sendTransaction",
 				params: [tx],
-			})
-			.then((newHash) => {
-				console.log(newHash);
-				// setHash(newHash);
-			})
-			.catch((err) => {
-				console.error(err);
-				setMinting(false);
 			});
+
+			setTxnHash(hash);
+		} catch (error) {
+			setMinting(false);
+			toast.error(error);
+		}
+	};
+	const handleSign = async () => {
+		try {
+			const signature = await web3.eth.personal.sign(messageToSign, web3React.account, "test");
+			const response = await (
+				await fetch(`/api/sign?address=${web3React.account}&signature=${signature}`)
+			).json();
+			if (response.error) {
+				return toast(response.error, {
+					type: "error",
+				});
+			}
+			return toast("Signed!", {
+				type: "success",
+			});
+		} catch (error) {
+			return toast(error, {
+				type: "error",
+			});
+		}
 	};
 
 	return (
@@ -219,16 +296,16 @@ function Constructor() {
 					>
 						<div className={`${customizing ? "hidden" : ""}`}>
 							<ControlPanel
+								account={web3React.account}
+								ownedCompanions={ownedCompanions}
+								selectedCompanion={selectedCompanion}
+								setSelectedCompanion={setSelectedCompanion}
 								handleCustomize={handleCustomize}
 								handleRandomize={handleRandomize}
-								handleCompanionId={setSelectedCompanion}
-								uneditedCompanion={uneditedCompanion}
 								handleCleanSlate={handleCleanSlate}
 								handleConnectWallet={handleConnectWallet}
 								handleSignOut={handleSignOut}
-								web3={web3}
-								contract={contract}
-								account={web3React.account}
+								loading={retrieving}
 							/>
 						</div>
 						{customizing ? (
@@ -267,6 +344,11 @@ function Constructor() {
 						customizing ? "pointer-events-none opacity-0 duration-75 " : ""
 					}`}
 				>
+					<div className="bg-white w-full p-4">
+						<Button className="" onClick={() => handleMint(1)}>
+							Mint
+						</Button>
+					</div>
 					<Marketing />
 				</div>
 			</div>

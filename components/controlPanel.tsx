@@ -1,88 +1,38 @@
-import { useWeb3React } from "@web3-react/core";
-import { InjectedConnector } from "@web3-react/injected-connector";
 import { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import Web3 from "web3";
-import { messageToSign } from "../data/helpers";
-import { Companion } from "../data/types";
-import useLocalStorage from "../hooks/useLocalStorage";
-import { abi, contractAddress } from "./contract";
 
 export const ControlPanel = ({
+	account,
+	ownedCompanions,
+	selectedCompanion,
+	setSelectedCompanion,
 	handleCustomize,
 	handleRandomize,
-	handleCompanionId,
 	handleCleanSlate,
 	handleConnectWallet,
 	handleSignOut,
-	uneditedCompanion,
-	web3,
-	contract,
-	account,
+	loading,
 }: {
+	account: string;
+	ownedCompanions: Set<number>;
+	selectedCompanion: number;
+	setSelectedCompanion: (companionId?: number) => void;
 	handleCustomize: () => void;
 	handleRandomize: () => void;
-	handleCompanionId: (companionId?: number) => void;
 	handleCleanSlate: () => void;
 	handleConnectWallet: () => void;
 	handleSignOut: () => void;
-	uneditedCompanion: Companion;
-	web3: Web3;
-	contract: any;
-	account: string;
+	loading: boolean;
 }) => {
 	const [expanded, setExpanded] = useState<boolean>(true);
 	const [activeSection, setActiveSection] = useState<"playground" | "myCompanions">(
-		"playground"
+		ownedCompanions.size > 0 ? "myCompanions" : "playground"
 	);
-	const [ownedCompanions, setOwnedCompanions] = useState<Set<number>>(new Set());
-	const [selected, setSelected] = useState<number | null>(null);
-
-	useEffect(() => {
-		setOwnedCompanions(new Set());
-		setSelected(null);
-		let active = true;
-		if (contract && contract.methods) {
-			load();
-			return () => {
-				active = false;
-			};
-		}
-		async function load() {
-			const result = await contract.methods.balanceOf(account).call();
-			if (result > 0) {
-				const companionNums = [];
-				for (let i = 0; i < result; i++) {
-					const tokenId = await contract.methods.tokenOfOwnerByIndex(account, i).call();
-					companionNums.push(tokenId);
-				}
-				if (!active) {
-					return;
-				}
-				setOwnedCompanions(new Set(companionNums));
-			}
-		}
-	}, [contract, account]);
-
-	useEffect(() => {
-		if (ownedCompanions.size > 0) {
-			setActiveSection("myCompanions");
-		}
-	}, [ownedCompanions]);
 
 	useEffect(() => {
 		if (window.outerWidth < 768) {
 			setExpanded(false);
 		}
 	}, []);
-
-	const handleCompanionClick = (id: number) => {
-		setSelected(id);
-	};
-
-	useEffect(() => {
-		handleCompanionId(selected);
-	}, [handleCompanionId, selected]);
 
 	return (
 		<>
@@ -118,41 +68,6 @@ export const ControlPanel = ({
 						<>
 							<p className="inline-block w-full overflow-ellipsis">{account}</p>
 
-							<button
-								className={`
-									relative
-									w-full mt-2 py-2 rounded-full
-									text-center
-									flex gap-2 justify-center items-center
-									border-2 border-gray-600
-								`}
-								onClick={async () => {
-									try {
-										const signature = await web3.eth.personal.sign(
-											messageToSign,
-											account,
-											"test"
-										);
-										const response = await (
-											await fetch(`/api/sign?address=${account}&signature=${signature}`)
-										).json();
-										if (response.error) {
-											return toast(response.error, {
-												type: "error",
-											});
-										}
-										return toast("Signed!", {
-											type: "success",
-										});
-									} catch (error) {
-										return toast(error, {
-											type: "error",
-										});
-									}
-								}}
-							>
-								Verify/sign
-							</button>
 							<a
 								href="#"
 								className={`
@@ -195,8 +110,8 @@ export const ControlPanel = ({
 									${activeSection === "playground" ? "border-background-red" : "border-transparent text-gray-400"}
 								`}
 							onClick={() => {
-								if (selected) {
-									setSelected(null);
+								if (selectedCompanion) {
+									setSelectedCompanion(null);
 									handleRandomize();
 									setActiveSection("playground");
 								} else {
@@ -280,12 +195,12 @@ export const ControlPanel = ({
 											rounded-full overflow-hidden
 											border-2 border-transparent 
 											${
-												selected == tokenId
+												selectedCompanion == tokenId
 													? "border-hair-lightblue text-hair-lightblue"
 													: "text-gray-400 border-gray-600 filter grayscale"
 											}`}
 												onClick={() => {
-													handleCompanionClick(tokenId);
+													setSelectedCompanion(tokenId);
 												}}
 											>
 												{/* eslint-disable */}
@@ -301,13 +216,13 @@ export const ControlPanel = ({
 
 									<div className="mt-4 pl-2 border-l-4 border-background-sand flex flex-col justify-items-stretch gap-2">
 										<button
-											disabled={selected === null}
+											disabled={selectedCompanion === null}
 											className={`
 											relative
 											py-2 rounded-full
 											text-center
 											flex gap-2 justify-center items-center
-											border-2 border-gray-600 ${selected === null ? "opacity-20" : ""}
+											border-2 border-gray-600 ${selectedCompanion === null ? "opacity-20" : ""}
 										`}
 											onClick={() => {
 												handleCustomize();
@@ -317,13 +232,13 @@ export const ControlPanel = ({
 										</button>
 
 										<button
-											disabled={selected === null}
+											disabled={selectedCompanion === null}
 											className={`
 											relative
 											py-2 rounded-full
 											text-center
 											flex gap-2 justify-center items-center
-											border-2 border-gray-600  ${selected === null ? "opacity-20" : ""}
+											border-2 border-gray-600  ${selectedCompanion === null ? "opacity-20" : ""}
 										`}
 											onClick={() => {}}
 										>
