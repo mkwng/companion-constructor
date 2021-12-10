@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import Button from "../button";
 import { LoggedIn, LoggedOut } from "./account";
 import { MyCompanions } from "./myCompanions";
 import { Playground } from "./playground";
 
 export const ControlPanel = ({
 	account,
+	chainId,
 	ownedCompanions,
 	selectedCompanion,
 	setSelectedCompanion,
@@ -16,6 +18,7 @@ export const ControlPanel = ({
 	loading,
 }: {
 	account: string;
+	chainId: number;
 	ownedCompanions: Set<number>;
 	selectedCompanion: number;
 	setSelectedCompanion: (companionId?: number) => void;
@@ -40,18 +43,18 @@ export const ControlPanel = ({
 	return (
 		<>
 			<div
-				className="flex items-center justify-center p-4"
+				className="flex items-center justify-center px-2 py-2 bg-ui-black-darker"
 				onClick={() => {
 					setExpanded((prev) => !prev);
 				}}
 			>
-				<div className="w-5 h-5">
+				<div className="w-4 h-4">
 					<div
-						className={`absolute w-5 h-5 rounded-full pointer-events-none ${
+						className={`absolute w-4 h-4 rounded-full overflow-hidden pointer-events-none ${
 							expanded ? "bg-yellow-400" : "bg-green-300"
 						}`}
 					></div>
-					<a className="absolute w-5 h-5 opacity-100 lg:opacity-0 hover:opacity-100 flex justify-center items-center cursor-default active:bg-green-400">
+					<a className="absolute w-4 h-4 opacity-100 lg:opacity-0 hover:opacity-100 flex justify-center items-center cursor-default active:bg-green-400">
 						<div
 							className={`pointer-events-none absolute w-2 h-0.5 ${
 								expanded ? "bg-yellow-600" : "bg-green-500"
@@ -68,14 +71,14 @@ export const ControlPanel = ({
 			<div className={`${expanded ? "" : "hidden"}`}>
 				<div className="bg-background-yellow p-2 text-clothing-black">
 					{account ? (
-						<LoggedIn account={account} handleSignOut={handleSignOut} />
+						<LoggedIn account={account} handleSignOut={handleSignOut} chainId={chainId} />
 					) : (
 						<LoggedOut handleConnectWallet={handleConnectWallet} />
 					)}
 				</div>
 				<div className="p-2">
 					<div className="flex w-full rounded-full relative">
-						<div className="absolute w-full h-full z-0 rounded-full border-gray-600 border-2"></div>
+						<div className="absolute w-full h-full z-0 rounded-full border-ui-black-lightest border-2"></div>
 						<button
 							disabled={activeSection === "playground"}
 							className={`
@@ -85,13 +88,7 @@ export const ControlPanel = ({
 									${activeSection === "playground" ? "border-background-red" : "border-transparent text-gray-400"}
 								`}
 							onClick={() => {
-								if (selectedCompanion) {
-									setSelectedCompanion(null);
-									handleRandomize();
-									setActiveSection("playground");
-								} else {
-									setActiveSection("playground");
-								}
+								setActiveSection("playground");
 							}}
 						>
 							Playground
@@ -118,7 +115,12 @@ export const ControlPanel = ({
 					</div>
 				</div>
 				{activeSection === "playground" && (
-					<Playground handleCustomize={handleCustomize} handleRandomize={handleRandomize} />
+					<Playground
+						handleCustomize={handleCustomize}
+						handleRandomize={handleRandomize}
+						handleClearSelection={() => setSelectedCompanion(null)}
+						companionSelected={selectedCompanion !== null}
+					/>
 				)}
 
 				{activeSection === "myCompanions" && (
@@ -127,8 +129,14 @@ export const ControlPanel = ({
 						selectedCompanion={selectedCompanion}
 						setSelectedCompanion={setSelectedCompanion}
 						handleCustomize={handleCustomize}
+						loading={loading}
 					/>
 				)}
+				<div className="p-2 pt-0">
+					<Button className={`bg-ui-orange-default border-ui-black-default`} onClick={() => {}}>
+						<span>Mint is live</span>
+					</Button>
+				</div>
 			</div>
 		</>
 	);

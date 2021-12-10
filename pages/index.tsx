@@ -31,6 +31,7 @@ export default function WrapperHome() {
 }
 
 const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42] });
+
 const ConnectorNames = {
 	Injected: "injected",
 	WalletConnect: "walletconnect",
@@ -86,8 +87,11 @@ function Constructor() {
 		if (contract && contract.methods) {
 			load();
 			return () => {
+				setRetrieving(false);
 				isRunning = false;
 			};
+		} else {
+			setRetrieving(false);
 		}
 		async function load() {
 			const result = await contract.methods.balanceOf(web3React.account).call();
@@ -103,8 +107,9 @@ function Constructor() {
 					return;
 				}
 				setOwnedCompanions(new Set(companionNums));
-				setRetrieving(false);
 			}
+
+			setRetrieving(false);
 		}
 	};
 	useEffect(retrieveCompanions, [contract, web3React.account]);
@@ -150,10 +155,6 @@ function Constructor() {
 		}
 	};
 	useEffect(checkMintStatus, [txnHash]);
-
-	if (!companion) {
-		return <>Loading..</>;
-	}
 
 	const handleCustomize = () => {
 		setCustomizing(true);
@@ -246,6 +247,28 @@ function Constructor() {
 		}
 	};
 
+	if (!companion) {
+		return (
+			<>
+				<div className="absolute animate-spin w-12 h-12 left-1/2 top-1/2 -ml-6 -mt-6">
+					<svg
+						width="48"
+						height="48"
+						viewBox="0 0 24 24"
+						fill={`rgb(${colors.clothing.orange.r},${colors.clothing.orange.g},${colors.clothing.orange.b})`}
+						stroke="currentColor"
+						strokeWidth="2"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<circle cx="12" cy="12" r="3"></circle>
+						<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+					</svg>
+				</div>
+			</>
+		);
+	}
+
 	return (
 		<>
 			<div
@@ -258,7 +281,6 @@ function Constructor() {
 				{!customizing ? (
 					<div className="fixed z-0 left-1/2 w-full max-w-xl transform -translate-x-1/2 bottom-24 p-2 pt-0 flex flex-col justify-items-stretch gap-1 text-xs">
 						<Button
-							className=""
 							onClick={() => {
 								scrollableArea.current?.scrollTo({
 									top: window.innerHeight - 96,
@@ -268,11 +290,12 @@ function Constructor() {
 						>
 							Learn more
 						</Button>
-						<Button className={`bg-clothing-orange border-clothing-black`} onClick={() => {}}>
+						<Button
+							loading={minting}
+							className={`bg-ui-orange-default border-ui-black-default`}
+							onClick={() => {}}
+						>
 							<span>Mint</span>
-							<span className="text-xs inline-block px-2 py-0.5 bg-clothing-black text-clothing-orange rounded-full">
-								soon
-							</span>
 						</Button>
 					</div>
 				) : null}
@@ -297,6 +320,7 @@ function Constructor() {
 						<div className={`${customizing ? "hidden" : ""}`}>
 							<ControlPanel
 								account={web3React.account}
+								chainId={web3React.chainId}
 								ownedCompanions={ownedCompanions}
 								selectedCompanion={selectedCompanion}
 								setSelectedCompanion={setSelectedCompanion}
@@ -310,7 +334,7 @@ function Constructor() {
 						</div>
 						{customizing ? (
 							<>
-								<div className="fixed lg:sticky left-0 top-0 right-0 p-2 bg-clothing-black lg:bg-opacity-70 lg:backdrop-filter lg:backdrop-blur-sm shadow-md z-10">
+								<div className="fixed lg:sticky left-0 top-0 right-0 p-2 bg-ui-black-darker z-10">
 									<div className="flex justify-between">
 										<Button className="" onClick={handleExitCustomization}>
 											{selectedCompanion ? "Cancel" : "← Back"}

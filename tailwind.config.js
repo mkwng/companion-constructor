@@ -114,6 +114,17 @@ module.exports = {
 					blue: "#556b79",
 					gray: "#f5f7f3",
 				},
+				ui: {
+					black: {
+						default: "#443D4A",
+						lighter: "#4C4254",
+						lightest: "#5D5365",
+						darker: "#39333C",
+					},
+					orange: {
+						default: "#fa615b",
+					},
+				},
 			},
 			maxHeight: {
 				"2/3-screen": "66vh",
@@ -126,11 +137,6 @@ module.exports = {
 			height: {
 				"1/2-screen": "50vh",
 			},
-		},
-	},
-	variants: {
-		extend: {
-			translate: ["active"],
 		},
 	},
 	plugins: [require("@tailwindcss/aspect-ratio")],

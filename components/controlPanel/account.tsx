@@ -1,39 +1,54 @@
-export const LoggedIn = ({ account, handleSignOut }) => {
+import Button from "../button";
+
+const getTruncatedAddress = (address) => {
+	if (address && address.startsWith("0x")) {
+		return address.substr(0, 4) + "..." + address.substr(address.length - 4);
+	}
+	return address;
+};
+
+export const LoggedIn = ({ account, handleSignOut, chainId }) => {
+	const AccountName = () => {
+		if (chainId === 1) {
+			return <>{getTruncatedAddress(account)}</>;
+		}
+		if (chainId === 4) {
+			return (
+				<>
+					<div>
+						<h4>Notice</h4>You&apos;re currently on a testnet. Things won&apos;t work correctly.
+					</div>
+					{getTruncatedAddress(account)}
+				</>
+			);
+		}
+		return (
+			<>
+				<div>
+					<h4>Notice</h4>You&apos;re on an unsupported network. Things won&apos;t work
+					correctly.
+				</div>
+				{getTruncatedAddress(account)}
+			</>
+		);
+	};
 	return (
 		<>
-			<p className="inline-block w-full overflow-ellipsis">{account}</p>
+			<div className="inline-block w-full overflow-ellipsis">
+				<AccountName />
+			</div>
 
-			<a
-				href="#"
-				className={`
-									relative
-									mt-2 py-2 rounded-full
-									text-center
-									flex gap-2 justify-center items-center
-									border-2 border-gray-600
-								`}
-				onClick={handleSignOut}
-			>
+			<Button className={`w-full`} onClick={handleSignOut}>
 				Sign out
-			</a>
+			</Button>
 		</>
 	);
 };
 
 export const LoggedOut = ({ handleConnectWallet }) => {
 	return (
-		<button
-			className={`
-            w-full
-            flex justify-center items-center 
-            border-clothing-black border-2 
-            py-2 gap-2 rounded-full`}
-			onClick={handleConnectWallet}
-		>
+		<Button className={`w-full`} onClick={handleConnectWallet}>
 			<span>Connect wallet</span>
-			<span className="text-xs inline-block px-2 py-0.5 bg-clothing-black text-background-yellow rounded-full">
-				soon
-			</span>
-		</button>
+		</Button>
 	);
 };
