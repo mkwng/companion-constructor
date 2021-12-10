@@ -343,9 +343,11 @@ function Constructor() {
 							<>
 								<div className="fixed lg:sticky left-0 top-0 right-0 p-2 bg-ui-black-darker z-10">
 									<div className="flex justify-between">
-										<Button className="" onClick={handleExitCustomization}>
-											{selectedCompanion ? "Cancel" : "← Back"}
-										</Button>
+										<div>
+											<Button className="" onClick={handleExitCustomization}>
+												{selectedCompanion ? "Cancel" : "← Done"}
+											</Button>
+										</div>
 										{selectedCompanion !== null && (
 											<Button
 												disabled={uneditedCompanion === null}

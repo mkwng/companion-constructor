@@ -10,6 +10,7 @@ import {
 } from "../data/helpers";
 import { randomProperty } from "../data/random";
 import { Companion, Pose, Restrictions, RGBColor, Variant } from "../data/types";
+import Button from "./button";
 
 const OptionsContainer = ({
 	title,
@@ -136,30 +137,28 @@ const AttributeSelector = ({
 		<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-2 xl:grid-cols-3 gap-2 p-4">
 			{variants.map((variant) => {
 				return (
-					<div
-						key={variant.name}
-						// onClick={variant.rarity === "mythic" ? () => {} : () => onSelect(variant.name)}
-						onClick={() => onSelect(variant.name)}
-						title={
-							variant.rarity === "mythic"
-								? "You can only mint this attribute randomly"
-								: variant.name
-						}
-						className={`
-							flex justify-center content-center 
-							cursor-pointer   
-							border-2 border-transparent rounded-full 
+					<div key={variant.name}>
+						<Button
+							// onClick={variant.rarity === "mythic" ? () => {} : () => onSelect(variant.name)}
+							onClick={() => onSelect(variant.name)}
+							title={
+								variant.rarity === "mythic"
+									? "You can only mint this attribute randomly"
+									: variant.name
+							}
+							className={`
 							px-4 py-2
 							${variant.rarity === "mythic" ? "opacity-50 cursor-not-allowed" : ""} 
 							${
 								variant.name === active
 									? `border-hair-lightblue text-hair-lightblue`
-									: `text-gray-400 border-gray-600`
+									: `text-gray-400 border-ui-black-lightest`
 							}`}
-					>
-						<p className="text-center m-auto">
-							{variant.name !== active && variant.rarity === "mythic" ? "???" : variant.name}
-						</p>
+						>
+							<p className="text-center m-auto">
+								{variant.name !== active && variant.rarity === "mythic" ? "???" : variant.name}
+							</p>
+						</Button>
 					</div>
 				);
 			})}
@@ -523,11 +522,8 @@ export default function Editor({
 			category: "general" | "face" | "hair" | "accessories" | "clothing";
 			children: React.ReactNode;
 		}) => (
-			<div
+			<Button
 				className={`
-				relative flex-grow
-				py-2 px-4 rounded-full
-				text-center border-2 
 					${category === viewing ? "border-background-red" : "border-transparent text-gray-400"}`}
 				onClick={() => {
 					sessionStorage.setItem(
@@ -538,7 +534,7 @@ export default function Editor({
 				}}
 			>
 				{children}
-			</div>
+			</Button>
 		);
 
 		useEffect(() => {
@@ -577,7 +573,7 @@ export default function Editor({
 					className="w-full overflow-x-scroll hide-scrollbar"
 				>
 					<div className="w-max min-w-full flex justify-center relative">
-						<div className="absolute left-2 right-2 h-full z-0 rounded-full border-gray-600 border-2 bg-clothing-black"></div>
+						<div className="absolute inset-0 h-full z-0 rounded-full border-ui-black-lightest border-2 bg-clothing-black"></div>
 						<span className="w-2 h-4 inline-block" aria-hidden="true" ref={leftPlaceholder} />
 						<CategoryLink key="general" category="general">
 							General
