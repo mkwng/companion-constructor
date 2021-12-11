@@ -6,12 +6,14 @@ export const MyCompanions = ({
 	selectedCompanion,
 	setSelectedCompanion,
 	handleCustomize,
+	handleStake,
 	loading,
 }: {
 	ownedCompanions: Set<number>;
 	selectedCompanion: number | number[];
 	setSelectedCompanion: (id: number | number[]) => void;
 	handleCustomize: () => void;
+	handleStake: () => void;
 	loading: boolean;
 }) => {
 	return (
@@ -80,7 +82,7 @@ export const MyCompanions = ({
 							<span>Customize{selectedCompanion ? ` #${selectedCompanion}` : ""}</span>
 						</Button>
 
-						<Button disabled={selectedCompanion === null} onClick={() => {}}>
+						<Button disabled={selectedCompanion === null} onClick={handleStake}>
 							<span>Stake{selectedCompanion ? ` #${selectedCompanion}` : ""}</span>
 						</Button>
 					</div>

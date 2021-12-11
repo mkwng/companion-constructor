@@ -12,6 +12,7 @@ import Editor from "../components/editor";
 import Marketing from "../components/marketing";
 import { MintDialog } from "../components/mintDialog";
 import Renderer from "../components/renderer";
+import { StakeDialog } from "../components/stakeDialog";
 import { colors } from "../data/colors";
 import { colorToKey, companionToUrl, keysToCompanion, messageToSign } from "../data/helpers";
 import { randomCompanion } from "../data/random";
@@ -54,6 +55,7 @@ function Constructor() {
 	const [customizing, setCustomizing] = useState<boolean>(false);
 	const [retrieving, setRetrieving] = useState(false);
 	const [showMinter, setShowMinter] = useState(false);
+	const [showStaker, setShowStaker] = useState(false);
 	const [minting, setMinting] = useState(false);
 	const [txnHash, setTxnHash] = useState(null);
 	const mintTypeState = useState<"custom" | "random">("custom");
@@ -369,6 +371,9 @@ function Constructor() {
 								selectedCompanion={selectedCompanion}
 								setSelectedCompanion={setSelectedCompanion}
 								handleCustomize={handleCustomize}
+								handleStake={() => {
+									setShowStaker(true);
+								}}
 								handleRandomize={handleRandomize}
 								handleCleanSlate={handleCleanSlate}
 								handleConnectWallet={handleConnectWallet}
@@ -447,6 +452,13 @@ function Constructor() {
 					mintQtyState={mintQtyState}
 					handleMint={handleMint}
 					minting={minting}
+				/>
+			) : null}
+			{showStaker ? (
+				<StakeDialog
+					handleClose={() => {
+						setShowStaker(false);
+					}}
 				/>
 			) : null}
 			<ToastContainer position="bottom-left" />

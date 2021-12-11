@@ -11,6 +11,7 @@ export const ControlPanel = ({
 	selectedCompanion,
 	setSelectedCompanion,
 	handleCustomize,
+	handleStake,
 	handleRandomize,
 	handleCleanSlate,
 	handleConnectWallet,
@@ -24,6 +25,7 @@ export const ControlPanel = ({
 	selectedCompanion: number | number[];
 	setSelectedCompanion: (companionId?: number) => void;
 	handleCustomize: () => void;
+	handleStake: () => void;
 	handleRandomize: () => void;
 	handleCleanSlate: () => void;
 	handleConnectWallet: () => void;
@@ -131,6 +133,7 @@ export const ControlPanel = ({
 						selectedCompanion={selectedCompanion}
 						setSelectedCompanion={setSelectedCompanion}
 						handleCustomize={handleCustomize}
+						handleStake={handleStake}
 						loading={loading}
 					/>
 				)}
