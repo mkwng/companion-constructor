@@ -1,4 +1,6 @@
 export const contractAddress = "0xd3A095B6BE87aabDC970c31e1E68e0d3685Ed686";
+export const priceEth = 0.08;
+export const priceCustomEth = 0.16;
 
 export type AbiType = "function" | "constructor" | "event" | "fallback";
 export type StateMutabilityType = "pure" | "view" | "nonpayable" | "payable";

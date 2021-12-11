@@ -10,6 +10,10 @@
 body {
 	min-height: 100vh;
 }
+::selection {
+	background: #ffb7b7; /* WebKit/Blink Browsers */
+	color: #39333c;
+}
 
 #__next {
 	height: 100vh;
