@@ -69,7 +69,7 @@ function Constructor() {
 
 	// Wallet
 	const [ownedCompanions, setOwnedCompanions] = useState<Set<number>>(new Set());
-	const [selectedCompanion, setSelectedCompanion] = useState<number | null>(null);
+	const [selectedCompanions, setSelectedCompanions] = useState<number[]>([]);
 
 	// Ref
 	const scrollableArea = useRef<HTMLDivElement>(null);
@@ -90,7 +90,7 @@ function Constructor() {
 	const retrieveCompanions = (onSuccess?: () => void) => {
 		setRetrieving(true);
 		setOwnedCompanions(new Set());
-		setSelectedCompanion(null);
+		setSelectedCompanions([]);
 		let isRunning = true;
 		if (contract && contract.methods) {
 			setTimeout(load, 5000);
@@ -125,27 +125,15 @@ function Constructor() {
 
 	// Handle when a new companion is selected
 	useEffect(() => {
-		if (Array.isArray(selectedCompanion)) {
-			switch (selectedCompanion.length) {
-				case 0:
-					setSelectedCompanion(null);
-					return;
-				case 1:
-					setSelectedCompanion(selectedCompanion[0]);
-					return;
-				default:
-					return;
-			}
-		}
-		if (selectedCompanion) {
-			fetch(`/api/companion/${selectedCompanion}?format=keys`)
+		if (selectedCompanions.length == 1) {
+			fetch(`/api/companion/${selectedCompanions[0]}?format=keys`)
 				.then((res) => {
 					res.json().then((data) => {
 						if (data.error) {
 							return alert("Oops! Something went wrong. Please try again later.");
 						}
 						const fetchedCompanion = keysToCompanion(data);
-						fetchedCompanion.name = `Companion #${selectedCompanion}`;
+						fetchedCompanion.name = `Companion #${selectedCompanions[0]}`;
 						setCompanion({ ...fetchedCompanion });
 						scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
 					});
@@ -153,10 +141,12 @@ function Constructor() {
 				.catch((error) => {
 					console.error(error);
 				});
-		} else {
+		} else if (selectedCompanions.length == 0) {
 			setCompanion(randomCompanion());
+		} else {
+			return;
 		}
-	}, [selectedCompanion]);
+	}, [selectedCompanions]);
 
 	const checkMintStatus = () => {
 		if (txnHash && minting) {
@@ -170,7 +160,7 @@ function Constructor() {
 							toast.error(result.error);
 						} else {
 							retrieveCompanions(() => {
-								setSelectedCompanion(result.companionId);
+								setSelectedCompanions([result.companionId]);
 							});
 							toast.success("Mint successful!");
 						}
@@ -213,7 +203,7 @@ function Constructor() {
 		scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
 	};
 	const handleExitCustomization = () => {
-		if (selectedCompanion && uneditedCompanion) {
+		if (selectedCompanions.length == 1 && uneditedCompanion) {
 			if (confirm("Are you sure you want to discard your changes?")) {
 				setCompanion(uneditedCompanion);
 				setUneditedCompanion(null);
@@ -368,8 +358,8 @@ function Constructor() {
 								account={web3React.account}
 								chainId={web3React.chainId}
 								ownedCompanions={ownedCompanions}
-								selectedCompanion={selectedCompanion}
-								setSelectedCompanion={setSelectedCompanion}
+								selectedCompanions={selectedCompanions}
+								setSelectedCompanions={setSelectedCompanions}
 								handleCustomize={handleCustomize}
 								handleStake={() => {
 									setShowStaker(true);
@@ -390,17 +380,19 @@ function Constructor() {
 									<div className="flex justify-between">
 										<div>
 											<Button className="" onClick={handleExitCustomization}>
-												{selectedCompanion ? "Cancel" : "← Done"}
+												{selectedCompanions.length ? "Cancel" : "← Done"}
 											</Button>
 										</div>
-										{selectedCompanion !== null && (
-											<Button
-												disabled={uneditedCompanion === null}
-												className={`${uneditedCompanion === null ? "opacity-20" : ""}`}
-												onClick={handlePurchase}
-											>
-												Purchase
-											</Button>
+										{selectedCompanions.length && (
+											<div>
+												<Button
+													disabled={uneditedCompanion === null}
+													className={`${uneditedCompanion === null ? "opacity-20" : ""}`}
+													onClick={handlePurchase}
+												>
+													Purchase
+												</Button>
+											</div>
 										)}
 									</div>
 								</div>
@@ -459,6 +451,7 @@ function Constructor() {
 					handleClose={() => {
 						setShowStaker(false);
 					}}
+					selectedCompanions={selectedCompanions}
 				/>
 			) : null}
 			<ToastContainer position="bottom-left" />

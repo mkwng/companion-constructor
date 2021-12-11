@@ -3,19 +3,20 @@ import Button from "../button";
 
 export const MyCompanions = ({
 	ownedCompanions,
-	selectedCompanion,
-	setSelectedCompanion,
+	selectedCompanions,
+	setSelectedCompanions,
 	handleCustomize,
 	handleStake,
 	loading,
 }: {
 	ownedCompanions: Set<number>;
-	selectedCompanion: number | number[];
-	setSelectedCompanion: (id: number | number[]) => void;
+	selectedCompanions: number[];
+	setSelectedCompanions: (ids: number[]) => void;
 	handleCustomize: () => void;
 	handleStake: () => void;
 	loading: boolean;
 }) => {
+	console.log(selectedCompanions);
 	return (
 		<div className="relative m-2 mt-0 p-2 bg-ui-black-darker rounded-lg overflow-hidden">
 			{ownedCompanions.size === 0 ? (
@@ -27,13 +28,11 @@ export const MyCompanions = ({
 				<>
 					<div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-4 xl:grid-cols-6 justify-start items-center gap-2">
 						{Array.from(ownedCompanions).map((tokenId) => {
-							const isSelected = Array.isArray(selectedCompanion)
-								? selectedCompanion.includes(tokenId)
-								: selectedCompanion === tokenId;
+							const isSelected = selectedCompanions?.includes(tokenId);
 							return (
 								<Button
 									key={tokenId}
-									className={`${
+									className={`aspect-square ${
 										isSelected
 											? "border-hair-lightblue text-hair-lightblue"
 											: "text-gray-400 border-ui-black-lighter "
@@ -41,33 +40,31 @@ export const MyCompanions = ({
 									onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
 										// Check if shift key was held down
 										if (e.shiftKey) {
-											setSelectedCompanion(
-												Array.isArray(selectedCompanion)
-													? selectedCompanion.includes(tokenId)
-														? [
-																...selectedCompanion.slice(
-																	0,
-																	selectedCompanion.indexOf(tokenId)
-																),
-																...selectedCompanion.slice(
-																	selectedCompanion.indexOf(tokenId) + 1
-																),
-														  ]
-														: [...selectedCompanion, tokenId]
-													: [selectedCompanion, tokenId]
+											setSelectedCompanions(
+												selectedCompanions.includes(tokenId)
+													? [
+															...selectedCompanions.slice(
+																0,
+																selectedCompanions.indexOf(tokenId)
+															),
+															...selectedCompanions.slice(
+																selectedCompanions.indexOf(tokenId) + 1
+															),
+													  ]
+													: [...selectedCompanions, tokenId]
 											);
 										} else {
-											setSelectedCompanion(tokenId);
+											setSelectedCompanions([tokenId]);
 										}
 									}}
 								>
 									#{tokenId}
 									{/* eslint-disable */}
-									{/* <img
-									src={`https://railway.companioninabox.art/api/companion.png?id=${tokenId}`}
-									alt={`Companion #${tokenId}`}
-									className="w-full h-full"
-								/> */}
+									<img
+										src={`//localhost:3000/api/companion.png?id=${tokenId}`}
+										alt={`#${tokenId}`}
+										className="w-full h-full"
+									/>
 									{/* eslint-enable */}
 								</Button>
 							);
@@ -75,15 +72,12 @@ export const MyCompanions = ({
 					</div>
 
 					<div className="grid grid-cols-2 gap-2 mt-2">
-						<Button
-							disabled={selectedCompanion === null || Array.isArray(selectedCompanion)}
-							onClick={handleCustomize}
-						>
-							<span>Customize{selectedCompanion ? ` #${selectedCompanion}` : ""}</span>
+						<Button disabled={selectedCompanions.length !== 1} onClick={handleCustomize}>
+							<span>Customize{selectedCompanions ? ` #${selectedCompanions}` : ""}</span>
 						</Button>
 
-						<Button disabled={selectedCompanion === null} onClick={handleStake}>
-							<span>Stake{selectedCompanion ? ` #${selectedCompanion}` : ""}</span>
+						<Button disabled={!selectedCompanions.length} onClick={handleStake}>
+							<span>Stake{selectedCompanions ? ` #${selectedCompanions}` : ""}</span>
 						</Button>
 					</div>
 				</>

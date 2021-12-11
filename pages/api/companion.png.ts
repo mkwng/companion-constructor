@@ -3,6 +3,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import NodeCache from "node-cache";
 import sharp from "sharp";
 import { apiToKeys, drawLayer, getLayers, getPath, keysToCompanion } from "../../data/helpers";
+import { createCompanion } from "../../data/operations";
+import { randomCompanion } from "../../data/random";
 import { AttributeSelection, Companion, LayerWithData, Pose, RGBColor } from "../../data/types";
 import prisma from "../../lib/prisma";
 
@@ -90,7 +92,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			const result = await prisma.companion.findUnique({
 				where: { id: parseInt(query.id) },
 			});
-			companion = keysToCompanion(apiToKeys(result));
+			if (!result) {
+				companion = await createCompanion({
+					id: parseInt(query.id),
+					companion: randomCompanion(),
+				});
+			} else {
+				companion = keysToCompanion(apiToKeys(result));
+			}
 		} else {
 			companion = keysToCompanion(query);
 		}

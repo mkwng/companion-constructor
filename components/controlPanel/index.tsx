@@ -8,8 +8,8 @@ export const ControlPanel = ({
 	account,
 	chainId,
 	ownedCompanions,
-	selectedCompanion,
-	setSelectedCompanion,
+	selectedCompanions,
+	setSelectedCompanions,
 	handleCustomize,
 	handleStake,
 	handleRandomize,
@@ -22,8 +22,8 @@ export const ControlPanel = ({
 	account: string;
 	chainId: number;
 	ownedCompanions: Set<number>;
-	selectedCompanion: number | number[];
-	setSelectedCompanion: (companionId?: number) => void;
+	selectedCompanions: number[];
+	setSelectedCompanions: (ids?: number[]) => void;
 	handleCustomize: () => void;
 	handleStake: () => void;
 	handleRandomize: () => void;
@@ -45,10 +45,10 @@ export const ControlPanel = ({
 	}, []);
 
 	useEffect(() => {
-		if (selectedCompanion) {
+		if (selectedCompanions.length) {
 			setActiveSection("myCompanions");
 		}
-	}, [selectedCompanion]);
+	}, [selectedCompanions]);
 
 	return (
 		<>
@@ -122,16 +122,16 @@ export const ControlPanel = ({
 					<Playground
 						handleCustomize={handleCustomize}
 						handleRandomize={handleRandomize}
-						handleClearSelection={() => setSelectedCompanion(null)}
-						companionSelected={selectedCompanion !== null}
+						handleClearSelection={() => setSelectedCompanions([])}
+						companionSelected={selectedCompanions.length > 0}
 					/>
 				)}
 
 				{activeSection === "myCompanions" && (
 					<MyCompanions
 						ownedCompanions={ownedCompanions}
-						selectedCompanion={selectedCompanion}
-						setSelectedCompanion={setSelectedCompanion}
+						selectedCompanions={selectedCompanions}
+						setSelectedCompanions={setSelectedCompanions}
 						handleCustomize={handleCustomize}
 						handleStake={handleStake}
 						loading={loading}
