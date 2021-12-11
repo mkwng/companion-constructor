@@ -9,8 +9,8 @@ export const MyCompanions = ({
 	loading,
 }: {
 	ownedCompanions: Set<number>;
-	selectedCompanion: number;
-	setSelectedCompanion: (id: number) => void;
+	selectedCompanion: number | number[];
+	setSelectedCompanion: (id: number | number[]) => void;
 	handleCustomize: () => void;
 	loading: boolean;
 }) => {
@@ -24,32 +24,59 @@ export const MyCompanions = ({
 			) : (
 				<>
 					<div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-4 xl:grid-cols-6 justify-start items-center gap-2">
-						{Array.from(ownedCompanions).map((tokenId) => (
-							<Button
-								key={tokenId}
-								className={`${
-									selectedCompanion == tokenId
-										? "border-hair-lightblue text-hair-lightblue"
-										: "text-gray-400 border-ui-black-lighter "
-								}`}
-								onClick={() => {
-									setSelectedCompanion(tokenId);
-								}}
-							>
-								#{tokenId}
-								{/* eslint-disable */}
-								{/* <img
+						{Array.from(ownedCompanions).map((tokenId) => {
+							const isSelected = Array.isArray(selectedCompanion)
+								? selectedCompanion.includes(tokenId)
+								: selectedCompanion === tokenId;
+							return (
+								<Button
+									key={tokenId}
+									className={`${
+										isSelected
+											? "border-hair-lightblue text-hair-lightblue"
+											: "text-gray-400 border-ui-black-lighter "
+									}`}
+									onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+										// Check if shift key was held down
+										if (e.shiftKey) {
+											setSelectedCompanion(
+												Array.isArray(selectedCompanion)
+													? selectedCompanion.includes(tokenId)
+														? [
+																...selectedCompanion.slice(
+																	0,
+																	selectedCompanion.indexOf(tokenId)
+																),
+																...selectedCompanion.slice(
+																	selectedCompanion.indexOf(tokenId) + 1
+																),
+														  ]
+														: [...selectedCompanion, tokenId]
+													: [selectedCompanion, tokenId]
+											);
+										} else {
+											setSelectedCompanion(tokenId);
+										}
+									}}
+								>
+									#{tokenId}
+									{/* eslint-disable */}
+									{/* <img
 									src={`https://railway.companioninabox.art/api/companion.png?id=${tokenId}`}
 									alt={`Companion #${tokenId}`}
 									className="w-full h-full"
 								/> */}
-								{/* eslint-enable */}
-							</Button>
-						))}
+									{/* eslint-enable */}
+								</Button>
+							);
+						})}
 					</div>
 
 					<div className="grid grid-cols-2 gap-2 mt-2">
-						<Button disabled={selectedCompanion === null} onClick={handleCustomize}>
+						<Button
+							disabled={selectedCompanion === null || Array.isArray(selectedCompanion)}
+							onClick={handleCustomize}
+						>
 							<span>Customize{selectedCompanion ? ` #${selectedCompanion}` : ""}</span>
 						</Button>
 

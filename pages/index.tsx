@@ -123,6 +123,18 @@ function Constructor() {
 
 	// Handle when a new companion is selected
 	useEffect(() => {
+		if (Array.isArray(selectedCompanion)) {
+			switch (selectedCompanion.length) {
+				case 0:
+					setSelectedCompanion(null);
+					return;
+				case 1:
+					setSelectedCompanion(selectedCompanion[0]);
+					return;
+				default:
+					return;
+			}
+		}
 		if (selectedCompanion) {
 			fetch(`/api/companion/${selectedCompanion}?format=keys`)
 				.then((res) => {

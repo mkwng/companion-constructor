@@ -117,7 +117,7 @@ export const MintDialog = ({
 												setShowFaq(true);
 											}}
 										>
-											Wait, I have a question...
+											Still have questions?
 										</a>
 									</p>
 									<div className="mt-16 w-full sticky bottom-8">
@@ -149,7 +149,7 @@ export const MintDialog = ({
 												setShowFaq(true);
 											}}
 										>
-											Wait, I have a question...
+											Still have questions?
 										</a>
 									</p>
 									<div className="flex align-baseline text-xl ">

@@ -21,7 +21,7 @@ export const ControlPanel = ({
 	account: string;
 	chainId: number;
 	ownedCompanions: Set<number>;
-	selectedCompanion: number;
+	selectedCompanion: number | number[];
 	setSelectedCompanion: (companionId?: number) => void;
 	handleCustomize: () => void;
 	handleRandomize: () => void;
