@@ -10,6 +10,13 @@ generator client {
   previewFeatures = ["referentialIntegrity"]
 }
 
+model Transactions {
+  hash    String   @unique
+  date    DateTime
+  txnType String
+  txnQty  Int
+}
+
 model Companion {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())

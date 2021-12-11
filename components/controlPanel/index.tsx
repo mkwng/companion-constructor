@@ -42,6 +42,12 @@ export const ControlPanel = ({
 		}
 	}, []);
 
+	useEffect(() => {
+		if (selectedCompanion) {
+			setActiveSection("myCompanions");
+		}
+	}, [selectedCompanion]);
+
 	return (
 		<>
 			<div

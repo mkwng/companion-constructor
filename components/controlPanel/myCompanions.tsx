@@ -25,20 +25,13 @@ export const MyCompanions = ({
 				<>
 					<div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-4 xl:grid-cols-6 justify-start items-center gap-2">
 						{Array.from(ownedCompanions).map((tokenId) => (
-							<div
+							<Button
 								key={tokenId}
-								className={`
-											w-full aspect-1
-											flex justify-center items-center 
-											font-semibold 
-											cursor-pointer 
-											rounded-full overflow-hidden
-											border-2 border-transparent 
-											${
-												selectedCompanion == tokenId
-													? "border-hair-lightblue text-hair-lightblue"
-													: "text-gray-400 border-ui-black-lighter "
-											}`}
+								className={`${
+									selectedCompanion == tokenId
+										? "border-hair-lightblue text-hair-lightblue"
+										: "text-gray-400 border-ui-black-lighter "
+								}`}
 								onClick={() => {
 									setSelectedCompanion(tokenId);
 								}}
@@ -51,7 +44,7 @@ export const MyCompanions = ({
 									className="w-full h-full"
 								/> */}
 								{/* eslint-enable */}
-							</div>
+							</Button>
 						))}
 					</div>
 

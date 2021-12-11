@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import Web3 from "web3";
 import { messageToSign } from "../../data/helpers";
-
-const web3 = new Web3(new Web3.providers.HttpProvider(process.env.INFURA_ENDPOINT));
+import { web3 } from "../../lib/web3";
 
 export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 	const { method } = req;

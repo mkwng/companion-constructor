@@ -6,14 +6,14 @@ import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
 import Button from "../components/button";
-import { abi, contractAddress } from "../components/contract";
+import { abi, contractAddress, priceCustomEth, priceEth } from "../components/contract";
 import { ControlPanel } from "../components/controlPanel";
 import Editor from "../components/editor";
 import Marketing from "../components/marketing";
 import { MintDialog } from "../components/mintDialog";
 import Renderer from "../components/renderer";
 import { colors } from "../data/colors";
-import { colorToKey, keysToCompanion, messageToSign } from "../data/helpers";
+import { colorToKey, companionToUrl, keysToCompanion, messageToSign } from "../data/helpers";
 import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
 import useLocalStorage from "../hooks/useLocalStorage";
@@ -51,11 +51,15 @@ function Constructor() {
 	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
 
 	// State & minting
+	const [customizing, setCustomizing] = useState<boolean>(false);
 	const [retrieving, setRetrieving] = useState(false);
 	const [showMinter, setShowMinter] = useState(false);
 	const [minting, setMinting] = useState(false);
 	const [txnHash, setTxnHash] = useState(null);
-	const [customizing, setCustomizing] = useState<boolean>(false);
+	const mintTypeState = useState<"custom" | "random">("custom");
+	const mintQtyState = useState(1);
+	const [mintType, setMintType] = mintTypeState;
+	const [mintQty, setMintQty] = mintQtyState;
 
 	// Companion
 	const [companion, setCompanion] = useState<Companion | null>(null);
@@ -81,13 +85,13 @@ function Constructor() {
 	}, [web3React.active, web3React]);
 
 	// Retrieve owned companions
-	const retrieveCompanions = () => {
+	const retrieveCompanions = (onSuccess?: () => void) => {
 		setRetrieving(true);
 		setOwnedCompanions(new Set());
 		setSelectedCompanion(null);
 		let isRunning = true;
 		if (contract && contract.methods) {
-			load();
+			setTimeout(load, 5000);
 			return () => {
 				setRetrieving(false);
 				isRunning = false;
@@ -109,6 +113,7 @@ function Constructor() {
 					return;
 				}
 				setOwnedCompanions(new Set(companionNums));
+				onSuccess?.();
 			}
 
 			setRetrieving(false);
@@ -141,13 +146,21 @@ function Constructor() {
 
 	const checkMintStatus = () => {
 		if (txnHash && minting) {
-			console.log("Checking mint status...");
 			web3.eth.getTransaction(txnHash).then((result) => {
-				console.log(result);
 				if (result.transactionIndex) {
-					console.log(result.transactionIndex);
-					retrieveCompanions();
-					setMinting(false);
+					verifyMint().then((result) => {
+						setMinting(false);
+						setShowMinter(false);
+
+						if (result.error) {
+							toast.error(result.error);
+						} else {
+							retrieveCompanions(() => {
+								setSelectedCompanion(result.companionId);
+							});
+							toast.success("Mint successful!");
+						}
+					});
 				} else {
 					setTimeout(checkMintStatus, 5000);
 				}
@@ -156,7 +169,30 @@ function Constructor() {
 			console.log("No hash/not minting");
 		}
 	};
-	useEffect(checkMintStatus, [txnHash]);
+	const verifyMint = async () => {
+		if (txnHash && minting) {
+			return await (
+				await fetch("/api/mint", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						hash: txnHash,
+						mintType,
+						mintQty: mintType === "random" ? mintQty : 1,
+						companion,
+					}),
+				})
+			).json();
+		} else {
+			console.log("No hash/not minting");
+			return false;
+		}
+	};
+	useEffect(() => {
+		checkMintStatus();
+	}, [txnHash]);
 
 	const handleCustomize = () => {
 		setCustomizing(true);
@@ -181,16 +217,6 @@ function Constructor() {
 		setUneditedCompanion(null);
 	};
 	const handlePurchase = () => {};
-	const handleSaveToDatabase = async () => {
-		const response = await fetch("/api/companion", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(companion),
-		});
-		console.log((await response.json()).id);
-	};
 	const handleConnectWallet = () => {
 		setLatestConnector(ConnectorNames.Injected);
 		setLatestOp(W3Operations.Connect);
@@ -201,13 +227,17 @@ function Constructor() {
 		setLatestOp(W3Operations.Disconnect);
 		web3React.deactivate();
 	};
-	const handleMint = async (qty: number) => {
+	const handleMint = async () => {
 		setMinting(true);
 
 		try {
-			let encoded = contract.methods.mint(qty).encodeABI();
+			let encoded = contract.methods.mint(mintType == "custom" ? 1 : mintQty).encodeABI();
 			const nonce = await web3.eth.getTransactionCount(web3React.account, "latest"); //get latest nonce
-			const wei = parseInt(web3.utils.toWei(0.08 * qty + "", "ether"));
+			const wei = parseInt(
+				mintType == "custom"
+					? web3.utils.toWei(priceCustomEth + "", "ether")
+					: web3.utils.toWei(priceEth * mintQty + "", "ether")
+			);
 
 			let tx = {
 				from: web3React.account,
@@ -221,7 +251,6 @@ function Constructor() {
 				method: "eth_sendTransaction",
 				params: [tx],
 			});
-
 			setTxnHash(hash);
 		} catch (error) {
 			setMinting(false);
@@ -293,7 +322,6 @@ function Constructor() {
 							Learn more
 						</Button>
 						<Button
-							loading={minting}
 							className={`bg-ui-orange-default border-ui-black-default`}
 							onClick={() => {
 								setShowMinter(true);
@@ -403,9 +431,13 @@ function Constructor() {
 					handleClose={() => {
 						setShowMinter(false);
 					}}
+					mintTypeState={mintTypeState}
+					mintQtyState={mintQtyState}
+					handleMint={handleMint}
+					minting={minting}
 				/>
 			) : null}
-			<ToastContainer position="bottom-left" autoClose={0} />
+			<ToastContainer position="bottom-left" />
 		</>
 	);
 }

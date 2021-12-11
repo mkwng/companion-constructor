@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { colors } from "../data/colors";
 import { colorToKey } from "../data/helpers";
 import { Companion } from "../data/types";
@@ -9,14 +9,22 @@ import Renderer from "./renderer";
 
 export const MintDialog = ({
 	companion,
+	handleMint,
 	handleClose,
+	mintTypeState,
+	mintQtyState,
+	minting,
 }: {
 	companion: Companion;
+	handleMint: () => void;
 	handleClose: () => void;
+	mintTypeState: ["custom" | "random", Dispatch<SetStateAction<"custom" | "random">>];
+	mintQtyState: [number, Dispatch<SetStateAction<number>>];
+	minting: boolean;
 }) => {
-	const [activeSection, setActiveSection] = useState<"custom" | "random">("custom");
+	const [mintType, setMintType] = mintTypeState;
+	const [mintQty, setMintQty] = mintQtyState;
 	const [showFaq, setShowFaq] = useState(false);
-	const [randomQty, setRandomQty] = useState(1);
 
 	return (
 		<div className="w-screen h-screen fixed z-50 inset-0 font-mono">
@@ -29,18 +37,18 @@ export const MintDialog = ({
 			<div className="w-full max-w-screen-xl max-h-screen overflow-y-scroll md:overflow-y-hidden absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg bg-default-white grid grid-cols-1 md:grid-cols-2 overflow-hidden md:aspect-[2/1]">
 				<div
 					className={`aspect-1 relative ${
-						activeSection == "custom"
+						mintType == "custom"
 							? "bg-background-" +
 							  colorToKey(companion.properties.background, colors.background)
 							: ""
 					}`}
 				>
-					<div className={`${activeSection == "custom" ? "" : "hidden"}`}>
+					<div className={`${mintType == "custom" ? "" : "hidden"}`}>
 						<Renderer showTitle={false} companion={companion} hideBackground={false} />
 					</div>
 					<div
 						className={`h-full w-full bg-ui-black-lightest flex justify-center items-center ${
-							activeSection == "random" ? "" : "hidden"
+							mintType == "random" ? "" : "hidden"
 						}`}
 					>
 						<span className="font-display text-default-yellow animate-pulse text-9xl">?</span>
@@ -67,34 +75,34 @@ export const MintDialog = ({
 						<div className="flex rounded-full relative justify-items-stretch text-xs max-w-xs">
 							<div className="absolute w-full h-full z-0 rounded-full border-ui-black-lightest bg-ui-black-lightest bg-opacity-10 border-2"></div>
 							<Button
-								disabled={activeSection === "custom"}
+								disabled={mintType === "custom"}
 								className={
-									activeSection === "custom"
+									mintType === "custom"
 										? "border-background-red bg-background-red text-white opacity-100"
 										: "border-transparent text-ui-black-lightest"
 								}
 								onClick={() => {
-									setActiveSection("custom");
+									setMintType("custom");
 								}}
 							>
 								Custom
 							</Button>
 							<Button
-								disabled={activeSection === "random"}
+								disabled={mintType === "random"}
 								className={
-									activeSection === "random"
+									mintType === "random"
 										? "border-background-red bg-background-red text-white opacity-100"
 										: "border-transparent text-ui-black-lightest"
 								}
 								onClick={() => {
-									setActiveSection("random");
+									setMintType("random");
 								}}
 							>
 								Random
 							</Button>
 						</div>
 						<div className="px-8 max-w-xs text-center flex flex-col gap-2 justify-center items-center">
-							{activeSection === "custom" ? (
+							{mintType === "custom" ? (
 								<>
 									<p>Whoa! This customized 1/1 NFT you created looks really dope. </p>
 									<p>
@@ -115,7 +123,9 @@ export const MintDialog = ({
 									<div className="mt-16 w-full sticky bottom-8">
 										<Button
 											className="text-lg text-white bg-ui-orange-default"
-											disabled={randomQty > 8 || randomQty < 1}
+											disabled={mintQty > 8 || mintQty < 1}
+											loading={minting}
+											onClick={handleMint}
 										>
 											<span>Mint</span>
 											<span className="text-md px-2 py-0.5 text-white bg-ui-black-lightest bg-opacity-20 rounded-full">
@@ -152,19 +162,19 @@ export const MintDialog = ({
 											w-16 text-center py-2 px-0
 											border-0 border-b-4 border-ui-black-lightest 
 											outline-ui-orange-default focus:border-ui-orange-default focus:ring-ui-orange-default
-											${randomQty > 8 ? "text-default-red" : ""}
+											${mintQty > 8 ? "text-default-red" : ""}
 										`}
 											name="qty"
 											type="number"
 											min="1"
 											max="8"
-											value={randomQty}
+											value={mintQty}
 											onChange={(e) => {
-												setRandomQty(parseInt(e.target.value));
+												setMintQty(parseInt(e.target.value));
 											}}
 											onBlur={(e) => {
 												if (parseInt(e.target.value) > 8) {
-													setRandomQty(8);
+													setMintQty(8);
 												}
 											}}
 										/>
@@ -172,11 +182,13 @@ export const MintDialog = ({
 									<div className="mt-16 w-full sticky bottom-8">
 										<Button
 											className="text-lg text-white bg-ui-orange-default"
-											disabled={randomQty > 8 || randomQty < 1}
+											disabled={mintQty > 8 || mintQty < 1}
+											loading={minting}
+											onClick={handleMint}
 										>
 											<span>Mint</span>
 											<span className="text-md px-2 py-0.5 text-white bg-ui-black-lightest bg-opacity-20 rounded-full">
-												{priceEth * randomQty}Ξ
+												{priceEth * mintQty}Ξ
 											</span>
 										</Button>
 									</div>
