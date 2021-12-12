@@ -328,6 +328,9 @@ function Constructor() {
 						<Button
 							className={`bg-ui-orange-default border-ui-black-default`}
 							onClick={() => {
+								if (selectedCompanions.length) {
+									setSelectedCompanions([]);
+								}
 								setShowMinter(true);
 							}}
 						>
@@ -383,14 +386,26 @@ function Constructor() {
 												{selectedCompanions.length ? "Cancel" : "← Done"}
 											</Button>
 										</div>
-										{selectedCompanions.length && (
+										{selectedCompanions.length ? (
 											<div>
 												<Button
 													disabled={uneditedCompanion === null}
 													className={`${uneditedCompanion === null ? "opacity-20" : ""}`}
 													onClick={handlePurchase}
 												>
-													Purchase
+													Checkout
+												</Button>
+											</div>
+										) : (
+											<div>
+												<Button
+													className="bg-ui-orange-default"
+													onClick={() => {
+														setShowMinter(true);
+														setCustomizing(false);
+													}}
+												>
+													Mint
 												</Button>
 											</div>
 										)}
@@ -440,10 +455,16 @@ function Constructor() {
 					handleClose={() => {
 						setShowMinter(false);
 					}}
+					handleCustomize={() => {
+						setShowMinter(false);
+						handleCustomize();
+					}}
+					handleConnectWallet={handleConnectWallet}
 					mintTypeState={mintTypeState}
 					mintQtyState={mintQtyState}
 					handleMint={handleMint}
 					minting={minting}
+					connected={!!web3React?.account}
 				/>
 			) : null}
 			{showStaker ? (

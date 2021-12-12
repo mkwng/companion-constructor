@@ -7,16 +7,24 @@ import { createCompanion } from "../../data/operations";
 import { randomCompanion } from "../../data/random";
 import { AttributeSelection, Companion, LayerWithData, Pose, RGBColor } from "../../data/types";
 import prisma from "../../lib/prisma";
+import { web3 } from "../../lib/web3";
+
+const { w, h } = {
+	w: 128,
+	h: 128,
+};
+const ratio = w / 2048;
 
 const imageCache = new NodeCache();
 const applyColor = async (input: Buffer, color: RGBColor): Promise<Buffer> => {
-	return await sharp(input)
+	if (!input) return input;
+	const result = await sharp(input)
 		.composite([
 			{
 				input: await sharp({
 					create: {
-						width: 2048,
-						height: 2048,
+						width: w,
+						height: h,
 						channels: 3,
 						background: color,
 					},
@@ -27,50 +35,67 @@ const applyColor = async (input: Buffer, color: RGBColor): Promise<Buffer> => {
 			},
 		])
 		.toBuffer();
+	return result;
 };
 const applyTransformation = async (input: Buffer, pose: Pose): Promise<Buffer> => {
+	let result;
 	switch (pose) {
 		case 1:
-			return await sharp({
+			result = await sharp({
 				create: {
-					width: 2048,
-					height: 2048,
-					channels: 4,
-					background: { r: 255, g: 255, b: 255, alpha: 0 },
-				},
-			})
-				.png()
-				.composite([{ input: await sharp(input).flop().toBuffer(), top: -15, left: -261 }])
-				.toBuffer();
-		case 2:
-			return input;
-		case 3:
-			return await sharp({
-				create: {
-					width: 2048,
-					height: 2048,
-					channels: 4,
-					background: { r: 255, g: 255, b: 255, alpha: 0 },
-				},
-			})
-				.png()
-				.composite([{ input, left: 521, top: -313 }])
-				.toBuffer();
-		case 4:
-			return await sharp({
-				create: {
-					width: 2048,
-					height: 2048,
+					width: w,
+					height: h,
 					channels: 4,
 					background: { r: 255, g: 255, b: 255, alpha: 0 },
 				},
 			})
 				.png()
 				.composite([
-					{ input: await sharp(input).flip().rotate(90).toBuffer(), top: 0, left: 246 },
+					{
+						input: await sharp(input).flop().toBuffer(),
+						top: Math.round(-15 * ratio),
+						left: Math.round(-261 * ratio),
+					},
 				])
 				.toBuffer();
+			break;
+		case 2:
+			result = input;
+			break;
+		case 3:
+			result = await sharp({
+				create: {
+					width: w,
+					height: h,
+					channels: 4,
+					background: { r: 255, g: 255, b: 255, alpha: 0 },
+				},
+			})
+				.png()
+				.composite([{ input, left: Math.round(521 * ratio), top: Math.round(-313 * ratio) }])
+				.toBuffer();
+			break;
+		case 4:
+			result = await sharp({
+				create: {
+					width: w,
+					height: h,
+					channels: 4,
+					background: { r: 255, g: 255, b: 255, alpha: 0 },
+				},
+			})
+				.png()
+				.composite([
+					{
+						input: await sharp(input).flip().rotate(90).toBuffer(),
+						top: 0,
+						left: Math.round(246 * ratio),
+					},
+				])
+				.toBuffer();
+			break;
 	}
+	return result;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -93,10 +118,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				where: { id: parseInt(query.id) },
 			});
 			if (!result) {
-				companion = await createCompanion({
-					id: parseInt(query.id),
-					companion: randomCompanion(),
-				});
+				res.status(404).send("No companion found");
+				return;
+				// companion = await createCompanion({
+				// 	id: parseInt(query.id),
+				// 	companion: randomCompanion(),
+				// });
 			} else {
 				companion = keysToCompanion(apiToKeys(result));
 			}
@@ -110,21 +137,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		const layers = getLayers(companion);
 
 		const imageBuffers = layers.map(async ([layer]) => {
-			const path = getPath(layer, companion.properties.pose);
-			let imageBuffer: Buffer = await imageCache.get(path);
-			if (!imageBuffer) {
-				imageBuffer = (
-					await axios({
-						url:
-							"https://" +
-							(process.env.RAILWAY_STATIC_URL || process.env.NEXT_PUBLIC_URL) +
-							getPath(layer, companion.properties.pose),
-						responseType: "arraybuffer",
-					})
-				).data as Buffer;
-				imageCache.set(path, imageBuffer);
-			}
-			return imageBuffer;
+			const imgBuffer = (
+				await axios({
+					url: "https://companioninabox.art" + getPath(layer, companion.properties.pose),
+					responseType: "arraybuffer",
+				})
+			).data as Buffer;
+			return sharp(imgBuffer).resize(w, h).toBuffer();
 		});
 		const results = await Promise.all(imageBuffers);
 
@@ -142,13 +161,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 		const final = await layersWithData.reduce(
 			async (canvas, [layer], i) => {
+				await canvas;
 				if (layer.batch) {
 					if (layer.batch?.length && layer.batch.some((item) => batches.has(item))) {
 						return canvas;
 					}
 				}
 
-				return await drawLayer({
+				const result = await drawLayer({
 					companion,
 					canvas: await canvas,
 					layers: layersWithData,
@@ -167,13 +187,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 									}
 							  })()
 							: "over";
-						return sharp(target).composite([{ input, blend }]).toBuffer();
+						const result = sharp(target).composite([{ input, blend }]).toBuffer();
+						return result;
 					},
 					createCanvas: () => {
 						return sharp({
 							create: {
-								width: 2048,
-								height: 2048,
+								width: w,
+								height: h,
 								channels: 4,
 								background: { r: 255, g: 255, b: 255, alpha: 0 },
 							},
@@ -183,12 +204,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					},
 					replaceColor: applyColor,
 					translateImage: applyTransformation,
+					debugEscape: async (buffer) => {
+						optimized = await sharp(buffer)
+							.flatten()
+							.png({ compressionLevel: 8, quality: 80 })
+							.toBuffer();
+						res.setHeader("Content-Type", "image/png");
+						res.setHeader("Content-Length", optimized.length);
+						res.setHeader("Cache-Control", "public, max-age=31536000");
+						res.status(200);
+						res.end(optimized);
+						return;
+					},
+					debugDeep: false,
 				});
+				return result;
 			},
 			sharp({
 				create: {
-					width: 2048,
-					height: 2048,
+					width: w,
+					height: h,
 					channels: 4,
 					background: { r: 255, g: 255, b: 255, alpha: 0 },
 				},

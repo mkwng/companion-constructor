@@ -16,7 +16,6 @@ export const MyCompanions = ({
 	handleStake: () => void;
 	loading: boolean;
 }) => {
-	console.log(selectedCompanions);
 	return (
 		<div className="relative m-2 mt-0 p-2 bg-ui-black-darker rounded-lg overflow-hidden">
 			{ownedCompanions.size === 0 ? (

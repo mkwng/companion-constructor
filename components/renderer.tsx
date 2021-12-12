@@ -10,10 +10,17 @@ import {
 import { colorToKey, drawLayer, getLayers, getPath } from "../data/helpers";
 import { colors } from "../data/colors";
 
+const { w, h } = { w: 1024, h: 1024 };
+const ratio = 1;
+
 const imgLoadToPromise = (src): Promise<HTMLImageElement> => {
 	return new Promise((resolve, reject) => {
+		let canvas = document.createElement("canvas");
+		let ctx = canvas.getContext("2d");
 		let img = new Image();
-		img.onload = () => resolve(img);
+		img.onload = () => {
+			return resolve(img);
+		};
 		img.onerror = reject;
 		img.src = src;
 	});
@@ -99,13 +106,13 @@ const applyTransform = (
 ): HTMLCanvasElement | HTMLImageElement => {
 	switch (pose) {
 		case 1:
-			return translateImage(flipHorizontal(source), -261, -15);
+			return translateImage(flipHorizontal(source), -261 * ratio, -15 * ratio);
 		case 2:
 			return source;
 		case 3:
-			return translateImage(source, 521, -313);
+			return translateImage(source, 521 * ratio, -313 * ratio);
 		case 4:
-			return translateImage(rotateImage(flipVertical(source), -90), 246, 0);
+			return translateImage(rotateImage(flipVertical(source), -90), 246 * ratio, 0);
 	}
 };
 
@@ -140,6 +147,7 @@ export default function Renderer({
 		};
 
 		async function load() {
+			canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
 			const batches: Set<string> = new Set();
 			const imgs = await loadImages(imagePaths);
 			const layersWithData: [LayerWithData, AttributeSelection?, boolean?][] = layers.map(
@@ -183,7 +191,7 @@ export default function Renderer({
 						if (!canvas.getContext) throw new Error("No canvas context");
 						const ctx = canvas.getContext("2d");
 						ctx.globalCompositeOperation = blendMode || "source-over";
-						ctx.drawImage(input, 0, 0);
+						ctx.drawImage(input, 0, 0, w, h);
 						return canvas;
 					},
 					createCanvas: () => {
@@ -252,8 +260,8 @@ export default function Renderer({
 			{companion && (
 				<div className="max-w-full max-h-2/3-screen mx-auto z-10 relative">
 					<canvas
-						width="2048"
-						height="2048"
+						width={w}
+						height={h}
 						ref={canvasRef}
 						className={`max-w-full max-h-2/3-screen mx-auto transition-opacity ${
 							isLoading ? "opacity-0 duration-0" : ""

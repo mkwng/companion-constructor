@@ -11,20 +11,29 @@ export const MintDialog = ({
 	companion,
 	handleMint,
 	handleClose,
+	handleCustomize,
+	handleConnectWallet,
 	mintTypeState,
 	mintQtyState,
 	minting,
+	connected,
 }: {
 	companion: Companion;
 	handleMint: () => void;
 	handleClose: () => void;
+	handleCustomize: () => void;
+	handleConnectWallet: () => void;
 	mintTypeState: ["custom" | "random", Dispatch<SetStateAction<"custom" | "random">>];
 	mintQtyState: [number, Dispatch<SetStateAction<number>>];
 	minting: boolean;
+	connected: boolean;
 }) => {
 	const [mintType, setMintType] = mintTypeState;
 	const [mintQty, setMintQty] = mintQtyState;
 	const [showFaq, setShowFaq] = useState(false);
+
+	const bgColorKey = colorToKey(companion.properties.background, colors.background);
+	const buttonColor = bgColorKey === "red" || bgColorKey == "orange" ? "yellow" : "red";
 
 	return (
 		<div className="w-screen h-screen fixed z-50 inset-0 font-mono">
@@ -35,16 +44,29 @@ export const MintDialog = ({
 				&nbsp;
 			</div>
 			<div className="w-full max-w-screen-xl max-h-screen overflow-y-scroll md:overflow-y-hidden absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg bg-default-white grid grid-cols-1 md:grid-cols-2 overflow-hidden md:aspect-[2/1] shadow-ui-black-default shadow-xl">
-				<div
-					className={`aspect-1 relative ${
-						mintType == "custom"
-							? "bg-background-" +
-							  colorToKey(companion.properties.background, colors.background)
-							: ""
-					}`}
-				>
+				{connected ? null : (
+					<div className="absolute z-20 inset-0 flex flex-col justify-center items-center bg-default-white bg-opacity-80 backdrop-blur gap-4">
+						<p>Connect your wallet, first!</p>
+						<div>
+							<Button className="bg-hair-yellow" onClick={handleConnectWallet}>
+								Connect your wallet
+							</Button>
+						</div>
+					</div>
+				)}
+				<div className={`aspect-1 relative`}>
 					<div className={`${mintType == "custom" ? "" : "hidden"}`}>
 						<Renderer showTitle={false} companion={companion} hideBackground={false} />
+						<div className="absolute inset-0 z-50 opacity-0 hover:opacity-100 transition-opacity">
+							<div className={`absolute bottom-8 left-1/2 -translate-x-1/2`}>
+								<Button
+									className={`text-xs text-white border-transparent bg-ui-black-default`}
+									onClick={handleCustomize}
+								>
+									Continue customizing
+								</Button>
+							</div>
+						</div>
 					</div>
 					<div
 						className={`h-full w-full bg-ui-black-lightest flex justify-center items-center ${
