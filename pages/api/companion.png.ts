@@ -107,13 +107,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	const batches: Set<string> = new Set();
 	if (query.id && typeof query.id === "string") {
 		const result = await prisma.companion.findUnique({
-			where: { id: parseInt(query.id) },
+			where: { tokenId: parseInt(query.id) },
 		});
 		if (!result) {
 			res.status(404).send("No companion found");
 			return;
 			// companion = await createCompanion({
-			// 	id: parseInt(query.id),
+			// 	tokenId: parseInt(query.id),
 			// 	companion: randomCompanion(),
 			// });
 		} else {
@@ -179,7 +179,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 								}
 						  })()
 						: "over";
-					console.log(blendMode, blend);
 					const result = sharp(target).composite([{ input, blend }]).toBuffer();
 					return result;
 				},

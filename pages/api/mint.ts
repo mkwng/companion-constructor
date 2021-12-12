@@ -5,6 +5,7 @@ import { web3 } from "../../lib/web3";
 import prisma from "../../lib/prisma";
 import { flattenCompanion } from "../../data/helpers";
 import { randomCompanion } from "../../data/random";
+import { createCompanion } from "../../data/operations";
 
 interface Transaction {
 	hash: string;
@@ -39,18 +40,14 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 						if (!isNaN(companionId)) {
 							let query;
 							if (mintType == "custom" && companion) {
-								query = prisma.companion.create({
-									data: {
-										id: companionId,
-										...flattenCompanion(companion),
-									},
+								query = createCompanion({
+									tokenId: companionId,
+									companion,
 								});
 							} else {
-								query = prisma.companion.create({
-									data: {
-										id: companionId,
-										...flattenCompanion(randomCompanion()),
-									},
+								query = createCompanion({
+									tokenId: companionId,
+									companion: randomCompanion(),
 								});
 							}
 							const result = await query;

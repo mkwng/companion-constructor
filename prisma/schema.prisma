@@ -19,6 +19,7 @@ model Transactions {
 
 model Companion {
   id        Int      @id @default(autoincrement())
+  tokenId   Int      @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String?

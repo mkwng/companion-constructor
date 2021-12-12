@@ -175,8 +175,8 @@ function Constructor() {
 	};
 	const verifyMint = async () => {
 		if (txnHash && minting) {
-			return await (
-				await fetch("/api/mint", {
+			try {
+				const request = await fetch("/api/mint", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -187,8 +187,13 @@ function Constructor() {
 						mintQty: mintType === "random" ? mintQty : 1,
 						companion,
 					}),
-				})
-			).json();
+				});
+				const response = await request.json();
+				console.log(response);
+				return response;
+			} catch (error) {
+				debugger;
+			}
 		} else {
 			console.log("No hash/not minting");
 			return false;

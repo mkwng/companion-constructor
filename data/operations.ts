@@ -4,16 +4,16 @@ import { Companion } from "./types";
 
 export const createCompanion = async ({
 	companion,
-	id,
+	tokenId,
 }: {
 	companion: Companion;
-	id?: number;
+	tokenId: number;
 }) => {
 	return await prisma.companion.create({
-		data: id
+		data: tokenId
 			? { ...flattenCompanion(companion) }
 			: {
-					id,
+					tokenId,
 					...flattenCompanion(companion),
 			  },
 	});

@@ -9,7 +9,7 @@ export default async function apiCompanions(req, res) {
 		case "GET":
 			try {
 				let prismaResponse: PrismaCompanion = await prisma.companion.findUnique({
-					where: { id: parseInt(req.query.id) },
+					where: { tokenId: parseInt(req.query.id) },
 				});
 				if (!prismaResponse) {
 					return res.status(404).json({
