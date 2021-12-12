@@ -31,7 +31,7 @@ export const MyCompanions = ({
 							return (
 								<Button
 									key={tokenId}
-									className={`aspect-square ${
+									className={`aspect-square overflow-hidden ${
 										isSelected
 											? "border-hair-lightblue text-hair-lightblue"
 											: "text-gray-400 border-ui-black-lighter "
@@ -57,12 +57,12 @@ export const MyCompanions = ({
 										}
 									}}
 								>
-									#{tokenId}
+									{/* #{tokenId} */}
 									{/* eslint-disable */}
 									<img
-										src={`//localhost:3000/api/companion.png?id=${tokenId}`}
+										src={`//localhost:3000/api/companion.png?id=${tokenId}&size=128`}
 										alt={`#${tokenId}`}
-										className="w-full h-full"
+										className="absolute inset-0 w-full h-full"
 									/>
 									{/* eslint-enable */}
 								</Button>
