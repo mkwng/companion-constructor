@@ -45,7 +45,6 @@ module.exports = {
 		"bg-background-purple",
 		"bg-background-blue",
 	],
-	darkMode: false, // or 'media' or 'class'
 	theme: {
 		extend: {
 			fontFamily: {
