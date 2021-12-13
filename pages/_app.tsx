@@ -13,6 +13,7 @@ function MyApp({ Component, pageProps }) {
 				<meta name="twitter:summary_large_image" content="summary"></meta>
 				<meta name="twitter:site" content="@companioninabox" />
 				<meta name="twitter:creator" content="@mkwng" />
+				<meta name="twitter:image" content="https://companioninabox.art/social.png" />
 
 				<meta property="og:image" content="/social.png" />
 				<meta property="og:title" content="Companion-in-a-Box" />
