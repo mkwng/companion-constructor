@@ -147,7 +147,7 @@ export default function Marketing({
 					</a>
 				</div>
 			</div>
-			<div className="snap-center w-full min-h-[80vh] bg-clothing-white rounded-xl shadow-2xl p-0 my-20 max-w-6xl mx-auto items-center overflow-hidden">
+			<div className="w-full min-h-[80vh] bg-clothing-white rounded-xl shadow-2xl p-0 my-20 max-w-6xl mx-auto items-center overflow-hidden">
 				<Faq />
 			</div>
 		</>
