@@ -33,8 +33,8 @@ export const MyCompanions = ({
 									key={tokenId}
 									className={`aspect-square overflow-hidden ${
 										isSelected
-											? "border-hair-lightblue text-hair-lightblue"
-											: "text-gray-400 border-ui-black-lighter "
+											? "outline outline-hair-lightblue outline-2 text-hair-lightblue"
+											: "text-gray-400 border-ui-black-lighter filter grayscale-[50%]"
 									}`}
 									onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
 										// Check if shift key was held down

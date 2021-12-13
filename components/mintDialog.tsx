@@ -44,8 +44,28 @@ export const MintDialog = ({
 				&nbsp;
 			</div>
 			<div className="w-full max-w-screen-xl max-h-screen overflow-y-scroll md:overflow-y-hidden absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg bg-default-white grid grid-cols-1 md:grid-cols-2 overflow-hidden md:aspect-[2/1] shadow-ui-black-default shadow-xl">
-				{connected ? null : (
-					<div className="absolute z-20 inset-0 flex flex-col justify-center items-center bg-default-white bg-opacity-80 backdrop-blur gap-4">
+				<div className="absolute z-50 inset-0 flex flex-col justify-center items-center bg-default-white bg-opacity-80 backdrop-blur-sm gap-4">
+					<p>Minting will open soon! Stay tuned.</p>
+					<div>
+						<a
+							className="
+							relative w-full
+							py-2 px-4 rounded-full active:pt-3 active:pb-1
+							flex justify-center items-center gap-2
+							text-center
+							border-2 border-ui-black-default 
+							cursor-pointer bg-hair-yellow
+							hover:text-ui-black-default hover:no-underline"
+							href="https://www.twitter.com/companioninabox"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Follow us on Twitter
+						</a>
+					</div>
+				</div>
+				{/* {connected ? null : (
+					<div className="absolute z-50 inset-0 flex flex-col justify-center items-center bg-default-white bg-opacity-80 backdrop-blur gap-4">
 						<p>Connect your wallet, first!</p>
 						<div>
 							<Button className="bg-hair-yellow" onClick={handleConnectWallet}>
@@ -53,11 +73,11 @@ export const MintDialog = ({
 							</Button>
 						</div>
 					</div>
-				)}
+				)} */}
 				<div className={`aspect-1 relative`}>
 					<div className={`${mintType == "custom" ? "" : "hidden"}`}>
 						<Renderer showTitle={false} companion={companion} hideBackground={false} />
-						<div className="absolute inset-0 z-50 opacity-0 hover:opacity-100 transition-opacity">
+						<div className="absolute inset-0 z-40 opacity-0 hover:opacity-100 transition-opacity">
 							<div className={`absolute bottom-8 left-1/2 -translate-x-1/2`}>
 								<Button
 									className={`text-xs text-white border-transparent bg-ui-black-default`}
@@ -73,7 +93,9 @@ export const MintDialog = ({
 							mintType == "random" ? "" : "hidden"
 						}`}
 					>
-						<span className="font-display text-default-yellow animate-pulse text-9xl">?</span>
+						<span className="font-display subpixel-antialiased text-default-yellow animate-pulse text-9xl">
+							?
+						</span>
 					</div>
 				</div>
 				{showFaq ? (
@@ -95,7 +117,9 @@ export const MintDialog = ({
 								×
 							</Button>
 						</div>
-						<h1 className="font-display text-9xl text-center text-ui-black-lighter">Mint</h1>
+						<h1 className="font-display subpixel-antialiased text-9xl text-center text-ui-black-lighter">
+							Mint
+						</h1>
 
 						<div className="flex rounded-full relative justify-items-stretch text-xs max-w-xs">
 							<div className="absolute w-full h-full z-0 rounded-full border-ui-black-lightest bg-ui-black-lightest bg-opacity-10 border-2"></div>
@@ -148,7 +172,8 @@ export const MintDialog = ({
 									<div className="mt-16 w-full sticky bottom-8">
 										<Button
 											className="text-lg text-white bg-ui-orange-default"
-											disabled={mintQty > 8 || mintQty < 1}
+											disabled={true}
+											// disabled={mintQty > 8 || mintQty < 1}
 											loading={minting}
 											onClick={handleMint}
 										>
@@ -207,7 +232,8 @@ export const MintDialog = ({
 									<div className="mt-16 w-full sticky bottom-8">
 										<Button
 											className="text-lg text-white bg-ui-orange-default"
-											disabled={mintQty > 8 || mintQty < 1}
+											disabled={true}
+											// disabled={mintQty > 8 || mintQty < 1}
 											loading={minting}
 											onClick={handleMint}
 										>

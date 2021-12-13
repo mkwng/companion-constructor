@@ -10,7 +10,7 @@ const getTruncatedAddress = (address) => {
 export const LoggedIn = ({ account, handleSignOut, chainId }) => {
 	const AccountName = () => {
 		if (chainId === 1) {
-			return <>{getTruncatedAddress(account)}</>;
+			return <></>;
 		}
 		if (chainId === 4) {
 			return (
@@ -18,7 +18,6 @@ export const LoggedIn = ({ account, handleSignOut, chainId }) => {
 					<div>
 						<h4>Notice</h4>You&apos;re currently on a testnet. Things won&apos;t work correctly.
 					</div>
-					{getTruncatedAddress(account)}
 				</>
 			);
 		}
@@ -28,18 +27,17 @@ export const LoggedIn = ({ account, handleSignOut, chainId }) => {
 					<h4>Notice</h4>You&apos;re on an unsupported network. Things won&apos;t work
 					correctly.
 				</div>
-				{getTruncatedAddress(account)}
 			</>
 		);
 	};
 	return (
 		<>
-			<div className="inline-block w-full overflow-ellipsis">
+			{/* <div className="inline-block w-full overflow-ellipsis">
 				<AccountName />
-			</div>
+			</div> */}
 
 			<Button className={`w-full`} onClick={handleSignOut}>
-				Sign out
+				Sign out of {getTruncatedAddress(account)}
 			</Button>
 		</>
 	);

@@ -25,7 +25,9 @@ export const StakeDialog = ({
 						<div
 							className={`h-full w-full bg-ui-black-lightest flex justify-center items-center`}
 						>
-							<span className="font-display text-default-yellow animate-pulse text-9xl">?</span>
+							<span className="font-display subpixel-antialiased text-default-yellow animate-pulse text-9xl">
+								?
+							</span>
 						</div>
 					</div>
 

@@ -1,9 +1,72 @@
 import Image from "next/image";
+import Button from "./button";
 import { Faq } from "./faq";
+import { Check } from "./icons/check";
 
-export default function Marketing() {
+export default function Marketing({
+	handleScrollToBottom,
+}: {
+	handleScrollToBottom: () => void;
+}) {
 	return (
 		<>
+			<div
+				className={`
+				relative
+				lg:snap-center w-full mb-20
+				max-w-6xl mx-auto 
+				bg-ui-black-default text-default-white rounded-3xl shadow-2xl 
+				flex flex-col justify-start gap-8 items-start
+				overflow-hidden`}
+			>
+				<div className="w-full aspect-[8/3] md:aspect-[6/1] grid grid-cols-2 md:grid-cols-3 mb-8">
+					<div className="relative">
+						<Image src="/examples/row1.png" alt="Example companions" layout="fill" />
+					</div>
+					<div className="relative">
+						<Image src="/examples/row2.png" alt="Example companions" layout="fill" />
+					</div>
+					<div className="relative">
+						<Image src="/examples/row3.png" alt="Example companions" layout="fill" />
+					</div>
+					<div className="relative">
+						<Image src="/examples/row4.png" alt="Example companions" layout="fill" />
+					</div>
+					<div className="relative">
+						<Image src="/examples/row5.png" alt="Example companions" layout="fill" />
+					</div>
+					<div className="relative">
+						<Image src="/examples/row6.png" alt="Example companions" layout="fill" />
+					</div>
+				</div>
+				<div className="gap-8 flex flex-col items-start px-4 lg:px-8 mb-20">
+					<h1 className="font-display subpixel-antialiased text-6xl md:text-9xl leading-[.8]">
+						Get in, everyone. We&apos;re hanging out in{" "}
+						<span className="text-ui-orange-default">boxes</span>.
+					</h1>
+					<div className="flex flex-col md:flex-row gap-2 md:gap-8 text-sm">
+						<div className="flex gap-2">
+							<Check />
+							<p>Trillions of possible combinations</p>
+						</div>
+						<div className="flex gap-2">
+							<Check />
+							<p>Not just a face, full body outfits</p>
+						</div>
+					</div>
+					<div className="flex flex-col md:flex-row gap-4 items-start">
+						{/* <div>
+							<Button className="border-default-white">View on OpenSea</Button>
+						</div> */}
+						<div>
+							<Button onClick={handleScrollToBottom} className="border-default-white">
+								Jump to FAQ
+							</Button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<div className="w-full min-h-full bg-clothing-white rounded-xl shadow-2xl px-4 lg:px-8 py-16 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-5 items-center overflow-hidden">
 				<div className="md:col-span-5">
 					<a
@@ -84,7 +147,7 @@ export default function Marketing() {
 					</a>
 				</div>
 			</div>
-			<div className="w-full min-h-full bg-clothing-white rounded-xl shadow-2xl p-0 mt-8 mb-16 max-w-6xl mx-auto items-center overflow-hidden">
+			<div className="snap-center w-full min-h-[80vh] bg-clothing-white rounded-xl shadow-2xl p-0 my-20 max-w-6xl mx-auto items-center overflow-hidden">
 				<Faq />
 			</div>
 		</>

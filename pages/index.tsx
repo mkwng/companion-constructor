@@ -79,8 +79,9 @@ function Constructor() {
 		if (web3React.active) {
 			let w3 = new Web3(web3React.library.provider);
 			setWeb3(w3);
-			let c = new w3.eth.Contract(abi, contractAddress);
-			setContract(c);
+			// ----- WHEN CONTRACT IS READY -----
+			// let c = new w3.eth.Contract(abi, contractAddress);
+			// setContract(c);
 		} else {
 			setContract(null);
 		}
@@ -141,7 +142,7 @@ function Constructor() {
 				.catch((error) => {
 					console.error(error);
 				});
-		} else if (selectedCompanions.length == 0) {
+		} else if (selectedCompanions.length == 0 && !showMinter) {
 			setCompanion(randomCompanion());
 		} else {
 			return;
@@ -314,7 +315,7 @@ function Constructor() {
 			<div
 				ref={scrollableArea}
 				className={`
-				font-mono z-10 fixed inset-0 h-screen w-screen overflow-x-hidden ${
+				scroll-smooth snap-y snap-manditory font-mono z-10 fixed inset-0 h-screen w-screen overflow-x-hidden ${
 					customizing ? "overflow-y-hidden" : ""
 				}`}
 			>
@@ -428,13 +429,19 @@ function Constructor() {
 						)}
 					</div>
 				</div>
-				<div className="h-screen pointer-events-none">&nbsp;</div>
+				<div className="snap-center h-screen pointer-events-none">&nbsp;</div>
 				<div
-					className={`transform-gpu transition-opacity duration-1000 relative z-30 min-h-screen w-screen -mt-12 p-2 md:px-8 lg:px-16 xl:px-32 ${
+					className={`
+					bg-gradient-to-b to-ui-black-darker via-ui-black-darker
+					transform-gpu transition-opacity duration-1000 relative z-30 min-h-screen w-screen p-2 md:px-8 lg:px-16 xl:px-32 ${
 						customizing ? "pointer-events-none opacity-0 duration-75 " : ""
 					}`}
 				>
-					<Marketing />
+					<Marketing
+						handleScrollToBottom={() => {
+							scrollableArea.current.scrollTo(0, scrollableArea.current.scrollHeight);
+						}}
+					/>
 				</div>
 			</div>
 			<div

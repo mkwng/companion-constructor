@@ -25,7 +25,7 @@ export const Faq = ({ section }: { section?: "general" | "customizing" | "stakin
 	);
 	return (
 		<>
-			<h1 className="p-8 font-display text-9xl mx-auto text-center text-ui-black-lighter">
+			<h1 className="p-8 font-display subpixel-antialiased text-9xl mx-auto text-center text-ui-black-lighter">
 				FAQ
 			</h1>
 			<div className="flex rounded-full justify-items-stretch text-xs max-w-xs mx-auto mb-8 sticky top-4 z-10">

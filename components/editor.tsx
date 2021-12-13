@@ -76,7 +76,7 @@ const ColorSelector = ({
 					pointer-events-none 
 					transition-opacity duration-300 
 					absolute left-0 w-16 h-full 
-					bg-gradient-to-r from-clothing-black to-transparent 
+					bg-gradient-to-r from-clothing-black 
 					${moreLeft ? "opacity-100" : "opacity-0"}`}
 				aria-hidden="true"
 			></div>
@@ -85,7 +85,7 @@ const ColorSelector = ({
 					pointer-events-none 
 					transition-opacity duration-300 
 					absolute right-0 w-16 h-full 
-					bg-gradient-to-l from-clothing-black to-transparent 
+					bg-gradient-to-l from-clothing-black 
 					${moreRight ? "opacity-100" : "opacity-0"}`}
 				aria-hidden="true"
 			></div>
@@ -551,7 +551,7 @@ export default function Editor({
 						z-10 
 						transition-opacity duration-300 
 						absolute left-0 w-16 h-full 
-						bg-gradient-to-r from-clothing-black to-transparent 
+						bg-gradient-to-r from-clothing-black 
 						${moreLeft ? "opacity-100" : "opacity-0"}
 					`}
 					aria-hidden="true"
@@ -562,7 +562,7 @@ export default function Editor({
 						z-10 
 						transition-opacity duration-300 
 						absolute right-0 w-16 h-full 
-						bg-gradient-to-l from-clothing-black to-transparent  
+						bg-gradient-to-l from-clothing-black  
 						${moreRight ? "opacity-100" : "opacity-0"}
 					`}
 					aria-hidden="true"
