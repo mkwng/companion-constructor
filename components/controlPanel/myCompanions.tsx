@@ -60,7 +60,7 @@ export const MyCompanions = ({
 									{/* #{tokenId} */}
 									{/* eslint-disable */}
 									<img
-										src={`//localhost:3000/api/companion.png?id=${tokenId}&size=128`}
+										src={`/api/companion.png?id=${tokenId}&size=128`}
 										alt={`#${tokenId}`}
 										className="absolute inset-0 w-full h-full"
 									/>
