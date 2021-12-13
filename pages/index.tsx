@@ -315,7 +315,7 @@ function Constructor() {
 			<div
 				ref={scrollableArea}
 				className={`
-				scroll-smooth snap-y snap-manditory font-mono z-10 fixed inset-0 h-screen w-screen overflow-x-hidden ${
+				scroll-smooth lg:snap-y lg:snap-proximity font-mono z-10 fixed inset-0 h-screen w-screen overflow-x-hidden ${
 					customizing ? "overflow-y-hidden" : ""
 				}`}
 			>
