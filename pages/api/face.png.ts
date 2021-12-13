@@ -86,7 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		const batches: Set<string> = new Set();
 		if (req.query.id && typeof req.query.id === "string") {
 			const result = await prisma.companion.findUnique({
-				where: { id: parseInt(req.query.id) },
+				where: { tokenId: parseInt(req.query.id) },
 			});
 			companion = keysToCompanion(apiToKeys(result));
 		} else {

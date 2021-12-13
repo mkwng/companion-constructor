@@ -446,6 +446,8 @@ export const drawLayer = async ({
 	createCanvas,
 	replaceColor,
 	translateImage,
+	debugEscape,
+	debugDeep,
 }: {
 	companion: Companion;
 	canvas: HTMLCanvasElement | Buffer;
@@ -466,12 +468,14 @@ export const drawLayer = async ({
 		input: HTMLImageElement | HTMLCanvasElement | Buffer,
 		pose: Pose
 	) => HTMLImageElement | HTMLCanvasElement | Promise<Buffer>;
+	debugEscape?: (input: Buffer) => void;
+	debugDeep?: boolean;
 }) => {
 	const [layer, selection, needsTranslation] = layers[drawIndex];
 	let imageToDraw: HTMLImageElement | HTMLCanvasElement | Buffer;
 
 	if (layer.batch?.length) {
-		const tempCanvas = await createCanvas();
+		let tempCanvas = await createCanvas();
 		usedBatches.add(layer.batch[0]);
 
 		const batchIndices = layers.reduce<number[]>((indices, curr, k) => {
@@ -510,7 +514,7 @@ export const drawLayer = async ({
 
 		if (batchIndices.length) {
 			for (let j = 0; j < batchIndices.length; j++) {
-				await drawLayer({
+				const result = await drawLayer({
 					companion,
 					canvas: tempCanvas,
 					layers: batchLayers,
@@ -520,7 +524,12 @@ export const drawLayer = async ({
 					createCanvas,
 					replaceColor,
 					translateImage,
+					debugEscape,
+					debugDeep: true,
 				});
+				if (Buffer.isBuffer(tempCanvas) && Buffer.isBuffer(result)) {
+					tempCanvas = result;
+				}
 			}
 		}
 		imageToDraw = tempCanvas;
@@ -540,7 +549,16 @@ export const drawLayer = async ({
 			? await translateImage(imageToDraw, companion.properties.pose)
 			: imageToDraw;
 	}
-
 	if (!imageToDraw) throw new Error("No image returned");
-	return paint(imageToDraw, canvas, layer.blendMode);
+	// Everything before this works fine
+	try {
+		const test = await paint(imageToDraw, canvas, layer.blendMode);
+
+		return test;
+	} catch (error) {
+		console.error(error);
+	}
 };
+
+export const messageToSign =
+	"Box me up! \n\nSign this message to prove you own this address. Signing is free and will not cost you any gas.";

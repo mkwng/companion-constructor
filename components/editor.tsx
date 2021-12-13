@@ -10,6 +10,7 @@ import {
 } from "../data/helpers";
 import { randomProperty } from "../data/random";
 import { Companion, Pose, Restrictions, RGBColor, Variant } from "../data/types";
+import Button from "./button";
 
 const OptionsContainer = ({
 	title,
@@ -75,7 +76,7 @@ const ColorSelector = ({
 					pointer-events-none 
 					transition-opacity duration-300 
 					absolute left-0 w-16 h-full 
-					bg-gradient-to-r from-clothing-black to-transparent 
+					bg-gradient-to-r from-clothing-black 
 					${moreLeft ? "opacity-100" : "opacity-0"}`}
 				aria-hidden="true"
 			></div>
@@ -84,7 +85,7 @@ const ColorSelector = ({
 					pointer-events-none 
 					transition-opacity duration-300 
 					absolute right-0 w-16 h-full 
-					bg-gradient-to-l from-clothing-black to-transparent 
+					bg-gradient-to-l from-clothing-black 
 					${moreRight ? "opacity-100" : "opacity-0"}`}
 				aria-hidden="true"
 			></div>
@@ -136,30 +137,28 @@ const AttributeSelector = ({
 		<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-2 xl:grid-cols-3 gap-2 p-4">
 			{variants.map((variant) => {
 				return (
-					<div
-						key={variant.name}
-						onClick={variant.rarity === "mythic" ? () => {} : () => onSelect(variant.name)}
-						// onClick={() => onSelect(variant.name)}
-						title={
-							variant.rarity === "mythic"
-								? "You can only mint this attribute randomly"
-								: variant.name
-						}
-						className={`
-							flex justify-center content-center 
-							cursor-pointer   
-							border-2 border-transparent rounded-full 
+					<div key={variant.name}>
+						<Button
+							// onClick={variant.rarity === "mythic" ? () => {} : () => onSelect(variant.name)}
+							onClick={() => onSelect(variant.name)}
+							title={
+								variant.rarity === "mythic"
+									? "You can only mint this attribute randomly"
+									: variant.name
+							}
+							className={`
 							px-4 py-2
 							${variant.rarity === "mythic" ? "opacity-50 cursor-not-allowed" : ""} 
 							${
 								variant.name === active
 									? `border-hair-lightblue text-hair-lightblue`
-									: `text-gray-400 border-gray-600`
+									: `text-gray-400 border-ui-black-lightest`
 							}`}
-					>
-						<p className="text-center m-auto">
-							{variant.name !== active && variant.rarity === "mythic" ? "???" : variant.name}
-						</p>
+						>
+							<p className="text-center m-auto">
+								{variant.name !== active && variant.rarity === "mythic" ? "???" : variant.name}
+							</p>
+						</Button>
 					</div>
 				);
 			})}
@@ -169,12 +168,15 @@ const AttributeSelector = ({
 
 export default function Editor({
 	companionState,
+	uneditedCompanionState,
 	...props
 }: {
 	companionState: [Companion, Dispatch<SetStateAction<Companion>>];
+	uneditedCompanionState: [Companion, Dispatch<SetStateAction<Companion>>];
 }) {
 	const [expanded, setExpanded] = useState(true);
 	const [companion, setCompanion] = companionState;
+	const [uneditedCompanion, setUneditedCompanion] = uneditedCompanionState;
 	const [viewing, setViewing] = useState<
 		"general" | "face" | "hair" | "clothing" | "accessories"
 	>("general");
@@ -250,6 +252,9 @@ export default function Editor({
 						<div
 							className="cursor-pointer"
 							onClick={() => {
+								if (!uneditedCompanion) {
+									setUneditedCompanion(companion);
+								}
 								setCompanion((old) => {
 									return {
 										...old,
@@ -280,6 +285,9 @@ export default function Editor({
 						color.push(randomProperty(colors.clothing));
 					}
 
+					if (!uneditedCompanion) {
+						setUneditedCompanion(companion);
+					}
 					setCompanion((old) => {
 						return {
 							...old,
@@ -311,6 +319,10 @@ export default function Editor({
 								onSelect={(selected) => {
 									let color = [...companion.attributes[attribute.name].color];
 									color[i] = colors.clothing[selected];
+
+									if (!uneditedCompanion) {
+										setUneditedCompanion(companion);
+									}
 									setCompanion((old) => {
 										return {
 											...old,
@@ -339,6 +351,9 @@ export default function Editor({
 					variants={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4, rarity: "mythic" }]}
 					active={companion.properties.pose}
 					onSelect={(pose) => {
+						if (!uneditedCompanion) {
+							setUneditedCompanion(companion);
+						}
 						setCompanion((old) => {
 							return {
 								...old,
@@ -357,6 +372,9 @@ export default function Editor({
 					colors={colors.background}
 					active={colorToKey(companion.properties.background, colors.background)}
 					onSelect={(color) => {
+						if (!uneditedCompanion) {
+							setUneditedCompanion(companion);
+						}
 						setCompanion((old) => {
 							return {
 								...old,
@@ -375,6 +393,9 @@ export default function Editor({
 					colors={colors.skin}
 					active={colorToKey(companion.properties.skin, colors.skin)}
 					onSelect={(color) => {
+						if (!uneditedCompanion) {
+							setUneditedCompanion(companion);
+						}
 						setCompanion((old) => {
 							return {
 								...old,
@@ -397,6 +418,9 @@ export default function Editor({
 					variants={[{ name: "m" }, { name: "f" }, { name: "w", rarity: "mythic" }]}
 					active={companion.properties.gender}
 					onSelect={(gender) => {
+						if (!uneditedCompanion) {
+							setUneditedCompanion(companion);
+						}
 						setCompanion((old) => {
 							return {
 								...old,
@@ -429,6 +453,9 @@ export default function Editor({
 					colors={colors.hair}
 					active={colorToKey(companion.properties.hair, colors.hair)}
 					onSelect={(color) => {
+						if (!uneditedCompanion) {
+							setUneditedCompanion(companion);
+						}
 						setCompanion((old) => {
 							return {
 								...old,
@@ -495,11 +522,8 @@ export default function Editor({
 			category: "general" | "face" | "hair" | "accessories" | "clothing";
 			children: React.ReactNode;
 		}) => (
-			<div
+			<Button
 				className={`
-				relative flex-grow
-				py-2 px-4 rounded-full
-				text-center border-2 
 					${category === viewing ? "border-background-red" : "border-transparent text-gray-400"}`}
 				onClick={() => {
 					sessionStorage.setItem(
@@ -510,7 +534,7 @@ export default function Editor({
 				}}
 			>
 				{children}
-			</div>
+			</Button>
 		);
 
 		useEffect(() => {
@@ -527,7 +551,7 @@ export default function Editor({
 						z-10 
 						transition-opacity duration-300 
 						absolute left-0 w-16 h-full 
-						bg-gradient-to-r from-clothing-black to-transparent 
+						bg-gradient-to-r from-clothing-black 
 						${moreLeft ? "opacity-100" : "opacity-0"}
 					`}
 					aria-hidden="true"
@@ -538,7 +562,7 @@ export default function Editor({
 						z-10 
 						transition-opacity duration-300 
 						absolute right-0 w-16 h-full 
-						bg-gradient-to-l from-clothing-black to-transparent  
+						bg-gradient-to-l from-clothing-black  
 						${moreRight ? "opacity-100" : "opacity-0"}
 					`}
 					aria-hidden="true"
@@ -549,7 +573,7 @@ export default function Editor({
 					className="w-full overflow-x-scroll hide-scrollbar"
 				>
 					<div className="w-max min-w-full flex justify-center relative">
-						<div className="absolute left-2 right-2 h-full z-0 rounded-full border-gray-600 border-2 bg-clothing-black"></div>
+						<div className="absolute inset-0 h-full z-0 rounded-full border-ui-black-lightest border-2 bg-clothing-black"></div>
 						<span className="w-2 h-4 inline-block" aria-hidden="true" ref={leftPlaceholder} />
 						<CategoryLink key="general" category="general">
 							General

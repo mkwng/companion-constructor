@@ -7,7 +7,7 @@ export const mouth: AttributeDictionary = {
 	variants: [
 		{
 			attribute: "mouth",
-			name: "aged",
+			name: "droop",
 			layers: [
 				{
 					path: "/attributes/face/08-mouth/aged_1-c_skin-b_multiply-g_m.png",
@@ -457,7 +457,7 @@ let facialhairVariants = [
 export type FacialhairVariant = typeof facialhairVariants[number];
 
 let mouthVariants = [
-	"aged",
+	"droop",
 	"bigsmile",
 	"grimace",
 	"neutral",

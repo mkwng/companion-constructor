@@ -90,7 +90,7 @@ export const blemish: AttributeDictionary = {
 			restrictions: { gender: "m" },
 			layers: [
 				{
-					path: "/attributes/face/02-blemish/stubblelg-v_hair-g_m.png",
+					path: "/attributes/face/02-blemish/stubblelg50-v_hair-g_m.png",
 					colorType: "hair",
 					batch: ["head"],
 				},
@@ -103,7 +103,7 @@ export const blemish: AttributeDictionary = {
 			restrictions: { gender: "m" },
 			layers: [
 				{
-					path: "/attributes/face/02-blemish/stubblemd-v_hair-g_m.png",
+					path: "/attributes/face/02-blemish/stubblemd50-v_hair-g_m.png",
 					colorType: "hair",
 					batch: ["head"],
 				},
@@ -116,7 +116,7 @@ export const blemish: AttributeDictionary = {
 			restrictions: { gender: "m" },
 			layers: [
 				{
-					path: "/attributes/face/02-blemish/stubblesm-v_hair-g_m.png",
+					path: "/attributes/face/02-blemish/stubblesm50-v_hair-g_m.png",
 					colorType: "hair",
 					batch: ["head"],
 				},

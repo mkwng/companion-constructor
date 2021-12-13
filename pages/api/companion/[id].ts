@@ -8,8 +8,11 @@ export default async function apiCompanions(req, res) {
 	switch (method) {
 		case "GET":
 			try {
+				if (!parseInt(req.query.id)) {
+					res.status(405).end(`Not Allowed`);
+				}
 				let prismaResponse: PrismaCompanion = await prisma.companion.findUnique({
-					where: { id: parseInt(req.query.id) },
+					where: { tokenId: parseInt(req.query.id) },
 				});
 				if (!prismaResponse) {
 					return res.status(404).json({
@@ -77,7 +80,7 @@ export default async function apiCompanions(req, res) {
 						});
 				}
 			} catch (e) {
-				res.status(500).json({ message: e.message });
+				return res.status(500).json({ message: e.message });
 			}
 			break;
 		case "POST":
