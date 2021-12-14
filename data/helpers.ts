@@ -370,7 +370,8 @@ export const apiToKeys = (data: PrismaCompanion) => {
 
 export const keysToCompanion = (companionQuery): Companion => {
 	const companion: Companion = {
-		name: null,
+		name: companionQuery.name,
+		tokenId: companionQuery.tokenId,
 		properties: { ...companionExample.properties },
 		attributes: {
 			hair: { name: "crop" },

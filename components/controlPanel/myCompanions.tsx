@@ -5,15 +5,23 @@ export const MyCompanions = ({
 	ownedCompanions,
 	selectedCompanions,
 	setSelectedCompanions,
-	handleCustomize,
-	handleStake,
+	action1,
+	action2,
 	loading,
 }: {
 	ownedCompanions: Set<number>;
 	selectedCompanions: number[];
 	setSelectedCompanions: (ids: number[]) => void;
-	handleCustomize: () => void;
-	handleStake: () => void;
+	action1: {
+		title: string;
+		action: () => void;
+		disabled?: boolean;
+	};
+	action2: {
+		title: string;
+		action: () => void;
+		disabled?: boolean;
+	};
 	loading: boolean;
 }) => {
 	return (
@@ -71,12 +79,12 @@ export const MyCompanions = ({
 					</div>
 
 					<div className="grid grid-cols-2 gap-2 mt-2">
-						<Button disabled={selectedCompanions.length !== 1} onClick={handleCustomize}>
-							<span>Customize{selectedCompanions ? ` #${selectedCompanions}` : ""}</span>
+						<Button disabled={action1.disabled} onClick={action1.action}>
+							<span>{action1.title}</span>
 						</Button>
 
-						<Button disabled={!selectedCompanions.length} onClick={handleStake}>
-							<span>Stake{selectedCompanions ? ` #${selectedCompanions}` : ""}</span>
+						<Button disabled={action2.disabled} onClick={action2.action}>
+							<span>{action2.title}</span>
 						</Button>
 					</div>
 				</>

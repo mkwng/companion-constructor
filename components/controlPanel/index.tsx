@@ -9,6 +9,7 @@ export const ControlPanel = ({
 	chainId,
 	ownedCompanions,
 	selectedCompanions,
+	stakedCompanions,
 	setSelectedCompanions,
 	handleCustomize,
 	handleStake,
@@ -23,6 +24,7 @@ export const ControlPanel = ({
 	chainId: number;
 	ownedCompanions: Set<number>;
 	selectedCompanions: number[];
+	stakedCompanions: Set<number>;
 	setSelectedCompanions: (ids?: number[]) => void;
 	handleCustomize: () => void;
 	handleStake: () => void;
@@ -34,9 +36,10 @@ export const ControlPanel = ({
 	loading: boolean;
 }) => {
 	const [expanded, setExpanded] = useState<boolean>(true);
-	const [activeSection, setActiveSection] = useState<"playground" | "myCompanions">(
+	const [activeSection, setActiveSection] = useState<"playground" | "myCompanions" | "staked">(
 		ownedCompanions.size > 0 ? "myCompanions" : "playground"
 	);
+	const [selectedStakedCompanions, setSelectedStakedCompanions] = useState<number[]>([]);
 
 	useEffect(() => {
 		if (window.outerWidth < 768) {
@@ -114,8 +117,25 @@ export const ControlPanel = ({
 								setActiveSection("myCompanions");
 							}}
 						>
-							My companions
+							{stakedCompanions.size > 0 ? "Companions" : "My companions"}
 						</Button>
+						{stakedCompanions.size > 0 ? (
+							<Button
+								disabled={activeSection === "staked"}
+								className={
+									activeSection === "staked"
+										? "border-background-red text-white opacity-100"
+										: "border-transparent text-gray-400"
+								}
+								onClick={() => {
+									handleCleanSlate();
+									setSelectedStakedCompanions([]);
+									setActiveSection("staked");
+								}}
+							>
+								Staked
+							</Button>
+						) : null}
 					</div>
 				</div>
 				{activeSection === "playground" && (
@@ -132,8 +152,35 @@ export const ControlPanel = ({
 						ownedCompanions={ownedCompanions}
 						selectedCompanions={selectedCompanions}
 						setSelectedCompanions={setSelectedCompanions}
-						handleCustomize={handleCustomize}
-						handleStake={handleStake}
+						action1={{
+							title: "Customize" + (selectedCompanions ? ` #${selectedCompanions}` : ""),
+							action: handleCustomize,
+							disabled: selectedCompanions.length !== 1,
+						}}
+						action2={{
+							title: "Stake" + (selectedCompanions ? ` #${selectedCompanions}` : ""),
+							action: handleStake,
+							disabled: !selectedCompanions.length,
+						}}
+						loading={loading}
+					/>
+				)}
+
+				{activeSection === "staked" && (
+					<MyCompanions
+						ownedCompanions={stakedCompanions}
+						selectedCompanions={selectedStakedCompanions}
+						setSelectedCompanions={setSelectedStakedCompanions}
+						action1={{
+							title: "Claim rewards",
+							action: () => {},
+						}}
+						action2={{
+							title:
+								"Unstake" + (selectedStakedCompanions ? ` #${selectedStakedCompanions}` : ""),
+							action: () => {},
+							disabled: !selectedStakedCompanions.length,
+						}}
 						loading={loading}
 					/>
 				)}

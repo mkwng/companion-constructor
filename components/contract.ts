@@ -1,4 +1,5 @@
-export const contractAddress = "0xd3A095B6BE87aabDC970c31e1E68e0d3685Ed686";
+export const companionAddress = "0xd3A095B6BE87aabDC970c31e1E68e0d3685Ed686";
+export const rangeAddress = "0x5765D9eD170a6Ef29F6f3b2Bd7CceeCCfD6AACd7";
 export const priceEth = 0.08;
 export const priceCustomEth = 0.16;
 
@@ -29,7 +30,390 @@ export interface AbiOutput {
 	internalType?: string;
 }
 
-export const abi: AbiItem[] = [
+export const rangeAbi: AbiItem[] = [
+	{
+		inputs: [
+			{
+				internalType: "uint256[]",
+				name: "tokenIds",
+				type: "uint256[]",
+			},
+		],
+		name: "claimRewards",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "uint256[]",
+				name: "tokenIds",
+				type: "uint256[]",
+			},
+		],
+		name: "deposit",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "address",
+				name: "_compboxAddress",
+				type: "address",
+			},
+			{
+				internalType: "address",
+				name: "_compshipAddress",
+				type: "address",
+			},
+			{
+				internalType: "uint256",
+				name: "_rewardRate",
+				type: "uint256",
+			},
+			{
+				internalType: "uint256",
+				name: "_expiration",
+				type: "uint256",
+			},
+		],
+		stateMutability: "nonpayable",
+		type: "constructor",
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: true,
+				internalType: "address",
+				name: "previousOwner",
+				type: "address",
+			},
+			{
+				indexed: true,
+				internalType: "address",
+				name: "newOwner",
+				type: "address",
+			},
+		],
+		name: "OwnershipTransferred",
+		type: "event",
+	},
+	{
+		inputs: [],
+		name: "pause",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: false,
+				internalType: "address",
+				name: "account",
+				type: "address",
+			},
+		],
+		name: "Paused",
+		type: "event",
+	},
+	{
+		inputs: [],
+		name: "renounceOwnership",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "uint256",
+				name: "_expiration",
+				type: "uint256",
+			},
+		],
+		name: "setExpiration",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "uint256",
+				name: "_rewardRate",
+				type: "uint256",
+			},
+		],
+		name: "setRate",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "address",
+				name: "newOwner",
+				type: "address",
+			},
+		],
+		name: "transferOwnership",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "unpause",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: false,
+				internalType: "address",
+				name: "account",
+				type: "address",
+			},
+		],
+		name: "Unpaused",
+		type: "event",
+	},
+	{
+		inputs: [
+			{
+				internalType: "uint256[]",
+				name: "tokenIds",
+				type: "uint256[]",
+			},
+		],
+		name: "withdraw",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "withdrawTokens",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "address",
+				name: "",
+				type: "address",
+			},
+			{
+				internalType: "uint256",
+				name: "",
+				type: "uint256",
+			},
+		],
+		name: "_lastClaimBlocks",
+		outputs: [
+			{
+				internalType: "uint256",
+				name: "",
+				type: "uint256",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "address",
+				name: "account",
+				type: "address",
+			},
+			{
+				internalType: "uint256",
+				name: "tokenId",
+				type: "uint256",
+			},
+		],
+		name: "calculateReward",
+		outputs: [
+			{
+				internalType: "uint256",
+				name: "",
+				type: "uint256",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "address",
+				name: "account",
+				type: "address",
+			},
+			{
+				internalType: "uint256[]",
+				name: "tokenIds",
+				type: "uint256[]",
+			},
+		],
+		name: "calculateRewards",
+		outputs: [
+			{
+				internalType: "uint256[]",
+				name: "rewards",
+				type: "uint256[]",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "compboxAddress",
+		outputs: [
+			{
+				internalType: "address",
+				name: "",
+				type: "address",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "compshipAddress",
+		outputs: [
+			{
+				internalType: "address",
+				name: "",
+				type: "address",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "address",
+				name: "account",
+				type: "address",
+			},
+		],
+		name: "depositsOf",
+		outputs: [
+			{
+				internalType: "uint256[]",
+				name: "",
+				type: "uint256[]",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "expiration",
+		outputs: [
+			{
+				internalType: "uint256",
+				name: "",
+				type: "uint256",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				internalType: "address",
+				name: "",
+				type: "address",
+			},
+			{
+				internalType: "address",
+				name: "",
+				type: "address",
+			},
+			{
+				internalType: "uint256",
+				name: "",
+				type: "uint256",
+			},
+			{
+				internalType: "bytes",
+				name: "",
+				type: "bytes",
+			},
+		],
+		name: "onERC721Received",
+		outputs: [
+			{
+				internalType: "bytes4",
+				name: "",
+				type: "bytes4",
+			},
+		],
+		stateMutability: "pure",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "owner",
+		outputs: [
+			{
+				internalType: "address",
+				name: "",
+				type: "address",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "paused",
+		outputs: [
+			{
+				internalType: "bool",
+				name: "",
+				type: "bool",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "rewardRate",
+		outputs: [
+			{
+				internalType: "uint256",
+				name: "",
+				type: "uint256",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+];
+
+export const companionAbi: AbiItem[] = [
 	{
 		inputs: [
 			{ internalType: "string", name: "customBaseURI_", type: "string" },

@@ -2,8 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { priceCustomEth, priceEth } from "../../components/contract";
 import { Companion } from "../../data/types";
 import { web3 } from "../../lib/web3";
-import prisma from "../../lib/prisma";
-import { flattenCompanion } from "../../data/helpers";
 import { randomCompanion } from "../../data/random";
 import { createCompanion } from "../../data/operations";
 

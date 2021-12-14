@@ -6,7 +6,14 @@ import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
 import Button from "../components/button";
-import { abi, contractAddress, priceCustomEth, priceEth } from "../components/contract";
+import {
+	companionAbi,
+	companionAddress,
+	priceCustomEth,
+	priceEth,
+	rangeAbi,
+	rangeAddress,
+} from "../components/contract";
 import { ControlPanel } from "../components/controlPanel";
 import Editor from "../components/editor";
 import Marketing from "../components/marketing";
@@ -14,7 +21,7 @@ import { MintDialog } from "../components/mintDialog";
 import Renderer from "../components/renderer";
 import { StakeDialog } from "../components/stakeDialog";
 import { colors } from "../data/colors";
-import { colorToKey, companionToUrl, keysToCompanion, messageToSign } from "../data/helpers";
+import { colorToKey, keysToCompanion, messageToSign } from "../data/helpers";
 import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
 import useLocalStorage from "../hooks/useLocalStorage";
@@ -43,11 +50,16 @@ const W3Operations = {
 	Disconnect: "disconnect",
 };
 
+function timeout(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function Constructor() {
 	// Web 3, contract & operations
 	const web3React = useWeb3React();
 	const [web3, setWeb3] = useState<Web3>(null);
-	const [contract, setContract] = useState<Contract>(null);
+	const [companionContract, setCompanionContract] = useState<Contract>(null);
+	const [rangeContract, setRangeContract] = useState<Contract>(null);
 	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
 	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
 
@@ -70,6 +82,7 @@ function Constructor() {
 	// Wallet
 	const [ownedCompanions, setOwnedCompanions] = useState<Set<number>>(new Set());
 	const [selectedCompanions, setSelectedCompanions] = useState<number[]>([]);
+	const [stakedCompanions, setStakedCompanions] = useState<Set<number>>(new Set());
 
 	// Ref
 	const scrollableArea = useRef<HTMLDivElement>(null);
@@ -80,10 +93,12 @@ function Constructor() {
 			let w3 = new Web3(web3React.library.provider);
 			setWeb3(w3);
 			// ----- WHEN CONTRACT IS READY -----
-			// let c = new w3.eth.Contract(abi, contractAddress);
-			// setContract(c);
+			let c = new w3.eth.Contract(companionAbi, companionAddress);
+			let c2 = new w3.eth.Contract(rangeAbi, rangeAddress);
+			setCompanionContract(c);
+			setRangeContract(c2);
 		} else {
-			setContract(null);
+			setCompanionContract(null);
 		}
 	}, [web3React.active, web3React]);
 
@@ -93,7 +108,7 @@ function Constructor() {
 		setOwnedCompanions(new Set());
 		setSelectedCompanions([]);
 		let isRunning = true;
-		if (contract && contract.methods) {
+		if (companionContract && companionContract.methods) {
 			setTimeout(load, 5000);
 			return () => {
 				setRetrieving(false);
@@ -103,14 +118,20 @@ function Constructor() {
 			setRetrieving(false);
 		}
 		async function load() {
-			const result = await contract.methods.balanceOf(web3React.account).call();
+			// In wallet
+			const result = await companionContract.methods.balanceOf(web3React.account).call();
 			if (result > 0) {
+				const tokenIdPromises = [];
 				const companionNums = [];
 				for (let i = 0; i < result; i++) {
-					const tokenId = await contract.methods
+					tokenIdPromises[i] = companionContract.methods
 						.tokenOfOwnerByIndex(web3React.account, i)
 						.call();
-					companionNums.push(tokenId);
+				}
+
+				const tokenIds = await Promise.all(tokenIdPromises);
+				for (let i = 0; i < tokenIds.length; i++) {
+					companionNums.push(tokenIds[i]);
 				}
 				if (!isRunning) {
 					return;
@@ -119,10 +140,16 @@ function Constructor() {
 				onSuccess?.();
 			}
 
+			// In range
+			const result2 = await rangeContract.methods.depositsOf(web3React.account).call();
+			if (result2.length > 0) {
+				setStakedCompanions(new Set(result2));
+			}
+
 			setRetrieving(false);
 		}
 	};
-	useEffect(retrieveCompanions, [contract, web3React.account]);
+	useEffect(retrieveCompanions, [companionContract, web3React.account]);
 
 	// Handle when a new companion is selected
 	useEffect(() => {
@@ -233,7 +260,7 @@ function Constructor() {
 		web3React.activate(injected);
 	};
 	const handleSignOut = () => {
-		setContract(null);
+		setCompanionContract(null);
 		setLatestOp(W3Operations.Disconnect);
 		web3React.deactivate();
 	};
@@ -241,7 +268,9 @@ function Constructor() {
 		setMinting(true);
 
 		try {
-			let encoded = contract.methods.mint(mintType == "custom" ? 1 : mintQty).encodeABI();
+			let encoded = companionContract.methods
+				.mint(mintType == "custom" ? 1 : mintQty)
+				.encodeABI();
 			const nonce = await web3.eth.getTransactionCount(web3React.account, "latest"); //get latest nonce
 			const wei = parseInt(
 				mintType == "custom"
@@ -251,7 +280,7 @@ function Constructor() {
 
 			let tx = {
 				from: web3React.account,
-				to: contractAddress,
+				to: companionAddress,
 				data: encoded,
 				nonce: nonce + "",
 				value: web3.utils.toHex(wei),
@@ -285,6 +314,74 @@ function Constructor() {
 			return toast(error, {
 				type: "error",
 			});
+		}
+	};
+	const handleApprove = async (tokenId: number): Promise<boolean> => {
+		try {
+			let encoded = companionContract.methods.approve(rangeAddress, tokenId).encodeABI();
+
+			const nonce = await web3.eth.getTransactionCount(web3React.account, "latest"); //get latest nonce
+
+			let tx = {
+				from: web3React.account,
+				to: companionAddress,
+				data: encoded,
+				nonce: nonce + "",
+			};
+
+			const hash = await web3React.library.provider.request({
+				method: "eth_sendTransaction",
+				params: [tx],
+			});
+			console.log("hash", hash);
+
+			let approval;
+			while (!approval) {
+				await timeout(5000);
+				const result = await web3.eth.getTransaction(hash);
+				console.log(result.blockNumber);
+				approval = !!result.blockNumber;
+			}
+			return true;
+		} catch (error) {
+			toast(error, {
+				type: "error",
+			});
+			return false;
+		}
+	};
+	const handleStake = async (tokenIds: number[]): Promise<boolean> => {
+		try {
+			let encoded = rangeContract.methods.deposit(tokenIds).encodeABI();
+
+			const nonce = await web3.eth.getTransactionCount(web3React.account, "latest"); //get latest nonce
+
+			let tx = {
+				from: web3React.account,
+				to: rangeAddress,
+				data: encoded,
+				nonce: nonce + "",
+			};
+
+			const hash = await web3React.library.provider.request({
+				method: "eth_sendTransaction",
+				params: [tx],
+			});
+			console.log("hash", hash);
+
+			let approval;
+			while (!approval) {
+				await timeout(5000);
+				const result = await web3.eth.getTransaction(hash);
+				console.log(result.blockNumber);
+				approval = !!result.blockNumber;
+			}
+			return true;
+		} catch (error) {
+			toast(error, {
+				type: "error",
+			});
+			return false;
 		}
 	};
 
@@ -368,6 +465,7 @@ function Constructor() {
 								chainId={web3React.chainId}
 								ownedCompanions={ownedCompanions}
 								selectedCompanions={selectedCompanions}
+								stakedCompanions={stakedCompanions}
 								setSelectedCompanions={setSelectedCompanions}
 								handleCustomize={handleCustomize}
 								handleStake={() => {
@@ -484,7 +582,13 @@ function Constructor() {
 					handleClose={() => {
 						setShowStaker(false);
 					}}
+					handleApprove={handleApprove}
+					handleStake={handleStake}
 					selectedCompanions={selectedCompanions}
+					onSuccess={() => {
+						setShowStaker(false);
+						retrieveCompanions();
+					}}
 				/>
 			) : null}
 			<ToastContainer position="bottom-left" />

@@ -170,7 +170,8 @@ export type AttributeSelection =
 	| ShoesSelection;
 
 export interface Companion {
-	name: string;
+	tokenId?: number;
+	name?: string;
 	properties: {
 		gender: Gender;
 		pose: Pose;
