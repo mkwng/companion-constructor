@@ -83,6 +83,7 @@ function Constructor() {
 	const [ownedCompanions, setOwnedCompanions] = useState<Set<number>>(new Set());
 	const [selectedCompanions, setSelectedCompanions] = useState<number[]>([]);
 	const [stakedCompanions, setStakedCompanions] = useState<Set<number>>(new Set());
+	const [claimable, setClaimable] = useState<number>(0);
 
 	// Ref
 	const scrollableArea = useRef<HTMLDivElement>(null);
@@ -102,11 +103,17 @@ function Constructor() {
 		}
 	}, [web3React.active, web3React]);
 
+	const zeroOutCompanions = () => {
+		setOwnedCompanions(new Set());
+		setStakedCompanions(new Set());
+		setClaimable(0);
+		setSelectedCompanions([]);
+	};
+
 	// Retrieve owned companions
 	const retrieveCompanions = (onSuccess?: () => void) => {
 		setRetrieving(true);
-		setOwnedCompanions(new Set());
-		setSelectedCompanions([]);
+		zeroOutCompanions();
 		let isRunning = true;
 		if (companionContract && companionContract.methods) {
 			setTimeout(load, 5000);
@@ -141,10 +148,19 @@ function Constructor() {
 			}
 
 			// In range
-			const result2 = await rangeContract.methods.depositsOf(web3React.account).call();
-			if (result2.length > 0) {
-				setStakedCompanions(new Set(result2));
+			const stakedCompResult = await rangeContract.methods.depositsOf(web3React.account).call();
+			if (stakedCompResult.length > 0) {
+				setStakedCompanions(new Set(stakedCompResult));
 			}
+
+			const rewardsResult = await rangeContract.methods
+				.calculateRewards(web3React.account, stakedCompResult)
+				.call();
+			setClaimable(
+				rewardsResult.reduce((acc, cur) => {
+					return acc + parseInt(cur);
+				}, 0)
+			);
 
 			setRetrieving(false);
 		}
@@ -384,6 +400,74 @@ function Constructor() {
 			return false;
 		}
 	};
+	const handleClaim = async (tokenIds: number[]): Promise<boolean> => {
+		try {
+			let encoded = rangeContract.methods.claimRewards(tokenIds).encodeABI();
+
+			const nonce = await web3.eth.getTransactionCount(web3React.account, "latest"); //get latest nonce
+
+			let tx = {
+				from: web3React.account,
+				to: rangeAddress,
+				data: encoded,
+				nonce: nonce + "",
+			};
+
+			const hash = await web3React.library.provider.request({
+				method: "eth_sendTransaction",
+				params: [tx],
+			});
+			console.log("hash", hash);
+
+			let success;
+			while (!success) {
+				await timeout(5000);
+				const result = await web3.eth.getTransaction(hash);
+				console.log(result.blockNumber);
+				success = !!result.blockNumber;
+			}
+			return true;
+		} catch (error) {
+			toast(error, {
+				type: "error",
+			});
+			return false;
+		}
+	};
+	const handleUnstake = async (tokenIds: number[]): Promise<boolean> => {
+		try {
+			let encoded = rangeContract.methods.withdraw(tokenIds).encodeABI();
+
+			const nonce = await web3.eth.getTransactionCount(web3React.account, "latest"); //get latest nonce
+
+			let tx = {
+				from: web3React.account,
+				to: rangeAddress,
+				data: encoded,
+				nonce: nonce + "",
+			};
+
+			const hash = await web3React.library.provider.request({
+				method: "eth_sendTransaction",
+				params: [tx],
+			});
+			console.log("hash", hash);
+
+			let success;
+			while (!success) {
+				await timeout(5000);
+				const result = await web3.eth.getTransaction(hash);
+				console.log(result.blockNumber);
+				success = !!result.blockNumber;
+			}
+			return true;
+		} catch (error) {
+			toast(error, {
+				type: "error",
+			});
+			return false;
+		}
+	};
 
 	if (!companion) {
 		return (
@@ -463,6 +547,7 @@ function Constructor() {
 							<ControlPanel
 								account={web3React.account}
 								chainId={web3React.chainId}
+								claimable={claimable}
 								ownedCompanions={ownedCompanions}
 								selectedCompanions={selectedCompanions}
 								stakedCompanions={stakedCompanions}
@@ -478,6 +563,8 @@ function Constructor() {
 								handleMint={() => {
 									setShowMinter(true);
 								}}
+								handleClaim={handleClaim}
+								handleUnstake={handleUnstake}
 								loading={retrieving}
 							/>
 						</div>

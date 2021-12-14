@@ -10,6 +10,7 @@ export const ControlPanel = ({
 	ownedCompanions,
 	selectedCompanions,
 	stakedCompanions,
+	claimable,
 	setSelectedCompanions,
 	handleCustomize,
 	handleStake,
@@ -18,6 +19,8 @@ export const ControlPanel = ({
 	handleConnectWallet,
 	handleSignOut,
 	handleMint,
+	handleUnstake,
+	handleClaim,
 	loading,
 }: {
 	account: string;
@@ -25,6 +28,7 @@ export const ControlPanel = ({
 	ownedCompanions: Set<number>;
 	selectedCompanions: number[];
 	stakedCompanions: Set<number>;
+	claimable: number;
 	setSelectedCompanions: (ids?: number[]) => void;
 	handleCustomize: () => void;
 	handleStake: () => void;
@@ -33,6 +37,8 @@ export const ControlPanel = ({
 	handleConnectWallet: () => void;
 	handleSignOut: () => void;
 	handleMint: () => void;
+	handleUnstake: (tokenIds: number[]) => Promise<boolean>;
+	handleClaim: (tokenIds: number[]) => Promise<boolean>;
 	loading: boolean;
 }) => {
 	const [expanded, setExpanded] = useState<boolean>(true);
@@ -40,6 +46,7 @@ export const ControlPanel = ({
 		ownedCompanions.size > 0 ? "myCompanions" : "playground"
 	);
 	const [selectedStakedCompanions, setSelectedStakedCompanions] = useState<number[]>([]);
+	const [stakeLoading, setStakeLoading] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (window.outerWidth < 768) {
@@ -172,16 +179,28 @@ export const ControlPanel = ({
 						selectedCompanions={selectedStakedCompanions}
 						setSelectedCompanions={setSelectedStakedCompanions}
 						action1={{
-							title: "Claim rewards",
-							action: () => {},
+							title: `Claim ${claimable} rewards`,
+							action: async () => {
+								setStakeLoading(true);
+								if (await handleClaim(Array.from(stakedCompanions))) {
+									alert("Claimed rewards!");
+								}
+								setStakeLoading(false);
+							},
 						}}
 						action2={{
 							title:
 								"Unstake" + (selectedStakedCompanions ? ` #${selectedStakedCompanions}` : ""),
-							action: () => {},
+							action: async () => {
+								setStakeLoading(true);
+								if (await handleUnstake(selectedStakedCompanions)) {
+									alert("Unstaked!");
+								}
+								setStakeLoading(false);
+							},
 							disabled: !selectedStakedCompanions.length,
 						}}
-						loading={loading}
+						loading={stakeLoading}
 					/>
 				)}
 				<div className="p-2 pt-0">

@@ -63,6 +63,7 @@ const StakeStep = ({
 	onSuccess: () => void;
 	onFailure: () => void;
 }) => {
+	const [loading, setLoading] = useState(false);
 	return (
 		<div className="flex flex-col gap-4">
 			<p>Ok we&apos;re ready to stake your Companions. This will cost gas.</p>
@@ -70,11 +71,13 @@ const StakeStep = ({
 				<Button
 					className="text-lg text-white bg-ui-orange-default"
 					onClick={async () => {
+						setLoading(true);
 						if (await handleStake(selectedCompanions)) {
 							onSuccess();
 						} else {
 							onFailure();
 						}
+						setLoading(false);
 					}}
 				>
 					<span>Stake</span>
