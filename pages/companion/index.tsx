@@ -1,5 +1,7 @@
 import { useRouter } from "next/dist/client/router";
 import { useEffect, useState } from "react";
+import Button from "../../components/button";
+import Editor from "../../components/editor";
 import Renderer from "../../components/renderer";
 import { keysToCompanion } from "../../data/helpers";
 import { randomCompanion } from "../../data/random";
@@ -9,13 +11,20 @@ import { fetcher } from "../../lib/swr";
 export default function CompanionDetails() {
 	const [companion, setCompanion] = useState<Companion | null>(randomCompanion());
 	const [isEditing, setIsEditing] = useState(false);
+	const [showBg, setShowBg] = useState(true);
 
 	return (
 		<div>
-			<h1>{companion.name}</h1>
-			<Renderer companion={companion} />
-			<button onClick={() => setIsEditing(!isEditing)}>{isEditing ? "View" : "Edit"}</button>
-			<button onClick={() => setCompanion(randomCompanion())}>Randomize</button>
+			<Renderer companion={companion} hideBackground={!showBg} />
+			<div className="flex m-8 gap-8">
+				<Button onClick={() => setShowBg((prev) => !prev)}>
+					Toggle background ({showBg ? "On" : "Off"})
+				</Button>
+				<Button onClick={() => setCompanion(randomCompanion())}>Random</Button>
+			</div>
+			<div className="bg-ui-black-default text-default-white">
+				<Editor companionState={[companion, setCompanion]} />
+			</div>
 		</div>
 	);
 }
