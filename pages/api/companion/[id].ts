@@ -1,33 +1,107 @@
 import { Companion as PrismaCompanion } from ".prisma/client";
+import { data } from "autoprefixer";
 import { NextApiRequest, NextApiResponse } from "next";
+import { shipAbi } from "../../../components/contract";
 import { rgbToHex } from "../../../data/colors";
-import { apiToKeys, keysToCompanion } from "../../../data/helpers";
+import {
+	apiToKeys,
+	calcCustomizationCost,
+	keysToCompanion,
+	messageToSign,
+	zeroPad,
+} from "../../../data/helpers";
+import { updateCompanion } from "../../../data/operations";
 import { Companion } from "../../../data/types";
 import prisma from "../../../lib/prisma";
 import { web3 } from "../../../lib/web3";
 
 interface UpdateCompanion {
-	tokenId: number;
-	oldCompanion: Companion;
-	newCompanion: Companion;
+	uneditedCompanion: Companion;
+	companion: Companion;
 	hash: string;
+	signature: string;
+	address: string;
 }
-const confirmHash = async (hash: string, requiredFee: number) => {
-	const checkMintStatus = async () => {
-		const transaction = await web3.eth.getTransaction(hash);
-		if (transaction.transactionIndex) {
-			if (parseInt(transaction.value) < requiredFee) {
-				return false;
-			}
-		}
-	};
+const confirmHash = async (hash: string, requiredFee: string) => {
+	const receipt = await web3.eth.getTransactionReceipt(hash);
+	// Check the amount of $CSHIP sent matches the required fee...
+	// const decoded = web3.eth.abi.decodeLog(
+	// 	[
+	// 		{
+	// 			internalType: "address",
+	// 			name: "recipient",
+	// 			type: "address",
+	// 		},
+	// 		{
+	// 			internalType: "uint256",
+	// 			name: "amount",
+	// 			type: "uint256",
+	// 		},
+	// 	],
+	// 	receipt.logs[0].data,
+	// 	receipt.logs[0].topics.slice(1)
+	// );
+	// console.log(decoded);
+	// const value = decoded.amount;
+	if (receipt) {
+		return true;
+	} else {
+		return false;
+	}
 };
 export default async function apiCompanions(req: NextApiRequest, res: NextApiResponse) {
 	const { method } = req;
 	switch (method) {
 		case "PUT":
 			try {
-				const { tokenId, oldCompanion, newCompanion, hash } = req.body as UpdateCompanion;
+				const { uneditedCompanion, companion, hash, signature, address } =
+					req.body as UpdateCompanion;
+				const tokenId = req.query.id;
+				if (typeof tokenId !== "string") {
+					throw new Error("tokenId should be a string");
+				}
+
+				let hashUsed;
+				try {
+					hashUsed = await prisma.transactions.findUnique({ where: { hash } });
+				} catch (e) {
+					console.error(e);
+				} finally {
+					if (hashUsed) {
+						throw new Error("Hash already used");
+					}
+
+					const recover = web3.eth.accounts.recover(
+						messageToSign +
+							"\n\nAmount: " +
+							calcCustomizationCost(uneditedCompanion, companion) +
+							" $CSHIP",
+						signature
+					);
+					if (recover !== address) {
+						throw new Error("Signature is not valid");
+					}
+
+					const cost = calcCustomizationCost(uneditedCompanion, companion) + zeroPad;
+					const confirmed = await confirmHash(hash, cost);
+					if (confirmed) {
+						await prisma.transactions.create({
+							data: {
+								hash,
+								date: new Date(),
+								txnType: "customization",
+								txnValue: cost,
+							},
+						});
+						await updateCompanion({
+							tokenId: parseInt(tokenId),
+							companion,
+						});
+						res.status(200).json({
+							message: "Successfully updated",
+						});
+					}
+				}
 			} catch (e) {
 				res.status(400).json({
 					error: e.message,

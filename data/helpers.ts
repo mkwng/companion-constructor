@@ -15,6 +15,9 @@ import {
 	Variant,
 } from "./types";
 import { Companion as PrismaCompanion } from ".prisma/client";
+import _ from "lodash";
+
+export const zeroPad = "000000000000000000";
 
 const getVariants = (companion: Companion): Variant[] => {
 	const pose = poses[companion.properties.pose];
@@ -563,3 +566,35 @@ export const drawLayer = async ({
 
 export const messageToSign =
 	"Box me up! \n\nSign this message to prove you own this address. Signing is free and will not cost you any gas.";
+
+const isObject = (obj: any) => typeof obj === "object" && !Array.isArray(obj) && obj !== null;
+
+export const calcCustomizationCost = (oldCompanion: Companion, newCompanion: Companion) => {
+	if (!oldCompanion || !newCompanion) return 0;
+	let runningTotal = 0;
+	// Loop through oldCompanion.properties and see if anything's changed
+	for (const key in newCompanion.properties) {
+		if (newCompanion.properties.hasOwnProperty(key)) {
+			if (isObject(newCompanion.properties[key])) {
+				if (!_.isEqual(newCompanion.properties[key], oldCompanion.properties[key])) {
+					runningTotal += 1;
+				}
+			} else if (newCompanion.properties[key] !== oldCompanion.properties[key]) {
+				runningTotal += 1;
+			}
+		} else {
+			runningTotal += 1;
+		}
+	}
+	// Loop through oldCompanion.attributes and see if anything's changed
+	for (const key in newCompanion.attributes) {
+		if (newCompanion.attributes.hasOwnProperty(key)) {
+			if (newCompanion.attributes[key].name !== oldCompanion.attributes[key].name) {
+				runningTotal += 1;
+			}
+		} else {
+			runningTotal += 1;
+		}
+	}
+	return runningTotal;
+};

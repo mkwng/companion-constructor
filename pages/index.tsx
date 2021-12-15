@@ -1,6 +1,7 @@
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
+import { BigNumber } from "ethers";
 import { useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
@@ -14,6 +15,7 @@ import {
 	farmAbi,
 	farmAddress,
 	shipAddress,
+	shipAbi,
 } from "../components/contract";
 import { ControlPanel } from "../components/controlPanel";
 import Editor from "../components/editor";
@@ -22,7 +24,13 @@ import { MintDialog } from "../components/mintDialog";
 import Renderer from "../components/renderer";
 import { StakeDialog } from "../components/stakeDialog";
 import { colors } from "../data/colors";
-import { colorToKey, keysToCompanion, messageToSign } from "../data/helpers";
+import {
+	calcCustomizationCost,
+	colorToKey,
+	keysToCompanion,
+	messageToSign,
+	zeroPad,
+} from "../data/helpers";
 import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
 import useLocalStorage from "../hooks/useLocalStorage";
@@ -103,6 +111,7 @@ function Constructor() {
 			setWeb3(w3);
 			setCompanionContract(new w3.eth.Contract(companionAbi, companionAddress));
 			setFarmContract(new w3.eth.Contract(farmAbi, farmAddress));
+			setShipContract(new w3.eth.Contract(shipAbi, shipAddress));
 		} else {
 			setCompanionContract(null);
 		}
@@ -202,7 +211,8 @@ function Constructor() {
 				.call();
 			setClaimable(
 				rewardsResult.reduce((acc, cur) => {
-					return acc + parseInt(cur);
+					console.log(acc);
+					return acc + parseInt(cur.substring(0, cur.length - zeroPad.length));
 				}, 0)
 			);
 
@@ -256,6 +266,31 @@ function Constructor() {
 			}),
 		});
 		return await request.json();
+	};
+	const verifySpend = async (hash: string) => {
+		const signature = await web3.eth.personal.sign(
+			messageToSign +
+				"\n\nAmount: " +
+				calcCustomizationCost(uneditedCompanion, companion) +
+				" $CSHIP",
+			web3React.account,
+			"test"
+		);
+		const request = await fetch(`/api/companion/${selectedCompanions[0]}`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				hash,
+				companion,
+				uneditedCompanion,
+				signature,
+				address: web3React.account,
+			}),
+		});
+		console.log(request);
+		return request;
 	};
 	const transactEth = async ({
 		from,
@@ -391,19 +426,21 @@ function Constructor() {
 		});
 	};
 
-	const handleApproveSpend = async (amount: number): Promise<boolean> => {
-		return await transactEth({
-			from: web3React.account,
-			to: shipAddress,
-			encodedData: shipContract.methods.approve(farmAddress, amount).encodeABI(),
-		});
-	};
-	const handleSpend = async (amount: number): Promise<boolean> => {
-		return await transactEth({
-			from: web3React.account,
-			to: farmAddress,
-			encodedData: shipContract.methods.transfer(farmAddress, amount).encodeABI(),
-		});
+	const handleSpend = async (amount: string) => {
+		let currentHash;
+		shipContract.methods
+			.transfer(farmAddress, web3.utils.toHex(amount))
+			.send({
+				from: web3React.account,
+			})
+			.on("transactionHash", (hash) => {
+				currentHash = hash;
+			})
+			.on("receipt", () => {
+				verifySpend(currentHash).then(async (result) => {
+					console.log(await result.json());
+				});
+			});
 	};
 
 	if (!companion) {
@@ -520,10 +557,13 @@ function Constructor() {
 													disabled={uneditedCompanion === null}
 													className={`${uneditedCompanion === null ? "opacity-20" : ""}`}
 													onClick={() => {
-														handleSpend(100000000000000000);
+														handleSpend(
+															calcCustomizationCost(uneditedCompanion, companion) + zeroPad
+														);
 													}}
 												>
-													Checkout
+													Checkout ({calcCustomizationCost(uneditedCompanion, companion)}{" "}
+													$CSHIP)
 												</Button>
 											</div>
 										) : (

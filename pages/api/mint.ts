@@ -4,6 +4,7 @@ import { Companion } from "../../data/types";
 import { web3 } from "../../lib/web3";
 import { randomCompanion } from "../../data/random";
 import { createCompanion } from "../../data/operations";
+import prisma from "../../lib/prisma";
 
 interface Transaction {
 	hash: string;
@@ -17,6 +18,14 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 	switch (method) {
 		case "POST":
 			const { hash, mintType, mintQty, companion } = req.body as Transaction;
+
+			const hashUsed = await prisma.transactions.findUnique({
+				where: { hash },
+			});
+			if (hashUsed) {
+				throw new Error("Hash already used");
+			}
+
 			const requiredFee =
 				mintType == "custom"
 					? web3.utils.toWei(priceCustomEth + "", "ether")
@@ -51,10 +60,19 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 							const result = await query;
 							companionIds.push(result.id);
 						} else {
+							console.error("Invalid companion id", companionId);
 							continue;
 						}
 					}
 					if (companionIds.length == receipt.logs.length) {
+						prisma.transactions.create({
+							data: {
+								hash,
+								date: new Date(),
+								txnType: "customization",
+								txnValue: requiredFee,
+							},
+						});
 						res.status(200).json({
 							companionId: companionIds[0],
 						});

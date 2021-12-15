@@ -11,10 +11,10 @@ generator client {
 }
 
 model Transactions {
-  hash    String   @unique
-  date    DateTime
-  txnType String
-  txnQty  Int
+  hash     String   @unique
+  date     DateTime
+  txnType  String
+  txnValue String
 }
 
 model Companion {

@@ -59,6 +59,7 @@ export const farmAbi: AbiItem[] = [
 				type: "uint256",
 			},
 		],
+		name: null,
 		stateMutability: "nonpayable",
 		type: "constructor",
 	},
@@ -411,6 +412,7 @@ export const companionAbi: AbiItem[] = [
 				type: "address",
 			},
 		],
+		name: null,
 		stateMutability: "nonpayable",
 		type: "constructor",
 	},
@@ -1023,6 +1025,7 @@ export const companionAbi: AbiItem[] = [
 export const shipAbi: AbiItem[] = [
 	{
 		inputs: [],
+		name: null,
 		stateMutability: "nonpayable",
 		type: "constructor",
 	},

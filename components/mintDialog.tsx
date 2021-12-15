@@ -44,7 +44,7 @@ export const MintDialog = ({
 				&nbsp;
 			</div>
 			<div className="w-full max-w-screen-xl max-h-screen overflow-y-scroll md:overflow-y-hidden absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg bg-default-white grid grid-cols-1 md:grid-cols-2 overflow-hidden md:aspect-[2/1] shadow-ui-black-default shadow-xl">
-				<div className="absolute z-50 inset-0 flex flex-col justify-center items-center bg-default-white bg-opacity-80 backdrop-blur-sm gap-4">
+				{/* <div className="absolute z-50 inset-0 flex flex-col justify-center items-center bg-default-white bg-opacity-80 backdrop-blur-sm gap-4">
 					<p>Minting will open soon! Stay tuned.</p>
 					<div>
 						<a
@@ -63,8 +63,8 @@ export const MintDialog = ({
 							Follow us on Twitter
 						</a>
 					</div>
-				</div>
-				{/* {connected ? null : (
+				</div> */}
+				{connected ? null : (
 					<div className="absolute z-50 inset-0 flex flex-col justify-center items-center bg-default-white bg-opacity-80 backdrop-blur gap-4">
 						<p>Connect your wallet, first!</p>
 						<div>
@@ -73,7 +73,7 @@ export const MintDialog = ({
 							</Button>
 						</div>
 					</div>
-				)} */}
+				)}
 				<div className={`aspect-1 relative`}>
 					<div className={`${mintType == "custom" ? "" : "hidden"}`}>
 						<Renderer showTitle={false} companion={companion} hideBackground={false} />
@@ -172,8 +172,8 @@ export const MintDialog = ({
 									<div className="mt-16 w-full sticky bottom-8">
 										<Button
 											className="text-lg text-white bg-ui-orange-default"
-											disabled={true}
-											// disabled={mintQty > 8 || mintQty < 1}
+											// disabled={true}
+											disabled={mintQty > 8 || mintQty < 1}
 											loading={minting}
 											onClick={handleMint}
 										>
@@ -232,8 +232,8 @@ export const MintDialog = ({
 									<div className="mt-16 w-full sticky bottom-8">
 										<Button
 											className="text-lg text-white bg-ui-orange-default"
-											disabled={true}
-											// disabled={mintQty > 8 || mintQty < 1}
+											// disabled={true}
+											disabled={mintQty > 8 || mintQty < 1}
 											loading={minting}
 											onClick={handleMint}
 										>

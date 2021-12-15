@@ -8,6 +8,12 @@
 - `yarn prisma studio`
 - `yarn dev`
 
+### Updating the schema
+
+- Migration: `yarn prisma migrate dev`
+- Deploy request: `pscale deploy-request create companions initial-setup`
+- Approve on planetscale.com
+
 ### Adding a new attribute
 
 Define it...
