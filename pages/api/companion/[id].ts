@@ -1,13 +1,44 @@
 import { Companion as PrismaCompanion } from ".prisma/client";
+import { NextApiRequest, NextApiResponse } from "next";
 import { rgbToHex } from "../../../data/colors";
 import { apiToKeys, keysToCompanion } from "../../../data/helpers";
+import { Companion } from "../../../data/types";
 import prisma from "../../../lib/prisma";
+import { web3 } from "../../../lib/web3";
 
-export default async function apiCompanions(req, res) {
+interface UpdateCompanion {
+	tokenId: number;
+	oldCompanion: Companion;
+	newCompanion: Companion;
+	hash: string;
+}
+const confirmHash = async (hash: string, requiredFee: number) => {
+	const checkMintStatus = async () => {
+		const transaction = await web3.eth.getTransaction(hash);
+		if (transaction.transactionIndex) {
+			if (parseInt(transaction.value) < requiredFee) {
+				return false;
+			}
+		}
+	};
+};
+export default async function apiCompanions(req: NextApiRequest, res: NextApiResponse) {
 	const { method } = req;
 	switch (method) {
+		case "PUT":
+			try {
+				const { tokenId, oldCompanion, newCompanion, hash } = req.body as UpdateCompanion;
+			} catch (e) {
+				res.status(400).json({
+					error: e.message,
+				});
+			}
+			break;
 		case "GET":
 			try {
+				if (typeof req.query.id !== "string") {
+					throw new Error("Invalid query id");
+				}
 				if (!parseInt(req.query.id)) {
 					res.status(405).end(`Not Allowed`);
 				}
@@ -82,7 +113,6 @@ export default async function apiCompanions(req, res) {
 			} catch (e) {
 				return res.status(500).json({ message: e.message });
 			}
-			break;
 		case "POST":
 			res.setHeader("Allow", ["GET"]);
 			res.status(405).end(`Method ${method} Not Allowed`);

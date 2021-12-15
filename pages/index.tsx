@@ -11,8 +11,9 @@ import {
 	companionAddress,
 	priceCustomEth,
 	priceEth,
-	rangeAbi,
-	rangeAddress,
+	farmAbi,
+	farmAddress,
+	shipAddress,
 } from "../components/contract";
 import { ControlPanel } from "../components/controlPanel";
 import Editor from "../components/editor";
@@ -55,11 +56,15 @@ function timeout(ms) {
 }
 
 function Constructor() {
+	/****************************************************************/
+	/**************************** STATES ****************************/
+	/****************************************************************/
 	// Web 3, contract & operations
 	const web3React = useWeb3React();
 	const [web3, setWeb3] = useState<Web3>(null);
 	const [companionContract, setCompanionContract] = useState<Contract>(null);
-	const [rangeContract, setRangeContract] = useState<Contract>(null);
+	const [farmContract, setFarmContract] = useState<Contract>(null);
+	const [shipContract, setShipContract] = useState<Contract>(null);
 	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
 	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
 
@@ -88,28 +93,67 @@ function Constructor() {
 	// Ref
 	const scrollableArea = useRef<HTMLDivElement>(null);
 
+	/****************************************************************/
+	/******************* WEB3 CONTRACT AND WALLET *******************/
+	/****************************************************************/
 	// Connect to web3 and get contract info
 	useEffect(() => {
 		if (web3React.active) {
 			let w3 = new Web3(web3React.library.provider);
 			setWeb3(w3);
-			// ----- WHEN CONTRACT IS READY -----
-			let c = new w3.eth.Contract(companionAbi, companionAddress);
-			let c2 = new w3.eth.Contract(rangeAbi, rangeAddress);
-			setCompanionContract(c);
-			setRangeContract(c2);
+			setCompanionContract(new w3.eth.Contract(companionAbi, companionAddress));
+			setFarmContract(new w3.eth.Contract(farmAbi, farmAddress));
 		} else {
 			setCompanionContract(null);
 		}
 	}, [web3React.active, web3React]);
 
+	const handleConnectWallet = () => {
+		setLatestConnector(ConnectorNames.Injected);
+		setLatestOp(W3Operations.Connect);
+		web3React.activate(injected);
+	};
+	const handleSignOut = () => {
+		setCompanionContract(null);
+		setLatestOp(W3Operations.Disconnect);
+		web3React.deactivate();
+	};
+
+	/****************************************************************/
+	/****************** STATE MANAGEMENT UTILITIES ******************/
+	/****************************************************************/
 	const zeroOutCompanions = () => {
 		setOwnedCompanions(new Set());
 		setStakedCompanions(new Set());
 		setClaimable(0);
 		setSelectedCompanions([]);
 	};
+	const handleCustomize = () => {
+		setCustomizing(true);
+		scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
+	};
+	const handleExitCustomization = () => {
+		if (selectedCompanions.length == 1 && uneditedCompanion) {
+			if (confirm("Are you sure you want to discard your changes?")) {
+				setCompanion(uneditedCompanion);
+				setUneditedCompanion(null);
+				setCustomizing(false);
+			}
+		} else {
+			setCustomizing(false);
+		}
+	};
+	const handleRandomize = () => {
+		setCompanion(randomCompanion());
+		scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
+	};
+	const handleCleanSlate = () => {
+		setUneditedCompanion(null);
+	};
 
+	/****************************************************************/
+	/******************* FETCHING FROM BLOCKCHAIN *******************/
+	/****************************************************************/
 	// Retrieve owned companions
 	const retrieveCompanions = (onSuccess?: () => void) => {
 		setRetrieving(true);
@@ -148,12 +192,12 @@ function Constructor() {
 			}
 
 			// In range
-			const stakedCompResult = await rangeContract.methods.depositsOf(web3React.account).call();
+			const stakedCompResult = await farmContract.methods.depositsOf(web3React.account).call();
 			if (stakedCompResult.length > 0) {
 				setStakedCompanions(new Set(stakedCompResult));
 			}
 
-			const rewardsResult = await rangeContract.methods
+			const rewardsResult = await farmContract.methods
 				.calculateRewards(web3React.account, stakedCompResult)
 				.call();
 			setClaimable(
@@ -167,6 +211,9 @@ function Constructor() {
 	};
 	useEffect(retrieveCompanions, [companionContract, web3React.account]);
 
+	/****************************************************************/
+	/********************** FETCHING FROM API ***********************/
+	/****************************************************************/
 	// Handle when a new companion is selected
 	useEffect(() => {
 		if (selectedCompanions.length == 1) {
@@ -192,125 +239,108 @@ function Constructor() {
 		}
 	}, [selectedCompanions]);
 
-	const checkMintStatus = () => {
-		if (txnHash && minting) {
-			web3.eth.getTransaction(txnHash).then((result) => {
-				if (result.transactionIndex) {
-					verifyMint().then((result) => {
-						setMinting(false);
-						setShowMinter(false);
-
-						if (result.error) {
-							toast.error(result.error);
-						} else {
-							retrieveCompanions(() => {
-								setSelectedCompanions([result.companionId]);
-							});
-							toast.success("Mint successful!");
-						}
-					});
-				} else {
-					setTimeout(checkMintStatus, 5000);
-				}
-			});
-		} else {
-			console.log("No hash/not minting");
-		}
+	/****************************************************************/
+	/************************ WEB3 UTILITIES ************************/
+	/****************************************************************/
+	const verifyMint = async (hash: string) => {
+		const request = await fetch("/api/mint", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				hash,
+				mintType,
+				mintQty: mintType === "random" ? mintQty : 1,
+				companion,
+			}),
+		});
+		return await request.json();
 	};
-	const verifyMint = async () => {
-		if (txnHash && minting) {
-			try {
-				const request = await fetch("/api/mint", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
+	const transactEth = async ({
+		from,
+		to,
+		encodedData,
+		value,
+		onSuccess,
+		onFailure,
+	}: {
+		from: string;
+		to: string;
+		encodedData: any;
+		value?: string;
+		onSuccess?: (hash: string) => void;
+		onFailure?: (error?: any) => void;
+	}): Promise<boolean> => {
+		try {
+			const hash = await web3React.library.provider.request({
+				method: "eth_sendTransaction",
+				params: [
+					{
+						from,
+						to,
+						data: encodedData,
+						nonce: (await web3.eth.getTransactionCount(web3React.account, "latest")) + "",
+						value,
 					},
-					body: JSON.stringify({
-						hash: txnHash,
-						mintType,
-						mintQty: mintType === "random" ? mintQty : 1,
-						companion,
-					}),
-				});
-				const response = await request.json();
-				console.log(response);
-				return response;
-			} catch (error) {
-				debugger;
+				],
+			});
+			let success = false;
+			let time = 0;
+			while (!success) {
+				const result = await web3.eth.getTransaction(hash);
+				success = !!result.blockNumber;
+				if (!success) {
+					if (time > 300000) {
+						// 5 minutes
+						onFailure?.("Transaction time out.");
+						return false;
+					}
+					time += 5000;
+					await timeout(5000);
+				}
 			}
-		} else {
-			console.log("No hash/not minting");
-			return false;
+			onSuccess?.(hash);
+			return true;
+		} catch (error) {
+			onFailure?.(error);
 		}
 	};
-	useEffect(() => {
-		checkMintStatus();
-	}, [txnHash]);
 
-	const handleCustomize = () => {
-		setCustomizing(true);
-		scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
-	};
-	const handleExitCustomization = () => {
-		if (selectedCompanions.length == 1 && uneditedCompanion) {
-			if (confirm("Are you sure you want to discard your changes?")) {
-				setCompanion(uneditedCompanion);
-				setUneditedCompanion(null);
-				setCustomizing(false);
-			}
-		} else {
-			setCustomizing(false);
-		}
-	};
-	const handleRandomize = () => {
-		setCompanion(randomCompanion());
-		scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
-	};
-	const handleCleanSlate = () => {
-		setUneditedCompanion(null);
-	};
-	const handlePurchase = () => {};
-	const handleConnectWallet = () => {
-		setLatestConnector(ConnectorNames.Injected);
-		setLatestOp(W3Operations.Connect);
-		web3React.activate(injected);
-	};
-	const handleSignOut = () => {
-		setCompanionContract(null);
-		setLatestOp(W3Operations.Disconnect);
-		web3React.deactivate();
-	};
+	/****************************************************************/
+	/*********************** WEB3 TRANSACTIONS **********************/
+	/****************************************************************/
 	const handleMint = async () => {
 		setMinting(true);
 
-		try {
-			let encoded = companionContract.methods
+		const wei = parseInt(
+			mintType == "custom"
+				? web3.utils.toWei(priceCustomEth + "", "ether")
+				: web3.utils.toWei(priceEth * mintQty + "", "ether")
+		);
+		await transactEth({
+			from: web3React.account,
+			to: companionAddress,
+			encodedData: companionContract.methods
 				.mint(mintType == "custom" ? 1 : mintQty)
-				.encodeABI();
-			const nonce = await web3.eth.getTransactionCount(web3React.account, "latest"); //get latest nonce
-			const wei = parseInt(
-				mintType == "custom"
-					? web3.utils.toWei(priceCustomEth + "", "ether")
-					: web3.utils.toWei(priceEth * mintQty + "", "ether")
-			);
+				.encodeABI(),
+			value: web3.utils.toHex(wei),
+			onSuccess: (hash) => {
+				verifyMint(hash).then((result) => {
+					setMinting(false);
+					setShowMinter(false);
 
-			let tx = {
-				from: web3React.account,
-				to: companionAddress,
-				data: encoded,
-				nonce: nonce + "",
-				value: web3.utils.toHex(wei),
-			};
-
-			const hash = await web3React.library.provider.request({
-				method: "eth_sendTransaction",
-				params: [tx],
-			});
-			setTxnHash(hash);
-		} catch (error) {
-			setMinting(false);
-			toast.error(error);
-		}
+					if (result.error) {
+						return false;
+					} else {
+						retrieveCompanions(() => {
+							setSelectedCompanions([result.companionId]);
+						});
+						return true;
+					}
+				});
+			},
+		});
 	};
 	const handleSign = async () => {
 		try {
@@ -333,140 +363,47 @@ function Constructor() {
 		}
 	};
 	const handleApprove = async (tokenId: number): Promise<boolean> => {
-		try {
-			let encoded = companionContract.methods.approve(rangeAddress, tokenId).encodeABI();
-
-			const nonce = await web3.eth.getTransactionCount(web3React.account, "latest"); //get latest nonce
-
-			let tx = {
-				from: web3React.account,
-				to: companionAddress,
-				data: encoded,
-				nonce: nonce + "",
-			};
-
-			const hash = await web3React.library.provider.request({
-				method: "eth_sendTransaction",
-				params: [tx],
-			});
-			console.log("hash", hash);
-
-			let approval;
-			while (!approval) {
-				await timeout(5000);
-				const result = await web3.eth.getTransaction(hash);
-				console.log(result.blockNumber);
-				approval = !!result.blockNumber;
-			}
-			return true;
-		} catch (error) {
-			toast(error, {
-				type: "error",
-			});
-			return false;
-		}
+		return await transactEth({
+			from: web3React.account,
+			to: companionAddress,
+			encodedData: companionContract.methods.approve(farmAddress, tokenId).encodeABI(),
+		});
 	};
 	const handleStake = async (tokenIds: number[]): Promise<boolean> => {
-		try {
-			let encoded = rangeContract.methods.deposit(tokenIds).encodeABI();
-
-			const nonce = await web3.eth.getTransactionCount(web3React.account, "latest"); //get latest nonce
-
-			let tx = {
-				from: web3React.account,
-				to: rangeAddress,
-				data: encoded,
-				nonce: nonce + "",
-			};
-
-			const hash = await web3React.library.provider.request({
-				method: "eth_sendTransaction",
-				params: [tx],
-			});
-			console.log("hash", hash);
-
-			let approval;
-			while (!approval) {
-				await timeout(5000);
-				const result = await web3.eth.getTransaction(hash);
-				console.log(result.blockNumber);
-				approval = !!result.blockNumber;
-			}
-			return true;
-		} catch (error) {
-			toast(error, {
-				type: "error",
-			});
-			return false;
-		}
+		return await transactEth({
+			from: web3React.account,
+			to: farmAddress,
+			encodedData: farmContract.methods.deposit(tokenIds).encodeABI(),
+		});
 	};
 	const handleClaim = async (tokenIds: number[]): Promise<boolean> => {
-		try {
-			let encoded = rangeContract.methods.claimRewards(tokenIds).encodeABI();
-
-			const nonce = await web3.eth.getTransactionCount(web3React.account, "latest"); //get latest nonce
-
-			let tx = {
-				from: web3React.account,
-				to: rangeAddress,
-				data: encoded,
-				nonce: nonce + "",
-			};
-
-			const hash = await web3React.library.provider.request({
-				method: "eth_sendTransaction",
-				params: [tx],
-			});
-			console.log("hash", hash);
-
-			let success;
-			while (!success) {
-				await timeout(5000);
-				const result = await web3.eth.getTransaction(hash);
-				console.log(result.blockNumber);
-				success = !!result.blockNumber;
-			}
-			return true;
-		} catch (error) {
-			toast(error, {
-				type: "error",
-			});
-			return false;
-		}
+		return await transactEth({
+			from: web3React.account,
+			to: farmAddress,
+			encodedData: farmContract.methods.withdraw(tokenIds).encodeABI(),
+		});
 	};
 	const handleUnstake = async (tokenIds: number[]): Promise<boolean> => {
-		try {
-			let encoded = rangeContract.methods.withdraw(tokenIds).encodeABI();
+		return await transactEth({
+			from: web3React.account,
+			to: farmAddress,
+			encodedData: farmContract.methods.withdraw(tokenIds).encodeABI(),
+		});
+	};
 
-			const nonce = await web3.eth.getTransactionCount(web3React.account, "latest"); //get latest nonce
-
-			let tx = {
-				from: web3React.account,
-				to: rangeAddress,
-				data: encoded,
-				nonce: nonce + "",
-			};
-
-			const hash = await web3React.library.provider.request({
-				method: "eth_sendTransaction",
-				params: [tx],
-			});
-			console.log("hash", hash);
-
-			let success;
-			while (!success) {
-				await timeout(5000);
-				const result = await web3.eth.getTransaction(hash);
-				console.log(result.blockNumber);
-				success = !!result.blockNumber;
-			}
-			return true;
-		} catch (error) {
-			toast(error, {
-				type: "error",
-			});
-			return false;
-		}
+	const handleApproveSpend = async (amount: number): Promise<boolean> => {
+		return await transactEth({
+			from: web3React.account,
+			to: shipAddress,
+			encodedData: shipContract.methods.approve(farmAddress, amount).encodeABI(),
+		});
+	};
+	const handleSpend = async (amount: number): Promise<boolean> => {
+		return await transactEth({
+			from: web3React.account,
+			to: farmAddress,
+			encodedData: shipContract.methods.transfer(farmAddress, amount).encodeABI(),
+		});
 	};
 
 	if (!companion) {
@@ -582,7 +519,9 @@ function Constructor() {
 												<Button
 													disabled={uneditedCompanion === null}
 													className={`${uneditedCompanion === null ? "opacity-20" : ""}`}
-													onClick={handlePurchase}
+													onClick={() => {
+														handleSpend(100000000000000000);
+													}}
 												>
 													Checkout
 												</Button>
