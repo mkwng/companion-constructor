@@ -1,7 +1,7 @@
 import { Web3Provider } from "@ethersproject/providers";
+import { Companion as PrismaCompanion } from "@prisma/client";
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
-import { BigNumber } from "ethers";
 import { useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
@@ -19,12 +19,14 @@ import {
 } from "../components/contract";
 import { ControlPanel } from "../components/controlPanel";
 import Editor from "../components/editor";
+import { Spinner } from "../components/icons/spinner";
 import Marketing from "../components/marketing";
 import { MintDialog } from "../components/mintDialog";
 import Renderer from "../components/renderer";
 import { StakeDialog } from "../components/stakeDialog";
 import { colors } from "../data/colors";
 import {
+	apiToKeys,
 	calcCustomizationCost,
 	colorToKey,
 	keysToCompanion,
@@ -33,6 +35,7 @@ import {
 } from "../data/helpers";
 import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
+
 import useLocalStorage from "../hooks/useLocalStorage";
 
 function getLibrary(provider) {
@@ -90,7 +93,7 @@ function Constructor() {
 	const [mintQty, setMintQty] = mintQtyState;
 
 	// Companion
-	const [companion, setCompanion] = useState<Companion | null>(null);
+	const [companion, setCompanion] = useState<Companion | null>(randomCompanion());
 	const [uneditedCompanion, setUneditedCompanion] = useState<Companion | null>(null);
 
 	// Wallet
@@ -160,6 +163,13 @@ function Constructor() {
 	const handleCleanSlate = () => {
 		setUneditedCompanion(null);
 	};
+	useEffect(() => {
+		console.log("hello");
+		if (showMinter && selectedCompanions.length) {
+			setSelectedCompanions([]);
+			setCompanion(randomCompanion());
+		}
+	}, [showMinter]);
 
 	/****************************************************************/
 	/******************* FETCHING FROM BLOCKCHAIN *******************/
@@ -226,13 +236,37 @@ function Constructor() {
 	/********************** FETCHING FROM API ***********************/
 	/****************************************************************/
 	// Handle when a new companion is selected
-	useEffect(() => {
+	const updateSelectedCompanion = () => {
 		if (selectedCompanions.length == 1) {
 			fetch(`/api/companion/${selectedCompanions[0]}?format=keys`)
 				.then((res) => {
 					res.json().then((data) => {
 						if (data.error) {
-							return alert("Oops! Something went wrong. Please try again later.");
+							switch (data.error) {
+								case "Companion not found":
+									if (
+										confirm(
+											"It looks like no companion was generated for this token. Generate a random one?"
+										)
+									) {
+										fillEmpty().then((result) => {
+											result.json().then((data) => {
+												if (data.error) {
+													toast.error(data.error);
+												} else {
+													setCompanion(
+														keysToCompanion(apiToKeys(data.companion as PrismaCompanion))
+													);
+												}
+											});
+										});
+										return;
+									} else {
+										return toast.error(data.error);
+									}
+								default:
+									return toast.error(data.error);
+							}
 						}
 						const fetchedCompanion = keysToCompanion(data);
 						fetchedCompanion.name = `Companion #${selectedCompanions[0]}`;
@@ -244,11 +278,32 @@ function Constructor() {
 					console.error(error);
 				});
 		} else if (selectedCompanions.length == 0 && !showMinter) {
-			setCompanion(randomCompanion());
+			setCompanion(null);
 		} else {
 			return;
 		}
-	}, [selectedCompanions]);
+	};
+	const fillEmpty = async () => {
+		const signature = await web3.eth.personal.sign(
+			messageToSign + "\n\nGenerate random companion",
+			web3React.account,
+			"test"
+		);
+		const request = await fetch(`/api/companion/${selectedCompanions[0]}`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				type: "fillEmpty",
+				signature,
+				address: web3React.account,
+			}),
+		});
+		console.log(request);
+		return request;
+	};
+	useEffect(updateSelectedCompanion, [selectedCompanions]);
 
 	/****************************************************************/
 	/************************ WEB3 UTILITIES ************************/
@@ -288,6 +343,7 @@ function Constructor() {
 			},
 			body: JSON.stringify({
 				hash,
+				type: "spend",
 				companion,
 				uneditedCompanion,
 				signature,
@@ -458,28 +514,6 @@ function Constructor() {
 			});
 	};
 
-	if (!companion) {
-		return (
-			<>
-				<div className="absolute animate-spin w-12 h-12 left-1/2 top-1/2 -ml-6 -mt-6">
-					<svg
-						width="48"
-						height="48"
-						viewBox="0 0 24 24"
-						fill={`rgb(${colors.clothing.orange.r},${colors.clothing.orange.g},${colors.clothing.orange.b})`}
-						stroke="currentColor"
-						strokeWidth="2"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					>
-						<circle cx="12" cy="12" r="3"></circle>
-						<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-					</svg>
-				</div>
-			</>
-		);
-	}
-
 	return (
 		<>
 			<div
@@ -504,9 +538,6 @@ function Constructor() {
 						<Button
 							className={`bg-ui-orange-default border-ui-black-default`}
 							onClick={() => {
-								if (selectedCompanions.length) {
-									setSelectedCompanions([]);
-								}
 								setShowMinter(true);
 							}}
 						>
@@ -625,10 +656,9 @@ function Constructor() {
 				</div>
 			</div>
 			<div
-				className={`font-mono h-screen transition-colors bg-background-${colorToKey(
-					companion.properties.background,
-					colors.background
-				)}`}
+				className={`font-mono h-screen transition-colors bg-background-${
+					companion ? colorToKey(companion?.properties.background, colors.background) : "sand"
+				}`}
 			>
 				<div
 					className={`
@@ -638,7 +668,11 @@ function Constructor() {
 					overflow-hidden
 					${customizing ? "lg:w-2/3 h-4/6" : "h-5/6"}`}
 				>
-					<Renderer showTitle={!customizing} companion={companion} hideBackground={true} />
+					{companion ? (
+						<Renderer showTitle={!customizing} companion={companion} hideBackground={true} />
+					) : (
+						<></>
+					)}
 				</div>
 			</div>
 			{showMinter ? (

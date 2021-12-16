@@ -11,14 +11,16 @@ import {
 	zeroPad,
 } from "../../../data/helpers";
 import { updateCompanion } from "../../../data/operations";
+import { randomCompanion } from "../../../data/random";
 import { Companion } from "../../../data/types";
 import prisma from "../../../lib/prisma";
 import { web3 } from "../../../lib/web3";
 
 interface UpdateCompanion {
-	uneditedCompanion: Companion;
-	companion: Companion;
-	hash: string;
+	uneditedCompanion?: Companion;
+	companion?: Companion;
+	hash?: string;
+	type?: "fillEmpty" | "customize";
 	signature: string;
 	address: string;
 }
@@ -53,59 +55,86 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 	const { method } = req;
 	switch (method) {
 		case "PUT":
-			try {
-				const { uneditedCompanion, companion, hash, signature, address } =
-					req.body as UpdateCompanion;
-				const tokenId = req.query.id;
-				if (typeof tokenId !== "string") {
-					throw new Error("tokenId should be a string");
-				}
-
-				let hashUsed;
+			const tokenId = req.query.id;
+			if (typeof tokenId !== "string") {
+				throw new Error("tokenId should be a string");
+			}
+			if (req.body.type === "fillEmpty") {
 				try {
-					hashUsed = await prisma.transactions.findUnique({ where: { hash } });
-				} catch (e) {
-					console.error(e);
-				} finally {
-					if (hashUsed) {
-						throw new Error("Hash already used");
-					}
-
+					const { signature, address } = req.body as UpdateCompanion;
 					const recover = web3.eth.accounts.recover(
-						messageToSign +
-							"\n\nAmount: " +
-							calcCustomizationCost(uneditedCompanion, companion) +
-							" $CSHIP",
+						messageToSign + "\n\nGenerate random companion",
 						signature
 					);
 					if (recover !== address) {
 						throw new Error("Signature is not valid");
 					}
-
-					const cost = calcCustomizationCost(uneditedCompanion, companion) + zeroPad;
-					const confirmed = await confirmHash(hash, cost);
-					if (confirmed) {
-						await prisma.transactions.create({
-							data: {
-								hash,
-								date: new Date(),
-								txnType: "customization",
-								txnValue: cost,
-							},
-						});
-						await updateCompanion({
-							tokenId: parseInt(tokenId),
-							companion,
-						});
-						res.status(200).json({
-							message: "Successfully updated",
-						});
-					}
+					const result = await updateCompanion({
+						tokenId: parseInt(tokenId),
+						companion: randomCompanion(),
+					});
+					res.status(200).json({
+						message: "Successfully updated",
+						companion: result,
+					});
+					return;
+				} catch (error) {
+					res.status(400).json({ error: error.message });
+					return;
 				}
-			} catch (e) {
-				res.status(400).json({
-					error: e.message,
-				});
+			} else if (req.body.type === "customize") {
+				try {
+					const { uneditedCompanion, companion, hash, signature, address } =
+						req.body as UpdateCompanion;
+
+					let hashUsed;
+					try {
+						hashUsed = await prisma.transactions.findUnique({ where: { hash } });
+					} catch (e) {
+						console.error(e);
+					} finally {
+						if (hashUsed) {
+							throw new Error("Hash already used");
+						}
+
+						const recover = web3.eth.accounts.recover(
+							messageToSign +
+								"\n\nAmount: " +
+								calcCustomizationCost(uneditedCompanion, companion) +
+								" $CSHIP",
+							signature
+						);
+						if (recover !== address) {
+							throw new Error("Signature is not valid");
+						}
+
+						const cost = calcCustomizationCost(uneditedCompanion, companion) + zeroPad;
+						const confirmed = await confirmHash(hash, cost);
+						if (confirmed) {
+							await prisma.transactions.create({
+								data: {
+									hash,
+									date: new Date(),
+									txnType: "customization",
+									txnValue: cost,
+								},
+							});
+							await updateCompanion({
+								tokenId: parseInt(tokenId),
+								companion,
+							});
+							res.status(200).json({
+								message: "Successfully updated",
+							});
+							return;
+						}
+					}
+				} catch (e) {
+					res.status(400).json({
+						error: e.message,
+					});
+					return;
+				}
 			}
 			break;
 		case "GET":
@@ -113,7 +142,7 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 				if (typeof req.query.id !== "string") {
 					throw new Error("Invalid query id");
 				}
-				if (!parseInt(req.query.id)) {
+				if (req.query.id === "" || req.query.id === null || req.query.id === undefined) {
 					res.status(405).end(`Not Allowed`);
 				}
 				let prismaResponse: PrismaCompanion = await prisma.companion.findUnique({

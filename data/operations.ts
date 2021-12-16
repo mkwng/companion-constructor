@@ -40,15 +40,19 @@ export const updateCompanion = async ({
 				tokenId,
 			},
 		});
-		prevCompanionFlat = apiToKeys(prevCompanion);
+		prevCompanionFlat = prevCompanion ? apiToKeys(prevCompanion) : {};
 	}
 	Object.keys(prevCompanionFlat).forEach((key) => {
 		if (!newCompanionFlat[key]) {
 			newCompanionFlat[key] = null;
 		}
 	});
-	return await prisma.companion.update({
+	return await prisma.companion.upsert({
 		where: { tokenId },
-		data: { ...newCompanionFlat },
+		update: { ...newCompanionFlat },
+		create: {
+			tokenId,
+			...newCompanionFlat,
+		},
 	});
 };
