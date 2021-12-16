@@ -4,12 +4,12 @@ export const Playground = ({
 	handleCustomize,
 	handleRandomize,
 	handleClearSelection,
-	companionSelected,
+	disabled,
 }: {
 	handleCustomize: () => void;
 	handleRandomize: () => void;
 	handleClearSelection: () => void;
-	companionSelected: boolean;
+	disabled: boolean;
 }) => {
 	return (
 		<div className="relative m-2 mt-0 p-2 bg-ui-black-darker rounded-lg overflow-hidden">
@@ -28,7 +28,7 @@ export const Playground = ({
 					Randomize
 				</Button>
 			</div>
-			{companionSelected ? (
+			{disabled ? (
 				<div className="absolute w-full h-full inset-0 bg-opacity-90 backdrop-blur-sm bg-ui-black-darker">
 					<div className="flex flex-col h-full w-8/12 mx-auto justify-center items-center">
 						<h3 className="font-bold mb-2 text-center">Back to playground</h3>

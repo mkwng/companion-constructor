@@ -1,6 +1,6 @@
 import { Companion as PrismaCompanion } from "@prisma/client";
 import prisma from "../lib/prisma";
-import { apiToKeys, flattenCompanion } from "./helpers";
+import { apiToKeys, flattenCompanion, keysToCompanion } from "./helpers";
 import { Companion } from "./types";
 
 export const createCompanion = async ({
@@ -40,7 +40,9 @@ export const updateCompanion = async ({
 				tokenId,
 			},
 		});
-		prevCompanionFlat = prevCompanion ? apiToKeys(prevCompanion) : {};
+		prevCompanionFlat = prevCompanion
+			? flattenCompanion(keysToCompanion(apiToKeys(prevCompanion)))
+			: {};
 	}
 	Object.keys(prevCompanionFlat).forEach((key) => {
 		if (!newCompanionFlat[key]) {

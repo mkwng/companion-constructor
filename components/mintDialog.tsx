@@ -55,6 +55,8 @@ export const MintDialog = ({
 	);
 	const [success, setSuccess] = useState(false);
 
+	const debug = true;
+
 	useEffect(() => {
 		if (!minting) return;
 		let running = true;
@@ -75,23 +77,58 @@ export const MintDialog = ({
 
 	return (
 		<div className="w-screen h-screen fixed z-50 inset-0 font-mono">
+			{debug && (
+				<div className="fixed top-0 z-50">
+					<div>
+						<Button onClick={() => setSuccess((prev) => !prev)}>Toggle success</Button>
+					</div>
+				</div>
+			)}
+			<div className="absolute top-4 right-4 left-4 z-20 flex justify-between">
+				<div>
+					{showFaq && (
+						<Button
+							className="bg-ui-black-default text-default-white text-xs w-auto md:hidden"
+							onClick={() => setShowFaq(false)}
+						>
+							Back
+						</Button>
+					)}
+				</div>
+				<div>
+					{!success && (
+						<Button
+							className={`bg-ui-black-default text-default-white w-8 h-8 pl-0 pr-0 pt-0 pb-0 ${
+								minting ? "opacity-20" : ""
+							}`}
+							onClick={minting ? () => {} : handleClose}
+						>
+							×
+						</Button>
+					)}
+				</div>
+			</div>
 			<div
-				className="inset-0 w-full h-full bg-opacity-90 bg-ui-black-default cursor-pointer"
+				className="inset-0 w-full h-full bg-opacity-95 bg-ui-black-darker cursor-pointer"
 				onClick={minting ? () => {} : handleClose}
 			>
 				&nbsp;
 			</div>
+			{/********************************************/}
+			{/*************** Popup Window ***************/}
+			{/********************************************/}
 			<div
 				className={`
-					w-full max-w-screen-xl max-h-screen transition-colors
-					absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 md:aspect-[2/1] 
-					grid grid-cols-1 md:grid-cols-2 rounded-lg shadow-xl
+					transition-all
+					w-full max-h-screen
+					absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 lg:aspect-[2/1] 
+					rounded-lg shadow-xl
 					shadow-ui-black-default 
 					${minting ? "bg-default-white" : "bg-default-white"}
 					${
 						success
-							? "bg-opacity-0 shadow-none overflow-visible"
-							: "shadow-xl overflow-y-scroll md:overflow-y-hidden overflow-x-hidden"
+							? "max-w-screen-sm bg-opacity-0 shadow-none overflow-visible "
+							: "max-w-screen-xl shadow-xl overflow-y-scroll lg:overflow-y-hidden overflow-x-hidden grid grid-cols-1 lg:grid-cols-2 "
 					}
 					`}
 			>
@@ -120,12 +157,12 @@ export const MintDialog = ({
 						<div className="w-12 h-12 transform scale-75">
 							<Spinner />
 						</div>
-						<p>{loadingText}</p>
+						<p className="p-4 text-center">{loadingText}</p>
 					</div>
 				)}
 
 				{success && (
-					<div className="absolute z-50 inset-0 flex justify-center items-center">
+					<div className="absolute z-50 inset-0 flex justify-center items-center pointer-events-none">
 						<ConfettiExplosion floorHeight={1600} floorWidth={1600} />
 					</div>
 				)}
@@ -139,21 +176,32 @@ export const MintDialog = ({
 						</div>
 					</div>
 				)}
+
+				{/********************************************/}
+				{/************* Companion Image **************/}
+				{/********************************************/}
 				<div
-					className={`aspect-1 relative transform-gpu transition-all duration-1000
-					${!minting && "left-0"}
-					${minting && !success && "left-1/2 origin-center rounded-2xl overflow-hidden opacity-50"}
-					${success && "left-1/2 opacity-100 duration-75"}
+					className={`aspect-1 relative transform-gpu transition-all duration-1000 
+					${
+						!minting &&
+						`left-0 bg-background-${
+							companion
+								? colorToKey(companion?.properties.background, colors.background)
+								: "sand"
+						}`
+					}
+					${minting && !success && "lg:left-1/2 origin-center rounded-2xl overflow-hidden opacity-50"}
+					${success && "opacity-100 duration-75 rounded-2xl overflow-hidden "}
 					`}
 				>
 					<div
-						className={`h-full w-full transform-gpu transition-transform overflow-hidden
+						className={`h-full w-full transform-gpu transition-transform overflow-hidden max-w-md md:max-w-none mx-auto
 						${!minting && "duration-1000"}
 						${minting && !success && "duration-[60000ms] ease-out scale-50 rounded-xl "}
 						${success && "scale-90 rounded-xl "}
 						`}
 					>
-						<div className={`${mintType == "custom" ? "" : "hidden"}`}>
+						<div className={`w-full h-full ${mintType == "custom" ? "" : "hidden"}`}>
 							<Renderer showTitle={false} companion={companion} hideBackground={false} />
 							<div className="absolute inset-0 z-40 opacity-0 hover:opacity-100 transition-opacity">
 								<div className={`absolute bottom-8 left-1/2 -translate-x-1/2`}>
@@ -167,9 +215,11 @@ export const MintDialog = ({
 							</div>
 						</div>
 						<div
-							className={`h-full w-full bg-ui-black-lightest flex justify-center items-center ${
-								mintType == "random" ? "" : "hidden"
-							}`}
+							className={`h-full w-full flex justify-center items-center bg-background-${
+								companion
+									? colorToKey(companion?.properties.background, colors.background)
+									: "sand"
+							} ${mintType == "random" ? "" : "hidden"}`}
 						>
 							<span className="font-display subpixel-antialiased text-default-yellow animate-pulse text-9xl">
 								?
@@ -177,175 +227,188 @@ export const MintDialog = ({
 						</div>
 					</div>
 				</div>
-				{showFaq ? (
-					<div className="md:overflow-y-scroll relative">
-						<div className="sticky top-4 ml-4">
-							<Button className="text-xs w-auto" onClick={() => setShowFaq(false)}>
-								Back
-							</Button>
-						</div>
-						<Faq />
-					</div>
-				) : (
-					<div
-						className={`flex flex-col gap-4 justify-center items-center relative text-sm transition-opacity duration-1000 ${
-							minting ? "opacity-0 pointer-events-none" : ""
-						}`}
-					>
-						<div className="absolute top-4 right-4">
-							<Button
-								className={`w-8 h-8 pl-0 pr-0 pt-0 pb-0 ${minting ? "opacity-20" : ""}`}
-								onClick={minting ? () => {} : handleClose}
-							>
-								×
-							</Button>
-						</div>
-						<h1 className="font-display subpixel-antialiased text-9xl text-center text-ui-black-lighter">
-							Mint
+				{/************* /Companion Image *************/}
+				{success ? (
+					<>
+						<h1 className="font-display subpixel-antialiased text-7xl lg:text-9xl text-center text-default-white">
+							Minted
 						</h1>
-
-						<div className="flex rounded-full relative justify-items-stretch text-xs max-w-xs">
-							<div className="absolute w-full h-full z-0 rounded-full border-ui-black-lightest bg-ui-black-lightest bg-opacity-10 border-2"></div>
-							<Button
-								disabled={mintType === "custom"}
-								className={
-									mintType === "custom"
-										? "border-background-red bg-background-red text-white opacity-100"
-										: "border-transparent text-ui-black-lightest"
-								}
-								onClick={() => {
-									setMintType("custom");
-								}}
-							>
-								Custom
-							</Button>
-							<Button
-								disabled={mintType === "random"}
-								className={
-									mintType === "random"
-										? "border-background-red bg-background-red text-white opacity-100"
-										: "border-transparent text-ui-black-lightest"
-								}
-								onClick={() => {
-									setMintType("random");
-								}}
-							>
-								Random
-							</Button>
-						</div>
-						<div
-							className={`px-8 max-w-xs text-center flex flex-col gap-2 justify-center items-center`}
-						>
-							{mintType === "custom" ? (
-								<>
-									<p>Whoa! This customized 1/1 NFT you created looks really dope. </p>
-									<p>
-										I just checked and it has a completely arbitrary* rarity score of 67/100.
-									</p>
-									<p>
-										<a
-											className="text-ui-orange-default"
-											href="#"
-											onClick={(e) => {
-												e.preventDefault();
-												setShowFaq(true);
-											}}
-										>
-											Still have questions?
-										</a>
-									</p>
-									<div className="mt-16 w-full sticky bottom-8">
+						<Button className="bg-ui-black-default text-default-white" onClick={handleClose}>
+							Back home
+						</Button>
+					</>
+				) : (
+					<>
+						{showFaq ? (
+							<>
+								{/********************************************/}
+								{/******************** FAQ *******************/}
+								{/********************************************/}
+								<div className="lg:overflow-y-scroll relative">
+									<div className="top-4 ml-4 hidden md:block sticky">
 										<Button
-											className="text-lg text-white bg-ui-orange-default"
-											// disabled={true}
-											disabled={mintQty > 8 || mintQty < 1}
-											loading={minting}
-											onClick={() => {
-												handleMint({
-													onSuccess: () => {
-														setSuccess(true);
-													},
-												});
-											}}
+											className="bg-ui-black-default text-default-white text-xs w-auto"
+											onClick={() => setShowFaq(false)}
 										>
-											<span>Mint</span>
-											<span className="text-md px-2 py-0.5 text-white bg-ui-black-lightest bg-opacity-20 rounded-full">
-												{priceCustomEth}Ξ
-											</span>
+											Back
 										</Button>
 									</div>
-								</>
-							) : (
-								<>
-									<p>
-										Minting a random companion this way gives you the opportunity to obtain
-										ultra-rare attributes that can&apos;t obtained otherwise.{" "}
-									</p>
-									<p>
-										<a
-											className="text-ui-orange-default"
-											href="#"
-											onClick={(e) => {
-												e.preventDefault();
-												setShowFaq(true);
+									<Faq />
+								</div>
+
+								{/******************** /FAQ ******************/}
+							</>
+						) : (
+							<>
+								{/********************************************/}
+								{/************* Mint Information *************/}
+								{/********************************************/}
+								<div
+									className={`flex flex-col gap-4 justify-center items-center relative text-sm transition-opacity duration-1000 ${
+										minting ? "opacity-0 pointer-events-none" : ""
+									}`}
+								>
+									<h1 className="font-display subpixel-antialiased text-9xl text-center text-ui-black-lighter">
+										Mint
+									</h1>
+
+									<div className="flex rounded-full relative justify-items-stretch text-xs max-w-xs">
+										<div className="absolute w-full h-full z-0 rounded-full border-ui-black-lightest bg-ui-black-lightest bg-opacity-10 border-2"></div>
+										<Button
+											disabled={mintType === "custom"}
+											className={
+												mintType === "custom"
+													? "border-background-red bg-background-red text-white opacity-100"
+													: "border-transparent text-ui-black-lightest"
+											}
+											onClick={() => {
+												setMintType("custom");
 											}}
 										>
-											Still have questions?
-										</a>
-									</p>
-									<div className="flex align-baseline text-xl ">
-										<label className="p-2" htmlFor="qty">
-											QTY:
-										</label>
-										<input
-											className={`
+											Custom
+										</Button>
+										<Button
+											disabled={mintType === "random"}
+											className={
+												mintType === "random"
+													? "border-background-red bg-background-red text-white opacity-100"
+													: "border-transparent text-ui-black-lightest"
+											}
+											onClick={() => {
+												setMintType("random");
+											}}
+										>
+											Random
+										</Button>
+									</div>
+									<div
+										className={`px-8 max-w-xs text-center flex flex-col gap-2 justify-center items-center`}
+									>
+										{mintType === "custom" ? (
+											<>
+												{/********************************************/}
+												{/*************** Mint: Custom ***************/}
+												{/********************************************/}
+												<p>Whoa! This customized 1/1 NFT you created looks really dope. </p>
+												<p>
+													I just checked and it has a completely arbitrary* rarity score of
+													67/100.
+												</p>
+												<p>
+													<a
+														className="text-ui-orange-default"
+														href="#"
+														onClick={(e) => {
+															e.preventDefault();
+															setShowFaq(true);
+														}}
+													>
+														Still have questions?
+													</a>
+												</p>
+											</>
+										) : (
+											<>
+												{/********************************************/}
+												{/*************** Mint: Random ***************/}
+												{/********************************************/}
+												<p>
+													Minting a random companion this way gives you the opportunity to
+													obtain ultra-rare attributes that can&apos;t obtained otherwise.{" "}
+												</p>
+												<p>
+													<a
+														className="text-ui-orange-default"
+														href="#"
+														onClick={(e) => {
+															e.preventDefault();
+															setShowFaq(true);
+														}}
+													>
+														Still have questions?
+													</a>
+												</p>
+												<div className="flex align-baseline text-xl ">
+													<label className="p-2" htmlFor="qty">
+														QTY:
+													</label>
+													<input
+														className={`
 											bg-transparent text-xl
 											w-16 text-center py-2 px-0
 											border-0 border-b-4 border-ui-black-lightest 
 											outline-ui-orange-default focus:border-ui-orange-default focus:ring-ui-orange-default
 											${mintQty > 8 ? "text-default-red" : ""}
 										`}
-											name="qty"
-											type="number"
-											min="1"
-											max="8"
-											value={mintQty}
-											onChange={(e) => {
-												setMintQty(parseInt(e.target.value));
-											}}
-											onBlur={(e) => {
-												if (parseInt(e.target.value) > 8) {
-													setMintQty(8);
-												}
-											}}
-										/>
+														name="qty"
+														type="number"
+														min="1"
+														max="8"
+														value={mintQty}
+														onChange={(e) => {
+															setMintQty(parseInt(e.target.value));
+														}}
+														onBlur={(e) => {
+															if (parseInt(e.target.value) > 8) {
+																setMintQty(8);
+															}
+														}}
+													/>
+												</div>
+											</>
+										)}
 									</div>
-									<div className="mt-16 w-full sticky bottom-8">
-										<Button
-											className="text-lg text-white bg-ui-orange-default"
-											// disabled={true}
-											disabled={mintQty > 8 || mintQty < 1}
-											loading={minting}
-											onClick={() => {
-												handleMint({
-													onSuccess: () => {
-														setSuccess(true);
-													},
-												});
-											}}
-										>
-											<span>Mint</span>
-											<span className="text-md px-2 py-0.5 text-white bg-ui-black-lightest bg-opacity-20 rounded-full">
-												{priceEth * mintQty}Ξ
-											</span>
-										</Button>
+
+									<div className="mt-16 w-full sticky bottom-8 flex justify-center">
+										<div>
+											<Button
+												className="text-lg text-white bg-ui-orange-default"
+												// disabled={true}
+												disabled={mintQty > 8 || mintQty < 1}
+												loading={minting}
+												onClick={() => {
+													handleMint({
+														onSuccess: () => {
+															setSuccess(true);
+														},
+													});
+												}}
+											>
+												<span>Mint</span>
+												<span className="text-md px-2 py-0.5 text-white bg-ui-black-lightest bg-opacity-20 rounded-full">
+													{mintType === "custom" ? priceCustomEth : priceEth * mintQty}Ξ
+												</span>
+											</Button>
+										</div>
 									</div>
-								</>
-							)}
-						</div>
-					</div>
+								</div>
+								{/************* /Mint Information ************/}
+							</>
+						)}
+					</>
 				)}
 			</div>
+			{/*************** /Popup Window **************/}
 		</div>
 	);
 };

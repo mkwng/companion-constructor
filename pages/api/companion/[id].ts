@@ -57,7 +57,7 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 		case "PUT":
 			const tokenId = req.query.id;
 			if (typeof tokenId !== "string") {
-				throw new Error("tokenId should be a string");
+				return res.status(400).json({ error: "tokenId should be a string" });
 			}
 			if (req.body.type === "fillEmpty") {
 				try {
@@ -73,14 +73,12 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 						tokenId: parseInt(tokenId),
 						companion: randomCompanion(),
 					});
-					res.status(200).json({
+					return res.status(200).json({
 						message: "Successfully updated",
 						companion: result,
 					});
-					return;
 				} catch (error) {
-					res.status(400).json({ error: error.message });
-					return;
+					return res.status(400).json({ error: error.message });
 				}
 			} else if (req.body.type === "customize") {
 				try {
@@ -123,10 +121,11 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 								tokenId: parseInt(tokenId),
 								companion,
 							});
-							res.status(200).json({
+							return res.status(200).json({
 								message: "Successfully updated",
 							});
-							return;
+						} else {
+							throw new Error("Could not confirm that this transaction was completed");
 						}
 					}
 				} catch (e) {

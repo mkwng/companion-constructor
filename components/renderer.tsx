@@ -122,11 +122,13 @@ export default function Renderer({
 	companion,
 	showTitle,
 	hideBackground,
+	maxHeight,
 	...props
 }: {
 	className?: string;
 	companion: Companion;
 	showTitle?: boolean;
+	maxHeight?: boolean;
 	hideBackground?: boolean;
 }) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -245,14 +247,14 @@ export default function Renderer({
 				</>
 			)}
 			{companion && (
-				<div className="max-w-full max-h-2/3-screen mx-auto z-10 relative">
+				<div className={`max-w-full mx-auto z-10 relative ${maxHeight && "max-h-2/3-screen"}`}>
 					<canvas
 						width={w}
 						height={h}
 						ref={canvasRef}
-						className={`max-w-full max-h-2/3-screen mx-auto transition-opacity ${
-							isLoading ? "opacity-0 duration-0" : ""
-						}`}
+						className={`max-w-full mx-auto transition-opacity ${
+							maxHeight && "max-h-2/3-screen"
+						} ${isLoading ? "opacity-0 duration-0" : ""}`}
 					/>
 				</div>
 			)}

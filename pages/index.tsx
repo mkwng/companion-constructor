@@ -93,7 +93,7 @@ function Constructor() {
 	const [mintQty, setMintQty] = mintQtyState;
 
 	// Companion
-	const [companion, setCompanion] = useState<Companion | null>(randomCompanion());
+	const [companion, setCompanion] = useState<Companion>(randomCompanion());
 	const [uneditedCompanion, setUneditedCompanion] = useState<Companion | null>(null);
 
 	// Wallet
@@ -118,6 +118,8 @@ function Constructor() {
 			setShipContract(new w3.eth.Contract(shipAbi, shipAddress));
 		} else {
 			setCompanionContract(null);
+			setFarmContract(null);
+			setShipContract(null);
 		}
 	}, [web3React.active, web3React]);
 
@@ -164,7 +166,6 @@ function Constructor() {
 		setUneditedCompanion(null);
 	};
 	useEffect(() => {
-		console.log("hello");
 		if (showMinter && selectedCompanions.length) {
 			setSelectedCompanions([]);
 			setCompanion(randomCompanion());
@@ -222,7 +223,6 @@ function Constructor() {
 				.call();
 			setClaimable(
 				rewardsResult.reduce((acc, cur) => {
-					console.log(acc);
 					return acc + parseInt(cur.substring(0, cur.length - zeroPad.length));
 				}, 0)
 			);
@@ -327,7 +327,7 @@ function Constructor() {
 			toast.error(error);
 		}
 	};
-	const verifySpend = async (hash: string) => {
+	const verifySpend = async (currHash: string) => {
 		const signature = await web3.eth.personal.sign(
 			messageToSign +
 				"\n\nAmount: " +
@@ -342,8 +342,8 @@ function Constructor() {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
-				hash,
-				type: "spend",
+				hash: currHash,
+				type: "customize",
 				companion,
 				uneditedCompanion,
 				signature,
@@ -385,7 +385,6 @@ function Constructor() {
 			let time = 0;
 			while (!success) {
 				const result = await web3.eth.getTransaction(hash);
-				debugger;
 				success = !!result.blockNumber;
 				if (!success) {
 					if (time > 300000) {
@@ -498,20 +497,26 @@ function Constructor() {
 	};
 
 	const handleSpend = async (amount: string) => {
-		let currentHash;
-		shipContract.methods
-			.transfer(farmAddress, web3.utils.toHex(amount))
-			.send({
-				from: web3React.account,
-			})
-			.on("transactionHash", (hash) => {
-				currentHash = hash;
-			})
-			.on("receipt", () => {
-				verifySpend(currentHash).then(async (result) => {
-					console.log(await result.json());
-				});
-			});
+		setTransacting(true);
+		return await transactEth({
+			from: web3React.account,
+			to: shipAddress,
+			encodedData: shipContract.methods
+				.transfer(farmAddress, web3.utils.toHex(amount))
+				.encodeABI(),
+			onSuccess: async (currHash) => {
+				const response = await (await verifySpend(currHash)).json();
+				if (response.error) {
+					return toast.error(response.error);
+				}
+				setCustomizing(false);
+				setTransacting(false);
+			},
+			onFailure: (error) => {
+				setTransacting(false);
+				toast.error(error);
+			},
+		});
 	};
 
 	return (
@@ -524,7 +529,7 @@ function Constructor() {
 				}`}
 			>
 				{!customizing ? (
-					<div className="fixed z-0 left-1/2 w-full max-w-xl transform -translate-x-1/2 bottom-24 p-2 pt-0 flex flex-col justify-items-stretch gap-1 text-xs">
+					<div className="fixed z-0 left-1/2 w-full max-w-xl transform -translate-x-1/2 bottom-24 p-2 pt-0 flex flex-col justify-items-stretch gap-1 text-sm">
 						<Button
 							onClick={() => {
 								scrollableArea.current?.scrollTo({
@@ -545,6 +550,15 @@ function Constructor() {
 						</Button>
 					</div>
 				) : null}
+				{!companion && (
+					<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+						<div>
+							<Button className="text-xs" onClick={() => setCompanion(randomCompanion())}>
+								Generate random companion
+							</Button>
+						</div>
+					</div>
+				)}
 				<div
 					className={`
 						transition-all
@@ -565,6 +579,7 @@ function Constructor() {
 					>
 						<div className={`${customizing ? "hidden" : ""}`}>
 							<ControlPanel
+								isEmpty={!companion}
 								account={web3React.account}
 								chainId={web3React.chainId}
 								claimable={claimable}
@@ -601,6 +616,7 @@ function Constructor() {
 											<div>
 												<Button
 													disabled={uneditedCompanion === null}
+													loading={transacting}
 													className={`${uneditedCompanion === null ? "opacity-20" : ""}`}
 													onClick={() => {
 														handleSpend(
@@ -627,9 +643,8 @@ function Constructor() {
 										)}
 									</div>
 								</div>
-								<div className="lg:pb-2">
+								<div className={`lg:pb-2 ${transacting && "pointer-events-none"}`}>
 									<Editor
-										// disabled={!transacting}
 										companionState={[companion, setCompanion]}
 										uneditedCompanionState={[uneditedCompanion, setUneditedCompanion]}
 									/>
@@ -669,10 +684,13 @@ function Constructor() {
 					${customizing ? "lg:w-2/3 h-4/6" : "h-5/6"}`}
 				>
 					{companion ? (
-						<Renderer showTitle={!customizing} companion={companion} hideBackground={true} />
-					) : (
-						<></>
-					)}
+						<Renderer
+							showTitle={!customizing}
+							companion={companion}
+							hideBackground={true}
+							maxHeight={true}
+						/>
+					) : null}
 				</div>
 			</div>
 			{showMinter ? (

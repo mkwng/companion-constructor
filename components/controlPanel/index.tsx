@@ -11,6 +11,7 @@ export const ControlPanel = ({
 	selectedCompanions,
 	stakedCompanions,
 	claimable,
+	isEmpty,
 	setSelectedCompanions,
 	handleCustomize,
 	handleStake,
@@ -29,6 +30,7 @@ export const ControlPanel = ({
 	selectedCompanions: number[];
 	stakedCompanions: Set<number>;
 	claimable: number;
+	isEmpty: boolean;
 	setSelectedCompanions: (ids?: number[]) => void;
 	handleCustomize: () => void;
 	handleStake: () => void;
@@ -63,7 +65,7 @@ export const ControlPanel = ({
 	return (
 		<>
 			<div
-				className="flex items-center justify-center px-2 py-2 bg-ui-black-darker"
+				className="flex items-center justify-center px-2 h-12 md:h-8 bg-ui-black-darker"
 				onClick={() => {
 					setExpanded((prev) => !prev);
 				}}
@@ -88,7 +90,14 @@ export const ControlPanel = ({
 				<div className="text-center flex-grow text-gray-500">Control panel</div>
 				<div className="w-4 h-4">&nbsp;</div>
 			</div>
-			<div className={`${expanded ? "" : "hidden"}`}>
+			<div
+				className={`transition-all duration-500 ease-out flex flex-col ${
+					expanded ? "max-h-[calc(100vh-3rem)]" : "max-h-0"
+				}`}
+			>
+				{/********************************************/}
+				{/************ Account Management ************/}
+				{/********************************************/}
 				<div className="bg-background-yellow p-2 text-clothing-black">
 					{account ? (
 						<LoggedIn account={account} handleSignOut={handleSignOut} chainId={chainId} />
@@ -96,113 +105,138 @@ export const ControlPanel = ({
 						<LoggedOut handleConnectWallet={handleConnectWallet} />
 					)}
 				</div>
+
+				{/********************************************/}
+				{/************** Tab Navigation **************/}
+				{/********************************************/}
 				<div className="p-2">
 					<div className="flex w-full rounded-full relative justify-items-stretch">
 						<div className="absolute w-full h-full z-0 rounded-full border-ui-black-lightest border-2"></div>
-						<Button
-							disabled={activeSection === "playground"}
-							className={
-								activeSection === "playground"
-									? "border-background-red text-white opacity-100"
-									: "border-transparent text-gray-400"
-							}
-							onClick={() => {
-								setActiveSection("playground");
-							}}
-						>
-							Playground
-						</Button>
-						<Button
-							disabled={activeSection === "myCompanions"}
-							className={
-								activeSection === "myCompanions"
-									? "border-background-red text-white opacity-100"
-									: "border-transparent text-gray-400"
-							}
-							onClick={() => {
-								handleCleanSlate();
-								setActiveSection("myCompanions");
-							}}
-						>
-							{stakedCompanions.size > 0 ? "Companions" : "My companions"}
-						</Button>
-						{stakedCompanions.size > 0 ? (
+						<div className={`${stakedCompanions.size > 0 && "w-1/3"}`}>
 							<Button
-								disabled={activeSection === "staked"}
-								className={
-									activeSection === "staked"
+								disabled={activeSection === "playground"}
+								className={`overrflow-x-hidden overflow-ellipsis ${
+									activeSection === "playground"
 										? "border-background-red text-white opacity-100"
 										: "border-transparent text-gray-400"
-								}
+								}`}
 								onClick={() => {
-									handleCleanSlate();
-									setSelectedStakedCompanions([]);
-									setActiveSection("staked");
+									setActiveSection("playground");
 								}}
 							>
-								Staked
+								Playground
 							</Button>
+						</div>
+						<div className={`${stakedCompanions.size > 0 && "w-1/3"}`}>
+							<Button
+								disabled={activeSection === "myCompanions"}
+								className={`overrflow-x-hidden overflow-ellipsis ${
+									activeSection === "myCompanions"
+										? "border-background-red text-white opacity-100"
+										: "border-transparent text-gray-400"
+								}`}
+								onClick={() => {
+									handleCleanSlate();
+									setActiveSection("myCompanions");
+								}}
+							>
+								{stakedCompanions.size > 0 ? "Companions" : "My companions"}
+							</Button>
+						</div>
+
+						{stakedCompanions.size > 0 ? (
+							<div className={`${stakedCompanions.size > 0 && "w-1/3"}`}>
+								<Button
+									disabled={activeSection === "staked"}
+									className={`overrflow-x-hidden overflow-ellipsis ${
+										activeSection === "staked"
+											? "border-background-red text-white opacity-100"
+											: "border-transparent text-gray-400"
+									}`}
+									onClick={() => {
+										handleCleanSlate();
+										setSelectedStakedCompanions([]);
+										setActiveSection("staked");
+									}}
+								>
+									Staked
+								</Button>
+							</div>
 						) : null}
 					</div>
 				</div>
+
+				{/********************************************/}
+				{/************ Account Management ************/}
+				{/********************************************/}
+
 				{activeSection === "playground" && (
 					<Playground
 						handleCustomize={handleCustomize}
 						handleRandomize={handleRandomize}
 						handleClearSelection={() => setSelectedCompanions([])}
-						companionSelected={selectedCompanions.length > 0}
+						disabled={isEmpty || selectedCompanions.length > 0}
 					/>
 				)}
 
-				{activeSection === "myCompanions" && (
-					<MyCompanions
-						ownedCompanions={ownedCompanions}
-						selectedCompanions={selectedCompanions}
-						setSelectedCompanions={setSelectedCompanions}
-						action1={{
-							title: "Customize" + (selectedCompanions ? ` #${selectedCompanions}` : ""),
-							action: handleCustomize,
-							disabled: selectedCompanions.length !== 1,
-						}}
-						action2={{
-							title: "Stake" + (selectedCompanions ? ` #${selectedCompanions}` : ""),
-							action: handleStake,
-							disabled: !selectedCompanions.length,
-						}}
-						loading={loading}
-					/>
-				)}
+				{/********************************************/}
+				{/****************** Content *****************/}
+				{/********************************************/}
+				<div className="overflow-x-hidden overflow-y-scroll hide-scrollbars">
+					{activeSection === "myCompanions" && (
+						<MyCompanions
+							ownedCompanions={ownedCompanions}
+							selectedCompanions={selectedCompanions}
+							setSelectedCompanions={setSelectedCompanions}
+							action1={{
+								title: "Customize" + (selectedCompanions ? ` #${selectedCompanions}` : ""),
+								action: handleCustomize,
+								disabled: selectedCompanions.length !== 1,
+							}}
+							action2={{
+								title: "Stake" + (selectedCompanions ? ` #${selectedCompanions}` : ""),
+								action: handleStake,
+								disabled: !selectedCompanions.length,
+							}}
+							loading={loading}
+						/>
+					)}
 
-				{activeSection === "staked" && (
-					<MyCompanions
-						ownedCompanions={stakedCompanions}
-						selectedCompanions={selectedStakedCompanions}
-						setSelectedCompanions={setSelectedStakedCompanions}
-						action1={{
-							title: `Claim ${claimable} rewards`,
-							action: async () => {
-								setStakeLoading(true);
-								if (await handleClaim(Array.from(stakedCompanions))) {
-									alert("Claimed rewards!");
-								}
-								setStakeLoading(false);
-							},
-						}}
-						action2={{
-							title:
-								"Unstake" + (selectedStakedCompanions ? ` #${selectedStakedCompanions}` : ""),
-							action: async () => {
-								setStakeLoading(true);
-								if (await handleUnstake(selectedStakedCompanions)) {
-									alert("Unstaked!");
-								}
-								setStakeLoading(false);
-							},
-							disabled: !selectedStakedCompanions.length,
-						}}
-						loading={stakeLoading}
-					/>
-				)}
+					{activeSection === "staked" && (
+						<MyCompanions
+							ownedCompanions={stakedCompanions}
+							selectedCompanions={selectedStakedCompanions}
+							setSelectedCompanions={setSelectedStakedCompanions}
+							action1={{
+								title: `Claim ${claimable} rewards`,
+								action: async () => {
+									setStakeLoading(true);
+									if (await handleClaim(Array.from(stakedCompanions))) {
+										alert("Claimed rewards!");
+									}
+									setStakeLoading(false);
+								},
+							}}
+							action2={{
+								title:
+									"Unstake" + (selectedStakedCompanions ? ` #${selectedStakedCompanions}` : ""),
+								action: async () => {
+									setStakeLoading(true);
+									if (await handleUnstake(selectedStakedCompanions)) {
+										alert("Unstaked!");
+									}
+									setStakeLoading(false);
+								},
+								disabled: !selectedStakedCompanions.length,
+							}}
+							loading={stakeLoading}
+						/>
+					)}
+				</div>
+
+				{/********************************************/}
+				{/**************** Mint Button ***************/}
+				{/********************************************/}
 				<div className="p-2 pt-0">
 					<Button
 						className={`bg-ui-orange-default border-ui-black-default`}
