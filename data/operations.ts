@@ -10,13 +10,12 @@ export const createCompanion = async ({
 	companion: Companion;
 	tokenId: number;
 }) => {
+	if (!tokenId) throw new Error("tokenId is required");
 	return await prisma.companion.create({
-		data: tokenId
-			? { ...flattenCompanion(companion) }
-			: {
-					tokenId,
-					...flattenCompanion(companion),
-			  },
+		data: {
+			tokenId,
+			...flattenCompanion(companion),
+		},
 	});
 };
 

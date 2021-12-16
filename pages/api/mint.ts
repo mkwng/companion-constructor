@@ -43,24 +43,24 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 					const receipt = await web3.eth.getTransactionReceipt(hash);
 					const companionIds = [];
 					for (let i = 0; i < receipt.logs.length; i++) {
-						const companionId = web3.utils.hexToNumber(receipt.logs[i].topics[3]);
-						if (!isNaN(companionId)) {
+						const tokenId = web3.utils.hexToNumber(receipt.logs[i].topics[3]);
+						if (!isNaN(tokenId)) {
 							let query;
 							if (mintType == "custom" && companion) {
 								query = createCompanion({
-									tokenId: companionId,
+									tokenId,
 									companion,
 								});
 							} else {
 								query = createCompanion({
-									tokenId: companionId,
+									tokenId,
 									companion: randomCompanion(),
 								});
 							}
 							const result = await query;
 							companionIds.push(result.id);
 						} else {
-							console.error("Invalid companion id", companionId);
+							console.error("Invalid companion id", tokenId);
 							continue;
 						}
 					}

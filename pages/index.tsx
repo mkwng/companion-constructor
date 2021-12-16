@@ -254,19 +254,23 @@ function Constructor() {
 	/************************ WEB3 UTILITIES ************************/
 	/****************************************************************/
 	const verifyMint = async (hash: string) => {
-		const request = await fetch("/api/mint", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				hash,
-				mintType,
-				mintQty: mintType === "random" ? mintQty : 1,
-				companion,
-			}),
-		});
-		return await request.json();
+		try {
+			const request = await fetch("/api/mint", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					hash,
+					mintType,
+					mintQty: mintType === "random" ? mintQty : 1,
+					companion,
+				}),
+			});
+			return await request.json();
+		} catch (error) {
+			toast.error(error);
+		}
 	};
 	const verifySpend = async (hash: string) => {
 		const signature = await web3.eth.personal.sign(
@@ -325,6 +329,7 @@ function Constructor() {
 			let time = 0;
 			while (!success) {
 				const result = await web3.eth.getTransaction(hash);
+				debugger;
 				success = !!result.blockNumber;
 				if (!success) {
 					if (time > 300000) {
