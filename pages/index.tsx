@@ -81,7 +81,8 @@ function Constructor() {
 	const [retrieving, setRetrieving] = useState(false);
 	const [showMinter, setShowMinter] = useState(false);
 	const [showStaker, setShowStaker] = useState(false);
-	const [minting, setMinting] = useState(false);
+
+	const [transacting, setTransacting] = useState(false);
 	const [txnHash, setTxnHash] = useState(null);
 	const mintTypeState = useState<"custom" | "random">("custom");
 	const mintQtyState = useState(1);
@@ -345,37 +346,46 @@ function Constructor() {
 	/****************************************************************/
 	/*********************** WEB3 TRANSACTIONS **********************/
 	/****************************************************************/
-	const handleMint = async () => {
-		setMinting(true);
+	const handleMint = async ({ onSuccess }: { onSuccess?: () => void }) => {
+		setTransacting(true);
 
 		const wei = parseInt(
 			mintType == "custom"
 				? web3.utils.toWei(priceCustomEth + "", "ether")
 				: web3.utils.toWei(priceEth * mintQty + "", "ether")
 		);
-		await transactEth({
-			from: web3React.account,
-			to: companionAddress,
-			encodedData: companionContract.methods
-				.mint(mintType == "custom" ? 1 : mintQty)
-				.encodeABI(),
-			value: web3.utils.toHex(wei),
-			onSuccess: (hash) => {
-				verifyMint(hash).then((result) => {
-					setMinting(false);
-					setShowMinter(false);
+		try {
+			await transactEth({
+				from: web3React.account,
+				to: companionAddress,
+				encodedData: companionContract.methods
+					.mint(mintType == "custom" ? 1 : mintQty)
+					.encodeABI(),
+				value: web3.utils.toHex(wei),
+				onSuccess: (hash) => {
+					verifyMint(hash).then((result) => {
+						setTransacting(false);
+						onSuccess?.();
 
-					if (result.error) {
-						return false;
-					} else {
-						retrieveCompanions(() => {
-							setSelectedCompanions([result.companionId]);
-						});
-						return true;
-					}
-				});
-			},
-		});
+						if (result.error) {
+							return false;
+						} else {
+							retrieveCompanions(() => {
+								setSelectedCompanions([result.companionId]);
+							});
+							return true;
+						}
+					});
+				},
+				onFailure: () => {
+					setTransacting(false);
+					toast.error("Transaction failed.");
+				},
+			});
+		} catch (error) {
+			setTransacting(false);
+			toast.error(error);
+		}
 	};
 	const handleSign = async () => {
 		try {
@@ -583,6 +593,7 @@ function Constructor() {
 								</div>
 								<div className="lg:pb-2">
 									<Editor
+										// disabled={!transacting}
 										companionState={[companion, setCompanion]}
 										uneditedCompanionState={[uneditedCompanion, setUneditedCompanion]}
 									/>
@@ -639,7 +650,7 @@ function Constructor() {
 					mintTypeState={mintTypeState}
 					mintQtyState={mintQtyState}
 					handleMint={handleMint}
-					minting={minting}
+					minting={transacting}
 					connected={!!web3React?.account}
 				/>
 			) : null}
