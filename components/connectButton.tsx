@@ -30,7 +30,7 @@ export function ConnectButton({
 						handleConnectInjected();
 					}}
 				>
-					<span className="transform scale-75">
+					<span className="absolute h-full left-3 top-1">
 						<Metamask />
 					</span>
 					<div>Metamask</div>
@@ -42,7 +42,7 @@ export function ConnectButton({
 						handleConnectWalletConnect();
 					}}
 				>
-					<span className="transform scale-75">
+					<span className="absolute h-full left-3 top-1">
 						<WalletConnect />
 					</span>
 					<div>WalletConnect</div>
@@ -69,7 +69,7 @@ export function ConnectButton({
 		<div className="relative m-2 z-20">
 			<div className="cursor-pointer">
 				<Button
-					className={`${expanded && "bg-ui-black-default bg-opacity-20"}`}
+					className={`bg-default-yellow ${expanded && "bg-ui-black-default bg-opacity-20"}`}
 					onClick={() => {
 						setExpanded((prev) => !prev);
 					}}

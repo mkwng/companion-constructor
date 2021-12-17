@@ -9,6 +9,8 @@ import { Faq } from "./faq";
 import Renderer from "./renderer";
 import { Spinner } from "./icons/spinner";
 import ConfettiExplosion from "@reonomy/react-confetti-explosion";
+import { ConnectButton } from "./connectButton";
+import { toast } from "react-toastify";
 
 const loadingStrings = [
 	"Finalizing your purchase...",
@@ -22,30 +24,74 @@ const loadingStrings = [
 	"Man, this is taking a while, huh?",
 ];
 
+const EmailForm = ({ onSuccess }: { onSuccess?: () => void }) => {
+	const [email, setEmail] = useState("");
+	return (
+		<div className="flex flex-col gap-4">
+			<input
+				type="email"
+				placeholder="youremail@gmail.com"
+				className=""
+				value={email}
+				onChange={(e) => {
+					setEmail(e.target.value);
+				}}
+			/>
+			<Button
+				onClick={async () => {
+					const response = await (
+						await fetch("/api/email", {
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify({ email }),
+						})
+					).json();
+					if (response.error) {
+						toast.error(response.error);
+					} else {
+						onSuccess?.();
+					}
+				}}
+			>
+				Submit
+			</Button>
+		</div>
+	);
+};
+
 export const MintDialog = ({
 	companion,
 	handleMint,
 	handleClose,
 	handleCustomize,
-	handleConnectWallet,
+	handleConnectInjected,
+	handleConnectWalletConnect,
 	mintTypeState,
 	mintQtyState,
 	minting,
-	connected,
+	saleIsActive,
+	account,
+	debug,
 }: {
 	companion: Companion;
 	handleMint: ({ onSuccess }: { onSuccess?: () => void }) => void;
 	handleClose: () => void;
 	handleCustomize: () => void;
-	handleConnectWallet: () => void;
+	handleConnectInjected: () => void;
+	handleConnectWalletConnect: () => void;
 	mintTypeState: ["custom" | "random", Dispatch<SetStateAction<"custom" | "random">>];
 	mintQtyState: [number, Dispatch<SetStateAction<number>>];
 	minting: boolean;
-	connected: boolean;
+	saleIsActive: boolean;
+	account: string;
+	debug?: boolean;
 }) => {
 	const [mintType, setMintType] = mintTypeState;
 	const [mintQty, setMintQty] = mintQtyState;
 	const [showFaq, setShowFaq] = useState(false);
+	const [showEmail, setShowEmail] = useState(false);
 
 	const bgColorKey = colorToKey(companion.properties.background, colors.background);
 	const buttonColor = bgColorKey === "red" || bgColorKey == "orange" ? "yellow" : "red";
@@ -54,8 +100,6 @@ export const MintDialog = ({
 		"Confirm the transaction with your wallet to continue..."
 	);
 	const [success, setSuccess] = useState(false);
-
-	const debug = true;
 
 	useEffect(() => {
 		if (!minting) return;
@@ -132,26 +176,64 @@ export const MintDialog = ({
 					}
 					`}
 			>
-				{/* <div className="absolute z-50 inset-0 flex flex-col justify-center items-center bg-default-white bg-opacity-80 backdrop-blur-sm gap-4">
-					<p>Minting will open soon! Stay tuned.</p>
-					<div>
-						<a
-							className="
-							relative w-full
-							py-2 px-4 rounded-full active:pt-3 active:pb-1
-							flex justify-center items-center gap-2
-							text-center
-							border-2 border-ui-black-default 
-							cursor-pointer bg-hair-yellow
-							hover:text-ui-black-default hover:no-underline"
-							href="https://www.twitter.com/companioninabox"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							Follow us on Twitter
-						</a>
+				{saleIsActive ? null : (
+					<div className="absolute z-50 inset-0 flex flex-col justify-center items-center bg-default-white bg-opacity-90 backdrop-blur-sm gap-4">
+						{showEmail ? (
+							<div className="w-full h-full flex justify-center items-center">
+								<div className="top-4 left-4 absolute">
+									<Button
+										className="bg-ui-black-default text-default-white text-xs w-auto"
+										onClick={() => setShowEmail(false)}
+									>
+										Back
+									</Button>
+								</div>
+								<EmailForm
+									onSuccess={() => {
+										setShowEmail(false);
+									}}
+								/>
+							</div>
+						) : (
+							<>
+								<p className="p-4">Minting will open soon! Stay tuned.</p>
+								<div className="flex flex-col md:flex-row gap-4 w-full mx-auto max-w-xl p-4">
+									<a
+										className="
+					relative w-full
+					py-2 px-4 rounded-full active:pt-3 active:pb-1
+					flex justify-center items-center gap-2
+					text-center
+					border-2 border-ui-black-default 
+					cursor-pointer bg-hair-yellow
+					hover:text-ui-black-default hover:no-underline"
+										href="#"
+										onClick={(e) => {
+											setShowEmail(true);
+										}}
+									>
+										Remind me via email
+									</a>
+									<a
+										className="
+					relative w-full
+					py-2 px-4 rounded-full active:pt-3 active:pb-1
+					flex justify-center items-center gap-2
+					text-center
+					border-2 border-ui-black-default 
+					cursor-pointer bg-hair-yellow
+					hover:text-ui-black-default hover:no-underline"
+										href="https://www.twitter.com/companioninabox"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										Follow us on Twitter
+									</a>
+								</div>
+							</>
+						)}
 					</div>
-				</div> */}
+				)}
 				{minting && !success && (
 					<div className="absolute z-50 inset-0 flex flex-col justify-center items-center">
 						<div className="w-12 h-12 transform scale-75">
@@ -166,13 +248,16 @@ export const MintDialog = ({
 						<ConfettiExplosion floorHeight={1600} floorWidth={1600} />
 					</div>
 				)}
-				{connected ? null : (
+				{account ? null : (
 					<div className="absolute z-50 inset-0 flex flex-col justify-center items-center bg-default-white bg-opacity-80 backdrop-blur gap-4">
 						<p>Connect your wallet, first!</p>
 						<div>
-							<Button className="bg-hair-yellow" onClick={handleConnectWallet}>
-								Connect your wallet
-							</Button>
+							<ConnectButton
+								account={account}
+								handleLogout={() => {}}
+								handleConnectInjected={handleConnectInjected}
+								handleConnectWalletConnect={handleConnectWalletConnect}
+							/>
 						</div>
 					</div>
 				)}

@@ -725,12 +725,14 @@ function Constructor() {
 						setShowMinter(false);
 						handleCustomize();
 					}}
-					handleConnectWallet={() => {}}
 					mintTypeState={mintTypeState}
 					mintQtyState={mintQtyState}
 					handleMint={handleMint}
 					minting={transacting}
-					connected={!!web3React?.account}
+					saleIsActive={false}
+					account={web3React?.account}
+					handleConnectInjected={handleConnectInjected}
+					handleConnectWalletConnect={handleConnectWalletConnect}
 				/>
 			) : null}
 			{showStaker ? (
