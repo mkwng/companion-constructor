@@ -58,7 +58,7 @@ model Companion {
   bottomColors    String?
   shoesColors     String?
   accessoryColors String?
-  moutColors      String?
+  mouthColors     String?
 
 
 }
