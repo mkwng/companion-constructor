@@ -1,4 +1,3 @@
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { useState } from "react";
 import Button from "./button";
 import { Metamask } from "./icons/metamask";
@@ -67,7 +66,7 @@ export function ConnectButton({
 		);
 	}
 	return (
-		<div className="relative p-2">
+		<div className="relative m-2 z-20">
 			<div className="cursor-pointer">
 				<Button
 					className={`${expanded && "bg-ui-black-default bg-opacity-20"}`}
@@ -75,7 +74,7 @@ export function ConnectButton({
 						setExpanded((prev) => !prev);
 					}}
 					onBlur={() => {
-						// setExpanded(false);
+						setTimeout(() => setExpanded(false), 500);
 					}}
 				>
 					{account ? "Manage " + getTruncatedAddress(account) : "Connect your wallet"}{" "}

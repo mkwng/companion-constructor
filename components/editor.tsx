@@ -20,7 +20,7 @@ const OptionsContainer = ({
 	children: React.ReactNode;
 }) => {
 	return (
-		<div className="mb-6 text-gray-400">
+		<div className="mb-6 text-default-white">
 			<div className="px-4 w-full flex justify-between font-bold ">{title}</div>
 			{children}
 		</div>
@@ -76,7 +76,7 @@ const ColorSelector = ({
 					pointer-events-none 
 					transition-opacity duration-300 
 					absolute left-0 w-16 h-full 
-					bg-gradient-to-r from-clothing-black 
+					bg-gradient-to-r from-ui-black-default 
 					${moreLeft ? "opacity-100" : "opacity-0"}`}
 				aria-hidden="true"
 			></div>
@@ -85,7 +85,7 @@ const ColorSelector = ({
 					pointer-events-none 
 					transition-opacity duration-300 
 					absolute right-0 w-16 h-full 
-					bg-gradient-to-l from-clothing-black 
+					bg-gradient-to-l from-ui-black-default 
 					${moreRight ? "opacity-100" : "opacity-0"}`}
 				aria-hidden="true"
 			></div>
@@ -103,7 +103,7 @@ const ColorSelector = ({
 								ref={color === active ? activeDiv : null}
 								key={color}
 								onClick={() => onSelect(color)}
-								className="w-8 h-8 inline-block rounded-full m-2 cursor-pointer hover:opacity-90"
+								className="w-8 h-8 inline-block rounded-full m-2 cursor-pointer hover:opacity-90 border-2 border-ui-black-darker"
 								style={{
 									backgroundColor: rgb,
 									border: color === active ? "2px solid rgba(69,61,75)" : "",
@@ -123,6 +123,7 @@ const AttributeSelector = ({
 	variants,
 	active,
 	onSelect,
+	showRare,
 }: {
 	variants:
 		| Variant[]
@@ -132,6 +133,7 @@ const AttributeSelector = ({
 		  }[];
 	active?: string | number;
 	onSelect: (variant: string | number) => void;
+	showRare?: boolean;
 }) => {
 	return (
 		<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-2 xl:grid-cols-3 gap-2 p-4">
@@ -139,7 +141,11 @@ const AttributeSelector = ({
 				return (
 					<div key={variant.name}>
 						<Button
-							onClick={variant.rarity === "mythic" ? () => {} : () => onSelect(variant.name)}
+							onClick={
+								variant.rarity === "mythic" && !showRare
+									? () => {}
+									: () => onSelect(variant.name)
+							}
 							// onClick={() => onSelect(variant.name)}
 							title={
 								variant.rarity === "mythic"
@@ -148,15 +154,17 @@ const AttributeSelector = ({
 							}
 							className={`
 							px-4 py-2
-							${variant.rarity === "mythic" ? "opacity-50 cursor-not-allowed" : ""} 
+							${variant.rarity === "mythic" && !showRare ? "opacity-50 cursor-not-allowed" : ""} 
 							${
 								variant.name === active
 									? `border-hair-lightblue text-hair-lightblue`
-									: `text-gray-400 border-ui-black-lightest`
+									: `text-default-white border-ui-black-lightest`
 							}`}
 						>
 							<p className="text-center m-auto">
-								{variant.name !== active && variant.rarity === "mythic" ? "???" : variant.name}
+								{variant.name !== active && variant.rarity === "mythic" && !showRare
+									? "???"
+									: variant.name}
 							</p>
 						</Button>
 					</div>
@@ -169,10 +177,12 @@ const AttributeSelector = ({
 export default function Editor({
 	companionState,
 	uneditedCompanionState,
+	showRare,
 	...props
 }: {
 	companionState: [Companion, Dispatch<SetStateAction<Companion>>];
 	uneditedCompanionState?: [Companion, Dispatch<SetStateAction<Companion>>];
+	showRare?: boolean;
 }) {
 	const [expanded, setExpanded] = useState(true);
 	const [companion, setCompanion] = companionState;
@@ -231,7 +241,7 @@ export default function Editor({
 
 	const selectables = selectableAttributesArray.map((attribute) => (
 		<div key={attribute.name}>
-			<div className="mt-4 text-gray-400">
+			<div className="mt-4 text-default-white">
 				<div className="px-4 w-full flex justify-between font-bold ">
 					<div>
 						{!isCompatible(
@@ -271,6 +281,7 @@ export default function Editor({
 				</div>
 			</div>
 			<AttributeSelector
+				showRare={showRare}
 				variants={attribute.variants}
 				active={companion.attributes[attribute.name]?.name || ""}
 				onSelect={(selected) => {
@@ -347,6 +358,7 @@ export default function Editor({
 		<>
 			<OptionsContainer title="Pose">
 				<AttributeSelector
+					showRare={showRare}
 					variants={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4, rarity: "mythic" }]}
 					active={companion.properties.pose}
 					onSelect={(pose) => {
@@ -414,6 +426,7 @@ export default function Editor({
 		<>
 			<OptionsContainer title="Shape">
 				<AttributeSelector
+					showRare={showRare}
 					variants={[{ name: "m" }, { name: "f" }, { name: "w", rarity: "mythic" }]}
 					active={companion.properties.gender}
 					onSelect={(gender) => {
@@ -523,7 +536,7 @@ export default function Editor({
 		}) => (
 			<Button
 				className={`
-					${category === viewing ? "border-background-red" : "border-transparent text-gray-400"}`}
+					${category === viewing ? "border-background-red" : "border-transparent text-default-white"}`}
 				onClick={() => {
 					sessionStorage.setItem(
 						"categoryPosition",
@@ -550,7 +563,7 @@ export default function Editor({
 						z-10 
 						transition-opacity duration-300 
 						absolute left-0 w-16 h-full 
-						bg-gradient-to-r from-clothing-black 
+						bg-gradient-to-r from-ui-black-default 
 						${moreLeft ? "opacity-100" : "opacity-0"}
 					`}
 					aria-hidden="true"
@@ -561,7 +574,7 @@ export default function Editor({
 						z-10 
 						transition-opacity duration-300 
 						absolute right-0 w-16 h-full 
-						bg-gradient-to-l from-clothing-black  
+						bg-gradient-to-l from-ui-black-default  
 						${moreRight ? "opacity-100" : "opacity-0"}
 					`}
 					aria-hidden="true"
@@ -572,7 +585,7 @@ export default function Editor({
 					className="w-full overflow-x-scroll hide-scrollbar"
 				>
 					<div className="w-max min-w-full flex justify-center relative">
-						<div className="absolute inset-0 h-full z-0 rounded-full border-ui-black-lightest border-2 bg-clothing-black"></div>
+						<div className="absolute inset-0 h-full z-0 rounded-full border-ui-black-lightest border-2 bg-ui-black-default"></div>
 						<span className="w-2 h-4 inline-block" aria-hidden="true" ref={leftPlaceholder} />
 						<CategoryLink key="general" category="general">
 							General
@@ -606,7 +619,7 @@ export default function Editor({
 			}`}
 		>
 			<div
-				className={`z-30 fixed lg:hidden bottom-0 w-full p-2 text-white bg-clothing-black shadow-md`}
+				className={`z-30 fixed lg:hidden bottom-0 w-full p-2 text-white bg-ui-black-default shadow-md`}
 			>
 				<button
 					className={`
@@ -622,7 +635,7 @@ export default function Editor({
 					{expanded ? "Hide editor" : "Show editor"}
 				</button>
 			</div>
-			<div className="sticky float-left top-4 px-2 mb-4 lg:top-16 w-full">
+			<div className="sticky float-left top-4 px-2 mb-4 w-full">
 				<CategorySelector />
 			</div>
 			{(() => {

@@ -39,7 +39,6 @@
 	},
 	"devDependencies": {
 		"@types/react": "^17.0.34",
-		"@welldone-software/why-did-you-render": "^6.2.3",
 		"eslint": "7",
 		"eslint-config-next": "12.0.2",
 		"prisma": "3.4.2",

@@ -20,6 +20,9 @@ import _ from "lodash";
 export const zeroPad = "000000000000000000";
 
 const getVariants = (companion: Companion): Variant[] => {
+	if (!companion) {
+		throw new Error("Companion is undefined");
+	}
 	const pose = poses[companion.properties.pose];
 	return pose.map((attribute) => {
 		let selection: AttributeSelection | undefined;
@@ -249,7 +252,9 @@ export const flattenCompanion = (
 ): {
 	[key: string]: any;
 } => {
-	let flatCompanion = {};
+	let flatCompanion = {
+		name: companion.name,
+	};
 
 	for (const key in companion.properties) {
 		switch (key) {
@@ -389,6 +394,10 @@ export const keysToCompanion = (companionQuery): Companion => {
 			continue;
 		}
 		switch (key) {
+			case "name":
+			case "tokenId":
+				companion.name = companionQuery.name;
+				break;
 			case "pose":
 				if (!((companionQuery[key] as string) in Pose)) {
 					throw new Error(`${key} not valid`);

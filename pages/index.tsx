@@ -147,13 +147,11 @@ function Constructor() {
 	}, []);
 
 	const handleConnectInjected = () => {
-		console.log("hi");
 		setLatestConnector(ConnectorNames.Injected);
 		setLatestOp(W3Operations.Connect);
 		web3React.activate(injected);
 	};
 	const handleConnectWalletConnect = () => {
-		console.log("hi");
 		setLatestConnector(ConnectorNames.WalletConnect);
 		setLatestOp(W3Operations.Connect);
 		web3React.activate(wcConnector);

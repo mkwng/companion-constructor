@@ -9,11 +9,11 @@ export default function Marketing({
 	handleScrollToBottom: () => void;
 }) {
 	return (
-		<>
+		<div className="flex flex-col gap-4 md:gap-8 pb-20">
 			<div
 				className={`
 				relative
-				lg:snap-center w-full mb-20
+				lg:snap-center w-full
 				max-w-6xl mx-auto 
 				bg-ui-black-default text-default-white rounded-3xl shadow-2xl 
 				flex flex-col justify-start gap-8 items-start
@@ -79,7 +79,6 @@ export default function Marketing({
 									text-center
 									border-2 border-clothing-black
 								`}
-						onClick={() => {}}
 					>
 						Follow us on Twitter
 					</a>
@@ -147,9 +146,9 @@ export default function Marketing({
 					</a>
 				</div>
 			</div>
-			<div className="w-full min-h-[80vh] bg-clothing-white rounded-xl shadow-2xl p-0 my-20 max-w-6xl mx-auto items-center overflow-hidden">
+			<div className="w-full min-h-[80vh] bg-clothing-white rounded-xl shadow-2xl p-0 max-w-6xl mx-auto items-center overflow-hidden">
 				<Faq />
 			</div>
-		</>
+		</div>
 	);
 }
