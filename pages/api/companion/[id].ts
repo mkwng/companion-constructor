@@ -202,9 +202,7 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 						return res.status(200).json({
 							token_id: id,
 							name: companion.name || `Companion #${id}`,
-							image: `https://${
-								process.env.RAILWAY_STATIC_URL || process.env.NEXT_PUBLIC_URL
-							}/api/companion.png?id=${id}`,
+							image: `https://${process.env.NEXT_PUBLIC_URL}/api/companion.png?id=${id}`,
 							external_url: `https://${process.env.NEXT_PUBLIC_URL}/companion/${id}`,
 							background_color: rgbToHex(companion.properties.background),
 							description:
