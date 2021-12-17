@@ -17,6 +17,10 @@ model Transactions {
   txnValue String
 }
 
+model Emails {
+  email String @unique
+}
+
 model Companion {
   id        Int      @id @default(autoincrement())
   tokenId   Int      @unique
@@ -38,20 +42,22 @@ model Companion {
   mouth      String
   facialhair String?
 
-  headwear String?
-  eyewear  String?
-  mask     String?
-  top      String?
-  bottom   String
-  shoes    String?
+  headwear  String?
+  eyewear   String?
+  mask      String?
+  top       String?
+  bottom    String
+  shoes     String?
+  accessory String?
 
-  hairColors     String?
-  headwearColors String?
-  eyewearColors  String?
-  maskColors     String?
-  topColors      String?
-  bottomColors   String?
-  shoesColors    String?
+  hairColors      String?
+  headwearColors  String?
+  eyewearColors   String?
+  maskColors      String?
+  topColors       String?
+  bottomColors    String?
+  shoesColors     String?
+  accessoryColors String?
 
 
 }

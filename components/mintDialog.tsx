@@ -203,16 +203,18 @@ export const MintDialog = ({
 					>
 						<div className={`w-full h-full ${mintType == "custom" ? "" : "hidden"}`}>
 							<Renderer showTitle={false} companion={companion} hideBackground={false} />
-							<div className="absolute inset-0 z-40 opacity-0 hover:opacity-100 transition-opacity">
-								<div className={`absolute bottom-8 left-1/2 -translate-x-1/2`}>
-									<Button
-										className={`text-xs text-white border-transparent bg-ui-black-default`}
-										onClick={handleCustomize}
-									>
-										Continue customizing
-									</Button>
+							{success ? null : (
+								<div className="absolute inset-0 z-40 opacity-0 hover:opacity-100 transition-opacity">
+									<div className={`absolute bottom-8 left-1/2 -translate-x-1/2`}>
+										<Button
+											className={`text-xs text-white border-transparent bg-ui-black-default`}
+											onClick={handleCustomize}
+										>
+											Continue customizing
+										</Button>
+									</div>
 								</div>
-							</div>
+							)}
 						</div>
 						<div
 							className={`h-full w-full flex justify-center items-center bg-background-${

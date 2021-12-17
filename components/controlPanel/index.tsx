@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Button from "../button";
+import { ConnectButton } from "../connectButton";
 import { LoggedIn, LoggedOut } from "./account";
 import { MyCompanions } from "./myCompanions";
 import { Playground } from "./playground";
@@ -17,7 +18,8 @@ export const ControlPanel = ({
 	handleStake,
 	handleRandomize,
 	handleCleanSlate,
-	handleConnectWallet,
+	handleConnectInjected,
+	handleConnectWalletConnect,
 	handleSignOut,
 	handleMint,
 	handleUnstake,
@@ -36,7 +38,8 @@ export const ControlPanel = ({
 	handleStake: () => void;
 	handleRandomize: () => void;
 	handleCleanSlate: () => void;
-	handleConnectWallet: () => void;
+	handleConnectInjected: () => void;
+	handleConnectWalletConnect: () => void;
 	handleSignOut: () => void;
 	handleMint: () => void;
 	handleUnstake: (tokenIds: number[]) => Promise<boolean>;
@@ -98,12 +101,13 @@ export const ControlPanel = ({
 				{/********************************************/}
 				{/************ Account Management ************/}
 				{/********************************************/}
-				<div className="bg-background-yellow p-2 text-clothing-black">
-					{account ? (
-						<LoggedIn account={account} handleSignOut={handleSignOut} chainId={chainId} />
-					) : (
-						<LoggedOut handleConnectWallet={handleConnectWallet} />
-					)}
+				<div className="bg-background-yellow text-clothing-black">
+					<ConnectButton
+						account={account}
+						handleLogout={handleSignOut}
+						handleConnectInjected={handleConnectInjected}
+						handleConnectWalletConnect={handleConnectWalletConnect}
+					/>
 				</div>
 
 				{/********************************************/}
@@ -112,10 +116,10 @@ export const ControlPanel = ({
 				<div className="p-2">
 					<div className="flex w-full rounded-full relative justify-items-stretch">
 						<div className="absolute w-full h-full z-0 rounded-full border-ui-black-lightest border-2"></div>
-						<div className={`${stakedCompanions.size > 0 && "w-1/3"}`}>
+						<div className={`${stakedCompanions.size > 0 ? "w-1/3" : "grow"}`}>
 							<Button
 								disabled={activeSection === "playground"}
-								className={`overrflow-x-hidden overflow-ellipsis ${
+								className={`whitespace-nowrap px-0 ${
 									activeSection === "playground"
 										? "border-background-red text-white opacity-100"
 										: "border-transparent text-gray-400"
@@ -127,10 +131,10 @@ export const ControlPanel = ({
 								Playground
 							</Button>
 						</div>
-						<div className={`${stakedCompanions.size > 0 && "w-1/3"}`}>
+						<div className={`${stakedCompanions.size > 0 ? "w-1/3" : "grow"}`}>
 							<Button
 								disabled={activeSection === "myCompanions"}
-								className={`overrflow-x-hidden overflow-ellipsis ${
+								className={`whitespace-nowrap px-0 ${
 									activeSection === "myCompanions"
 										? "border-background-red text-white opacity-100"
 										: "border-transparent text-gray-400"
@@ -145,10 +149,10 @@ export const ControlPanel = ({
 						</div>
 
 						{stakedCompanions.size > 0 ? (
-							<div className={`${stakedCompanions.size > 0 && "w-1/3"}`}>
+							<div className="w-1/3">
 								<Button
 									disabled={activeSection === "staked"}
-									className={`overrflow-x-hidden overflow-ellipsis ${
+									className={`whitespace-nowrap px-0 ${
 										activeSection === "staked"
 											? "border-background-red text-white opacity-100"
 											: "border-transparent text-gray-400"

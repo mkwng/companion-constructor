@@ -2,6 +2,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Companion as PrismaCompanion } from "@prisma/client";
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
@@ -35,12 +36,28 @@ import {
 } from "../data/helpers";
 import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
-
 import useLocalStorage from "../hooks/useLocalStorage";
 
 function getLibrary(provider) {
 	const library = new Web3Provider(provider);
 	return library;
+}
+
+const ConnectorNames = {
+	Injected: "injected",
+	WalletConnect: "walletconnect",
+};
+const W3Operations = {
+	Connect: "connect",
+	Disconnect: "disconnect",
+};
+const wcConnector = new WalletConnectConnector({
+	infuraId: "517bf3874a6848e58f99fa38ccf9fce4",
+});
+const injected = new InjectedConnector({ supportedChainIds: [1, 4] });
+
+function timeout(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export default function WrapperHome() {
@@ -51,21 +68,6 @@ export default function WrapperHome() {
 	);
 }
 
-const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42] });
-
-const ConnectorNames = {
-	Injected: "injected",
-	WalletConnect: "walletconnect",
-};
-const W3Operations = {
-	Connect: "connect",
-	Disconnect: "disconnect",
-};
-
-function timeout(ms) {
-	return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 function Constructor() {
 	/****************************************************************/
 	/**************************** STATES ****************************/
@@ -73,6 +75,7 @@ function Constructor() {
 	// Web 3, contract & operations
 	const web3React = useWeb3React();
 	const [web3, setWeb3] = useState<Web3>(null);
+	const [loaded, setLoaded] = useState(false);
 	const [companionContract, setCompanionContract] = useState<Contract>(null);
 	const [farmContract, setFarmContract] = useState<Contract>(null);
 	const [shipContract, setShipContract] = useState<Contract>(null);
@@ -86,14 +89,16 @@ function Constructor() {
 	const [showStaker, setShowStaker] = useState(false);
 
 	const [transacting, setTransacting] = useState(false);
-	const [txnHash, setTxnHash] = useState(null);
+	const [transactingMessage, setTransactingMessage] = useState(
+		"Confirm the transfer to continue..."
+	);
 	const mintTypeState = useState<"custom" | "random">("custom");
 	const mintQtyState = useState(1);
 	const [mintType, setMintType] = mintTypeState;
 	const [mintQty, setMintQty] = mintQtyState;
 
 	// Companion
-	const [companion, setCompanion] = useState<Companion>(randomCompanion());
+	const [companion, setCompanion] = useState<Companion>(null);
 	const [uneditedCompanion, setUneditedCompanion] = useState<Companion | null>(null);
 
 	// Wallet
@@ -121,15 +126,39 @@ function Constructor() {
 			setFarmContract(null);
 			setShipContract(null);
 		}
-	}, [web3React.active, web3React]);
+	}, [web3React.active]);
 
-	const handleConnectWallet = () => {
+	useEffect(() => {
+		if (latestOp == "connect" && latestConnector == "injected") {
+			injected
+				.isAuthorized()
+				.then((isAuthorized) => {
+					setLoaded(true);
+					if (isAuthorized && !web3React.active && !web3React.error) {
+						web3React.activate(injected);
+					}
+				})
+				.catch(() => {
+					setLoaded(true);
+				});
+		} else if (latestOp == "connect" && latestConnector == "walletconnect") {
+			web3React.activate(wcConnector);
+		}
+	}, []);
+
+	const handleConnectInjected = () => {
+		console.log("hi");
 		setLatestConnector(ConnectorNames.Injected);
 		setLatestOp(W3Operations.Connect);
 		web3React.activate(injected);
 	};
+	const handleConnectWalletConnect = () => {
+		console.log("hi");
+		setLatestConnector(ConnectorNames.WalletConnect);
+		setLatestOp(W3Operations.Connect);
+		web3React.activate(wcConnector);
+	};
 	const handleSignOut = () => {
-		setCompanionContract(null);
 		setLatestOp(W3Operations.Disconnect);
 		web3React.deactivate();
 	};
@@ -177,6 +206,10 @@ function Constructor() {
 	/****************************************************************/
 	// Retrieve owned companions
 	const retrieveCompanions = (onSuccess?: () => void) => {
+		if (!web3React.account || !companionContract) {
+			zeroOutCompanions();
+			return;
+		}
 		setRetrieving(true);
 		zeroOutCompanions();
 		let isRunning = true;
@@ -230,7 +263,7 @@ function Constructor() {
 			setRetrieving(false);
 		}
 	};
-	useEffect(retrieveCompanions, [companionContract, web3React.account]);
+	useEffect(retrieveCompanions, [companionContract, farmContract, web3React.account]);
 
 	/****************************************************************/
 	/********************** FETCHING FROM API ***********************/
@@ -278,7 +311,7 @@ function Constructor() {
 					console.error(error);
 				});
 		} else if (selectedCompanions.length == 0 && !showMinter) {
-			setCompanion(null);
+			setCompanion(randomCompanion());
 		} else {
 			return;
 		}
@@ -336,6 +369,7 @@ function Constructor() {
 			web3React.account,
 			"test"
 		);
+		setTransactingMessage("Verify that this is you...");
 		const request = await fetch(`/api/companion/${selectedCompanions[0]}`, {
 			method: "PUT",
 			headers: {
@@ -423,15 +457,15 @@ function Constructor() {
 					.encodeABI(),
 				value: web3.utils.toHex(wei),
 				onSuccess: (hash) => {
-					verifyMint(hash).then((result) => {
+					verifyMint(hash).then(async (result) => {
 						setTransacting(false);
-						onSuccess?.();
-
 						if (result.error) {
 							return false;
 						} else {
-							retrieveCompanions(() => {
-								setSelectedCompanions([result.companionId]);
+							onSuccess?.();
+							retrieveCompanions(async () => {
+								await timeout(500);
+								setSelectedCompanions([result.companionIds[0]]);
 							});
 							return true;
 						}
@@ -445,26 +479,6 @@ function Constructor() {
 		} catch (error) {
 			setTransacting(false);
 			toast.error(error);
-		}
-	};
-	const handleSign = async () => {
-		try {
-			const signature = await web3.eth.personal.sign(messageToSign, web3React.account, "test");
-			const response = await (
-				await fetch(`/api/sign?address=${web3React.account}&signature=${signature}`)
-			).json();
-			if (response.error) {
-				return toast(response.error, {
-					type: "error",
-				});
-			}
-			return toast("Signed!", {
-				type: "success",
-			});
-		} catch (error) {
-			return toast(error, {
-				type: "error",
-			});
 		}
 	};
 	const handleApprove = async (tokenId: number): Promise<boolean> => {
@@ -511,6 +525,7 @@ function Constructor() {
 				}
 				setCustomizing(false);
 				setTransacting(false);
+				updateSelectedCompanion();
 			},
 			onFailure: (error) => {
 				setTransacting(false);
@@ -593,7 +608,8 @@ function Constructor() {
 								}}
 								handleRandomize={handleRandomize}
 								handleCleanSlate={handleCleanSlate}
-								handleConnectWallet={handleConnectWallet}
+								handleConnectInjected={handleConnectInjected}
+								handleConnectWalletConnect={handleConnectWalletConnect}
 								handleSignOut={handleSignOut}
 								handleMint={() => {
 									setShowMinter(true);
@@ -644,6 +660,14 @@ function Constructor() {
 									</div>
 								</div>
 								<div className={`lg:pb-2 ${transacting && "pointer-events-none"}`}>
+									{transacting && (
+										<div className="fixed inset-0 bg-ui-black-darker bg-opacity-90 z-50 flex flex-col justify-center items-center">
+											<div className="relative w-12 h-12 transform scale-50">
+												<Spinner />
+											</div>
+											<p className="text-default-white">{transactingMessage}</p>
+										</div>
+									)}
 									<Editor
 										companionState={[companion, setCompanion]}
 										uneditedCompanionState={[uneditedCompanion, setUneditedCompanion]}
@@ -703,7 +727,7 @@ function Constructor() {
 						setShowMinter(false);
 						handleCustomize();
 					}}
-					handleConnectWallet={handleConnectWallet}
+					handleConnectWallet={() => {}}
 					mintTypeState={mintTypeState}
 					mintQtyState={mintQtyState}
 					handleMint={handleMint}

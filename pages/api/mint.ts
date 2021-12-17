@@ -58,14 +58,14 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 								});
 							}
 							const result = await query;
-							companionIds.push(result.id);
+							companionIds.push(result.tokenId);
 						} else {
 							console.error("Invalid companion id", tokenId);
 							continue;
 						}
 					}
 					if (companionIds.length == receipt.logs.length) {
-						prisma.transactions.create({
+						await prisma.transactions.create({
 							data: {
 								hash,
 								date: new Date(),
@@ -74,7 +74,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 							},
 						});
 						res.status(200).json({
-							companionId: companionIds[0],
+							companionIds,
 						});
 					} else {
 						res.status(400).json({
