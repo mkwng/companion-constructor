@@ -57,6 +57,7 @@ export default function CompanionDetails() {
 		if (result.error) {
 			toast.error("Tell Michael: " + result.error);
 		} else {
+			setCompanionUnedited(null);
 			toast.success("Saved!");
 		}
 
