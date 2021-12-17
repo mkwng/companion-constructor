@@ -185,20 +185,22 @@ export default function CompanionDetails() {
 						</div>
 					) : (
 						<div className="w-full h-full flex justify-center items-center relative p-8">
-							Companion #{tokenId} does not exist yet. <br />
-							<a
-								href="#"
-								className="underline pl-2"
-								onClick={(e) => {
-									e.preventDefault();
-									const random = randomCompanion();
-									setCompanionUnedited(random);
-									setCompanion(random);
-								}}
-							>
-								Start with a random one
-							</a>
-							.
+							<p>
+								Companion #{tokenId} does not exist yet. <br />
+								<a
+									href="#"
+									className="underline pl-2"
+									onClick={(e) => {
+										e.preventDefault();
+										const random = randomCompanion();
+										setCompanionUnedited(random);
+										setCompanion(random);
+									}}
+								>
+									Start with a random one
+								</a>
+								.
+							</p>
 						</div>
 					)}
 				</div>
