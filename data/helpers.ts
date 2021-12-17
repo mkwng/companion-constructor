@@ -347,6 +347,8 @@ export const apiToKeys = (data: PrismaCompanion) => {
 		topColors,
 		bottomColors,
 		shoesColors,
+		accessoryColors,
+		mouthColors,
 		...rest
 	} = data;
 	const colors: {
@@ -359,6 +361,8 @@ export const apiToKeys = (data: PrismaCompanion) => {
 		top: topColors,
 		bottom: bottomColors,
 		shoes: shoesColors,
+		accessory: accessoryColors,
+		mouth: mouthColors,
 	};
 	for (const key of Object.keys(colors)) {
 		// split colors string at commas, remove spaces, and convert to array
