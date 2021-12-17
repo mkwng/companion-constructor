@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import useSWR from "swr";
 import Button from "../../components/button";
 import Editor from "../../components/editor";
@@ -14,10 +15,17 @@ export default function CompanionDetails() {
 	const router = useRouter();
 	const [companion, setCompanion] = useState<Companion | null>(null);
 	const [companionUnedited, setCompanionUnedited] = useState<Companion | null>(null);
-	const [tokenId, setTokenId] = useState<number | null>(25);
+	const [tokenId, setTokenId] = useState<number | null>(null);
 	const { data, error } = useSWR(`/api/companion/${tokenId}?format=keys`, fetcher);
 	const [name, setName] = useState("");
 	const [saving, setSaving] = useState(false);
+
+	useEffect(() => {
+		const queryToken = parseInt(
+			Array.isArray(router.query.tokenId) ? router.query.tokenId[0] : router.query.tokenId
+		);
+		setTokenId(queryToken !== undefined && !isNaN(queryToken) ? queryToken : 25);
+	}, [router.query.tokenId]);
 
 	useEffect(() => {
 		setCompanionUnedited(null);
@@ -33,15 +41,25 @@ export default function CompanionDetails() {
 
 	const handleSave = async () => {
 		setSaving(true);
-		const result = await fetch(`/api/companion/admin/${tokenId}`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				companion,
-			}),
-		});
+
+		const result = await (
+			await fetch(`/api/companion/admin/${tokenId}`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					companion: { ...companion, name: name },
+				}),
+			})
+		).json();
+
+		if (result.error) {
+			toast.error("Tell Michael: " + result.error);
+		} else {
+			toast.success("Saved!");
+		}
+
 		setSaving(false);
 	};
 
@@ -104,7 +122,7 @@ export default function CompanionDetails() {
 					<div>
 						<Button
 							className="border-ui-black-lightest text-default-white"
-							disabled={tokenId <= 25 || saving}
+							disabled={tokenId <= 0 || saving}
 							onClick={() => setTokenId((prev) => prev - 1)}
 						>
 							← Prev
@@ -133,7 +151,7 @@ export default function CompanionDetails() {
 					<div>
 						<Button
 							className="border-ui-black-lightest text-default-white"
-							disabled={tokenId >= 175 || saving}
+							disabled={tokenId >= 8888 || saving}
 							onClick={() => setTokenId((prev) => prev + 1)}
 						>
 							Next →
@@ -169,6 +187,7 @@ export default function CompanionDetails() {
 					)}
 				</div>
 			</div>
+			<ToastContainer position="bottom-left" />
 		</div>
 	);
 }
