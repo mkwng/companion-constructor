@@ -123,7 +123,18 @@ export default function CompanionDetails() {
 						<Button
 							className="border-ui-black-lightest text-default-white"
 							disabled={tokenId <= 0 || saving}
-							onClick={() => setTokenId((prev) => prev - 1)}
+							onClick={() => {
+								() => {
+									if (
+										companionUnedited &&
+										confirm("You have unsaved changes. Are you sure you want to continue?")
+									) {
+										setTokenId((prev) => prev - 1);
+									} else {
+										setTokenId((prev) => prev - 1);
+									}
+								};
+							}}
 						>
 							← Prev
 						</Button>
@@ -152,7 +163,16 @@ export default function CompanionDetails() {
 						<Button
 							className="border-ui-black-lightest text-default-white"
 							disabled={tokenId >= 8888 || saving}
-							onClick={() => setTokenId((prev) => prev + 1)}
+							onClick={() => {
+								if (
+									companionUnedited &&
+									confirm("You have unsaved changes. Are you sure you want to continue?")
+								) {
+									setTokenId((prev) => prev + 1);
+								} else {
+									setTokenId((prev) => prev + 1);
+								}
+							}}
 						>
 							Next →
 						</Button>
