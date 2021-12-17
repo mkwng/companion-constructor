@@ -72,3 +72,13 @@ a:hover {
 	width: 0;
 	padding-bottom: calc(100%);
 }
+
+@keyframes marquee {
+	0% {
+		background-position: 0;
+	}
+
+	100% {
+		background-position: -100%;
+	}
+}

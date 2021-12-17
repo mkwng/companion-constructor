@@ -156,6 +156,25 @@ export const eyewear: AttributeDictionary = {
 				},
 			],
 		},
+		{
+			attribute: "eyewear",
+			name: "aviators",
+			rarity: "uncommon",
+			layers: [
+				{
+					path: "/attributes/face/09-eyewear/aviators_1-v_clothing.png",
+					colorType: "clothing",
+				},
+				{
+					path: "/attributes/face/09-eyewear/aviators_2-c_white.png",
+					color: colors.default.white,
+				},
+				{
+					path: "/attributes/face/09-eyewear/aviators_3-c_outline.png",
+					color: colors.default.black,
+				},
+			],
+		},
 	],
 };
 
@@ -168,5 +187,6 @@ let eyewearVariants = [
 	"eyepatch",
 	"roundedColorFrames",
 	"vr",
+	"aviators",
 ] as const;
 export type EyewearVariant = typeof eyewearVariants[number];

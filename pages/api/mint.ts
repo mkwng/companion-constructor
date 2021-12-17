@@ -2,10 +2,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { priceCustomEth, priceEth } from "../../components/contract";
 import { Companion } from "../../data/types";
 import { web3 } from "../../lib/web3";
-import prisma from "../../lib/prisma";
-import { flattenCompanion } from "../../data/helpers";
 import { randomCompanion } from "../../data/random";
 import { createCompanion } from "../../data/operations";
+import prisma from "../../lib/prisma";
 
 interface Transaction {
 	hash: string;
@@ -19,6 +18,14 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 	switch (method) {
 		case "POST":
 			const { hash, mintType, mintQty, companion } = req.body as Transaction;
+
+			const hashUsed = await prisma.transactions.findUnique({
+				where: { hash },
+			});
+			if (hashUsed) {
+				throw new Error("Hash already used");
+			}
+
 			const requiredFee =
 				mintType == "custom"
 					? web3.utils.toWei(priceCustomEth + "", "ether")
@@ -36,29 +43,38 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 					const receipt = await web3.eth.getTransactionReceipt(hash);
 					const companionIds = [];
 					for (let i = 0; i < receipt.logs.length; i++) {
-						const companionId = web3.utils.hexToNumber(receipt.logs[i].topics[3]);
-						if (!isNaN(companionId)) {
+						const tokenId = web3.utils.hexToNumber(receipt.logs[i].topics[3]);
+						if (!isNaN(tokenId)) {
 							let query;
 							if (mintType == "custom" && companion) {
 								query = createCompanion({
-									tokenId: companionId,
+									tokenId,
 									companion,
 								});
 							} else {
 								query = createCompanion({
-									tokenId: companionId,
+									tokenId,
 									companion: randomCompanion(),
 								});
 							}
 							const result = await query;
-							companionIds.push(result.id);
+							companionIds.push(result.tokenId);
 						} else {
+							console.error("Invalid companion id", tokenId);
 							continue;
 						}
 					}
 					if (companionIds.length == receipt.logs.length) {
+						await prisma.transactions.create({
+							data: {
+								hash,
+								date: new Date(),
+								txnType: "customization",
+								txnValue: requiredFee,
+							},
+						});
 						res.status(200).json({
-							companionId: companionIds[0],
+							companionIds,
 						});
 					} else {
 						res.status(400).json({

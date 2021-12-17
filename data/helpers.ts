@@ -15,8 +15,14 @@ import {
 	Variant,
 } from "./types";
 import { Companion as PrismaCompanion } from ".prisma/client";
+import _ from "lodash";
+
+export const zeroPad = "000000000000000000";
 
 const getVariants = (companion: Companion): Variant[] => {
+	if (!companion) {
+		throw new Error("Companion is undefined");
+	}
 	const pose = poses[companion.properties.pose];
 	return pose.map((attribute) => {
 		let selection: AttributeSelection | undefined;
@@ -246,7 +252,9 @@ export const flattenCompanion = (
 ): {
 	[key: string]: any;
 } => {
-	let flatCompanion = {};
+	let flatCompanion = {
+		name: companion.name,
+	};
 
 	for (const key in companion.properties) {
 		switch (key) {
@@ -370,7 +378,8 @@ export const apiToKeys = (data: PrismaCompanion) => {
 
 export const keysToCompanion = (companionQuery): Companion => {
 	const companion: Companion = {
-		name: null,
+		name: companionQuery.name,
+		tokenId: companionQuery.tokenId,
 		properties: { ...companionExample.properties },
 		attributes: {
 			hair: { name: "crop" },
@@ -385,6 +394,10 @@ export const keysToCompanion = (companionQuery): Companion => {
 			continue;
 		}
 		switch (key) {
+			case "name":
+			case "tokenId":
+				companion.name = companionQuery.name;
+				break;
 			case "pose":
 				if (!((companionQuery[key] as string) in Pose)) {
 					throw new Error(`${key} not valid`);
@@ -562,3 +575,35 @@ export const drawLayer = async ({
 
 export const messageToSign =
 	"Box me up! \n\nSign this message to prove you own this address. Signing is free and will not cost you any gas.";
+
+const isObject = (obj: any) => typeof obj === "object" && !Array.isArray(obj) && obj !== null;
+
+export const calcCustomizationCost = (oldCompanion: Companion, newCompanion: Companion) => {
+	if (!oldCompanion || !newCompanion) return 0;
+	let runningTotal = 0;
+	// Loop through oldCompanion.properties and see if anything's changed
+	for (const key in newCompanion.properties) {
+		if (newCompanion.properties.hasOwnProperty(key)) {
+			if (isObject(newCompanion.properties[key])) {
+				if (!_.isEqual(newCompanion.properties[key], oldCompanion.properties[key])) {
+					runningTotal += 1;
+				}
+			} else if (newCompanion.properties[key] !== oldCompanion.properties[key]) {
+				runningTotal += 1;
+			}
+		} else {
+			runningTotal += 1;
+		}
+	}
+	// Loop through oldCompanion.attributes and see if anything's changed
+	for (const key in newCompanion.attributes) {
+		if (newCompanion.attributes.hasOwnProperty(key)) {
+			if (newCompanion.attributes[key].name !== oldCompanion.attributes[key].name) {
+				runningTotal += 1;
+			}
+		} else {
+			runningTotal += 1;
+		}
+	}
+	return runningTotal;
+};

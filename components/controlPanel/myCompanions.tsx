@@ -5,19 +5,27 @@ export const MyCompanions = ({
 	ownedCompanions,
 	selectedCompanions,
 	setSelectedCompanions,
-	handleCustomize,
-	handleStake,
+	action1,
+	action2,
 	loading,
 }: {
 	ownedCompanions: Set<number>;
 	selectedCompanions: number[];
 	setSelectedCompanions: (ids: number[]) => void;
-	handleCustomize: () => void;
-	handleStake: () => void;
+	action1: {
+		title: string;
+		action: () => void;
+		disabled?: boolean;
+	};
+	action2: {
+		title: string;
+		action: () => void;
+		disabled?: boolean;
+	};
 	loading: boolean;
 }) => {
 	return (
-		<div className="relative m-2 mt-0 p-2 bg-ui-black-darker rounded-lg overflow-hidden">
+		<div className="relative m-2 mt-0 p-2 bg-ui-black-darker rounded-lg ">
 			{ownedCompanions.size === 0 ? (
 				<div className="py-8 flex flex-col w-8/12 mx-auto justify-center items-center text-center">
 					<h3 className="font-bold mb-2">You don&apos;t have any Companions yet!</h3>
@@ -69,15 +77,24 @@ export const MyCompanions = ({
 							);
 						})}
 					</div>
+					<div className="sticky bottom-4">
+						<div className="grid grid-cols-2 gap-2 mt-2">
+							<Button
+								className="bg-ui-black-darker"
+								disabled={action1.disabled}
+								onClick={action1.action}
+							>
+								<span>{action1.title}</span>
+							</Button>
 
-					<div className="grid grid-cols-2 gap-2 mt-2">
-						<Button disabled={selectedCompanions.length !== 1} onClick={handleCustomize}>
-							<span>Customize{selectedCompanions ? ` #${selectedCompanions}` : ""}</span>
-						</Button>
-
-						<Button disabled={!selectedCompanions.length} onClick={handleStake}>
-							<span>Stake{selectedCompanions ? ` #${selectedCompanions}` : ""}</span>
-						</Button>
+							<Button
+								className="bg-ui-black-darker"
+								disabled={action2.disabled}
+								onClick={action2.action}
+							>
+								<span>{action2.title}</span>
+							</Button>
+						</div>
 					</div>
 				</>
 			)}
