@@ -409,10 +409,14 @@ export const keysToCompanion = (companionQuery): Companion => {
 				companion.properties.pose = Number(companionQuery[key]);
 				break;
 			case "gender":
-				if (companionQuery[key] !== "f" && companionQuery[key] !== "m") {
+				if (
+					companionQuery[key] !== "f" &&
+					companionQuery[key] !== "m" &&
+					companionQuery[key] !== "w"
+				) {
 					throw new Error(`${key} not valid`);
 				}
-				companion.properties.gender = companionQuery[key] as "m" | "f";
+				companion.properties.gender = companionQuery[key] as "m" | "f" | "w";
 				break;
 			case "skinColor":
 			case "hairColor":
