@@ -10,6 +10,40 @@ import { Companion, RGBColor } from "../../data/types";
 import { fetcher } from "../../lib/swr";
 import { Check } from "../../components/icons/check";
 import Button from "../../components/button";
+import { Web3Provider } from "@ethersproject/providers";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { InjectedConnector } from "@web3-react/injected-connector";
+import { Web3ReactProvider } from "@web3-react/core";
+
+function getLibrary(provider) {
+	const library = new Web3Provider(provider);
+	return library;
+}
+
+const ConnectorNames = {
+	Injected: "injected",
+	WalletConnect: "walletconnect",
+};
+const W3Operations = {
+	Connect: "connect",
+	Disconnect: "disconnect",
+};
+const wcConnector = new WalletConnectConnector({
+	infuraId: "517bf3874a6848e58f99fa38ccf9fce4",
+});
+const injected = new InjectedConnector({ supportedChainIds: [1, 4] });
+
+function timeout(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export default function WrapperHome() {
+	return (
+		<Web3ReactProvider getLibrary={getLibrary}>
+			<CompanionGift />
+		</Web3ReactProvider>
+	);
+}
 
 const rescale = (
 	minOld: number,
@@ -113,7 +147,7 @@ const Logomark = ({ color }: { color: RGBColor }) => {
 	);
 };
 
-export default function CompanionGift() {
+function CompanionGift() {
 	const router = useRouter();
 	const [companion, setCompanion] = useState<Companion | null>(null);
 	const { data, error } = useSWR(`/api/companion/${router.query.id}?format=keys`, fetcher);
@@ -182,18 +216,35 @@ export default function CompanionGift() {
 							style={{
 								top: `calc(33% + ${Math.min(
 									720,
-									y * 4 * scrollableArea.current.clientHeight
+									y * 4 * scrollableArea?.current?.offsetHeight
 								)}px)`,
 							}}
-						></div>
+						>
+							<div
+								className="absolute bg-ui-black-darker top-0 left-0 origin-bottom-left h-3 w-1/2 transform-gpu -translate-y-3"
+								style={{
+									// @ts-ignore
+									"--tw-rotate": rescale(0, 0.25, -60, -180, y) + "deg",
+									transform: "var(--tw-transform)",
+								}}
+							></div>
+							<div
+								className="absolute bg-ui-black-darker top-0 right-0 origin-bottom-right h-3 w-1/2 transform-gpu -translate-y-3"
+								style={{
+									// @ts-ignore
+									"--tw-rotate": rescale(0, 0.25, 60, 180, y) + "deg",
+									transform: "var(--tw-transform)",
+								}}
+							></div>
+						</div>
 					</div>
 				</div>
 				<div
 					ref={scrollableArea}
 					onScroll={() => {
 						setY(
-							scrollableArea.current?.scrollTop /
-								(scrollableArea.current.scrollHeight - scrollableArea.current.offsetHeight)
+							scrollableArea?.current?.scrollTop /
+								(scrollableArea?.current?.scrollHeight - scrollableArea?.current?.offsetHeight)
 						);
 					}}
 					className="scroll-smooth lg:snap-y lg:snap-proximity absolute inset-0 w-screen h-screen overflow-x-hidden overflow-y-scroll"
@@ -209,7 +260,7 @@ export default function CompanionGift() {
 								max-w-6xl mx-auto 
 								bg-ui-black-default text-default-white rounded-3xl shadow-2xl 
 								flex flex-col justify-start gap-8 items-start
-								overflow-hidden`}
+								overflow-visible`}
 							>
 								<div className="w-full aspect-[8/3] md:aspect-[6/1] grid grid-cols-2 md:grid-cols-3 mb-8">
 									<div className="relative">
@@ -239,7 +290,7 @@ export default function CompanionGift() {
 									<div className="flex flex-col md:flex-row gap-2 md:gap-8 text-sm">
 										<div className="flex gap-2">
 											<Check />
-											<p>1/1 created just for you, {companion.name || "friend"}.</p>
+											<p>1/1 created just for {companion?.name || "a friend"}.</p>
 										</div>
 										<div className="flex gap-2">
 											<Check />
