@@ -157,7 +157,9 @@ export default function CompanionDetails() {
 								className="underline pl-2"
 								onClick={(e) => {
 									e.preventDefault();
-									setCompanion(randomCompanion());
+									const random = randomCompanion();
+									setCompanionUnedited(random);
+									setCompanion(random);
 								}}
 							>
 								Start with a random one

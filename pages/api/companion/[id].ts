@@ -162,7 +162,7 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 					case "metadata":
 					default:
 						const {
-							id,
+							tokenId,
 							createdAt,
 							updatedAt,
 							hairColors,
@@ -200,10 +200,12 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 						}
 						const companion = keysToCompanion(apiToKeys(prismaResponse));
 						return res.status(200).json({
-							token_id: id,
-							name: companion.name || `Companion #${id}`,
-							image: `https://${process.env.NEXT_PUBLIC_URL}/api/companion.png?id=${id}`,
-							external_url: `https://${process.env.NEXT_PUBLIC_URL}/companion/${id}`,
+							token_id: tokenId,
+							name: companion.name || `Companion #${tokenId}`,
+							image: `https://${
+								process.env.RAILWAY_STATIC_URL || process.env.NEXT_PUBLIC_URL
+							}/api/companion.png?id=${tokenId}`,
+							external_url: `https://companioninabox.art/companion/${tokenId}`,
 							background_color: rgbToHex(companion.properties.background),
 							description:
 								"Boxed in a small, wooden box, this companion is a bit of a mystery.",
