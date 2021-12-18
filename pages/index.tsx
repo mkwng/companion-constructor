@@ -560,8 +560,8 @@ function Constructor() {
 
 	return (
 		<>
-			{coupon ? (
-				<div className="font-mono text-xs top-0 left-0 right-0 absolute p-2 bg-ui-black-darker text-default-yellow text-center flex justify-center items-center">
+			{coupon && !customizing ? (
+				<div className="font-mono text-xs z-30 top-0 left-0 right-0 absolute p-2 bg-ui-black-darker text-default-yellow text-center flex justify-center items-center">
 					<div className="w-4 h-4"></div>
 					<div className="grow text-center">
 						Promotion applied: <strong>Free customization of your companion</strong>
@@ -665,7 +665,7 @@ function Constructor() {
 						</div>
 						{customizing ? (
 							<>
-								<div className="fixed lg:sticky left-0 top-0 right-0 p-2 bg-ui-black-darker z-10">
+								<div className="fixed lg:sticky left-0 top-0 right-0 p-2 bg-ui-black-darker z-40">
 									<div className="flex justify-between">
 										<div>
 											<Button className="" onClick={handleExitCustomization}>
