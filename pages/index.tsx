@@ -564,8 +564,7 @@ function Constructor() {
 				<div className="font-mono text-xs top-0 left-0 right-0 absolute p-2 bg-ui-black-darker text-default-yellow text-center flex justify-center items-center">
 					<div className="w-4 h-4"></div>
 					<div className="grow text-center">
-						Coupon code applied: <strong>Free customization of your companion</strong> ({coupon}
-						)
+						Promotion applied: <strong>Free customization of your companion</strong>
 					</div>
 					<div>
 						<Button

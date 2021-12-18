@@ -49,7 +49,7 @@ export const CheckoutDialog = ({
 	const [success, setSuccess] = useState(false);
 
 	useEffect(() => {
-		if (data.error) {
+		if (data?.error) {
 			toast.error("Invalid coupon code: " + data.error);
 		}
 	}, [data]);
