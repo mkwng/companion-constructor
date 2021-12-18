@@ -56,6 +56,7 @@ const wcConnector = new WalletConnectConnector({
 	infuraId: "517bf3874a6848e58f99fa38ccf9fce4",
 });
 const injected = new InjectedConnector({ supportedChainIds: [1, 4] });
+const preferredChain = 4;
 
 function timeout(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
@@ -126,7 +127,7 @@ function Constructor() {
 	/****************************************************************/
 	// Connect to web3 and get contract info
 	useEffect(() => {
-		if (web3React.active) {
+		if (web3React.active && web3React.chainId === preferredChain) {
 			let w3 = new Web3(web3React.library.provider);
 			setWeb3(w3);
 			setCompanionContract(new w3.eth.Contract(companionAbi, companionAddress));
@@ -560,7 +561,7 @@ function Constructor() {
 	return (
 		<>
 			{coupon ? (
-				<div className="font-mono text-xs z-30 top-0 left-0 right-0 absolute p-2 bg-ui-black-darker text-default-yellow text-center flex justify-center items-center">
+				<div className="font-mono text-xs top-0 left-0 right-0 absolute p-2 bg-ui-black-darker text-default-yellow text-center flex justify-center items-center">
 					<div className="w-4 h-4"></div>
 					<div className="grow text-center">
 						Coupon code applied: <strong>Free customization of your companion</strong> ({coupon}
