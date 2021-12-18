@@ -21,6 +21,7 @@ export const poses: { [key: string]: AttributeDictionary[] } = {
 		attributes.top,
 		attributes.eyewear,
 		attributes.nose,
+		attributes.accessory,
 		attributes.background,
 	],
 	"2": [
@@ -64,6 +65,7 @@ export const poses: { [key: string]: AttributeDictionary[] } = {
 		attributes.eyewear,
 		attributes.nose,
 		attributes.shoes,
+		attributes.accessory,
 		attributes.background,
 	],
 	"4": [
@@ -80,6 +82,7 @@ export const poses: { [key: string]: AttributeDictionary[] } = {
 		attributes.eyewear,
 		attributes.headwear,
 		attributes.nose,
+		attributes.accessory,
 		attributes.background,
 	],
 };

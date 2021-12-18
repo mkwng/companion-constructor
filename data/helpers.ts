@@ -172,7 +172,7 @@ export const colorToKey = (
 	colorObject: { [key: string]: RGBColor }
 ): string => {
 	if (!color) {
-		debugger;
+		throw new Error("Color is undefined");
 	}
 	for (const key in colorObject) {
 		if (
