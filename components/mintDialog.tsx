@@ -165,14 +165,14 @@ export const MintDialog = ({
 				className={`
 					transition-all
 					w-full max-h-screen
-					absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 lg:aspect-[2/1] 
+					absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 md:aspect-[2/1] 
 					rounded-lg shadow-xl
 					shadow-ui-black-default 
 					${minting ? "bg-default-white" : "bg-default-white"}
 					${
 						success
 							? "max-w-screen-sm bg-opacity-0 shadow-none overflow-visible "
-							: "max-w-screen-xl shadow-xl overflow-y-scroll lg:overflow-y-hidden overflow-x-hidden grid grid-cols-1 lg:grid-cols-2 "
+							: "max-w-screen-xl shadow-xl overflow-y-scroll md:overflow-y-hidden overflow-x-hidden grid grid-cols-1 md:grid-cols-2 "
 					}
 					`}
 			>
@@ -270,12 +270,12 @@ export const MintDialog = ({
 					${
 						!minting &&
 						`left-0 bg-background-${
-							companion
+							companion && mintType === "custom"
 								? colorToKey(companion?.properties.background, colors.background)
-								: "sand"
+								: "red"
 						}`
 					}
-					${minting && !success && "lg:left-1/2 origin-center rounded-2xl overflow-hidden opacity-50"}
+					${minting && !success && "md:left-1/2 origin-center rounded-2xl overflow-hidden opacity-50"}
 					${success && "opacity-100 duration-75 rounded-2xl overflow-hidden "}
 					`}
 				>
@@ -302,22 +302,18 @@ export const MintDialog = ({
 							)}
 						</div>
 						<div
-							className={`h-full w-full flex justify-center items-center bg-background-${
-								companion
-									? colorToKey(companion?.properties.background, colors.background)
-									: "sand"
-							} ${mintType == "random" ? "" : "hidden"}`}
+							className={`h-full w-full aspect-square relative bg-default-red ${
+								mintType == "random" ? "" : "hidden"
+							}`}
 						>
-							<span className="font-display subpixel-antialiased text-default-yellow animate-pulse text-9xl">
-								?
-							</span>
+							<Image src="/box.png" alt="box" layout="fill" />
 						</div>
 					</div>
 				</div>
 				{/************* /Companion Image *************/}
 				{success ? (
 					<>
-						<h1 className="font-display subpixel-antialiased text-7xl lg:text-9xl text-center text-default-white">
+						<h1 className="font-display subpixel-antialiased text-7xl md:text-9xl text-center text-default-white">
 							Minted
 						</h1>
 						<Button className="bg-ui-black-default text-default-white" onClick={handleClose}>
@@ -331,7 +327,7 @@ export const MintDialog = ({
 								{/********************************************/}
 								{/******************** FAQ *******************/}
 								{/********************************************/}
-								<div className="lg:overflow-y-scroll relative">
+								<div className="md:overflow-y-scroll relative">
 									<div className="top-4 ml-4 hidden md:block sticky">
 										<Button
 											className="bg-ui-black-default text-default-white text-xs w-auto"

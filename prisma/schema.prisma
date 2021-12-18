@@ -21,6 +21,11 @@ model Emails {
   email String @unique
 }
 
+model Coupon {
+  code String  @unique
+  used Boolean
+}
+
 model Companion {
   id        Int      @id @default(autoincrement())
   tokenId   Int      @unique

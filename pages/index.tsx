@@ -3,11 +3,13 @@ import { Companion as PrismaCompanion } from "@prisma/client";
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
 import Button from "../components/button";
+import { CheckoutDialog } from "../components/checkoutDialog";
 import {
 	companionAbi,
 	companionAddress,
@@ -28,7 +30,6 @@ import { StakeDialog } from "../components/stakeDialog";
 import { colors } from "../data/colors";
 import {
 	apiToKeys,
-	calcCustomizationCost,
 	colorToKey,
 	keysToCompanion,
 	messageToSign,
@@ -55,6 +56,7 @@ const wcConnector = new WalletConnectConnector({
 	infuraId: "517bf3874a6848e58f99fa38ccf9fce4",
 });
 const injected = new InjectedConnector({ supportedChainIds: [1, 4] });
+const preferredChain = 4;
 
 function timeout(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
@@ -72,6 +74,8 @@ function Constructor() {
 	/****************************************************************/
 	/**************************** STATES ****************************/
 	/****************************************************************/
+	const router = useRouter();
+
 	// Web 3, contract & operations
 	const web3React = useWeb3React();
 	const [web3, setWeb3] = useState<Web3>(null);
@@ -87,6 +91,7 @@ function Constructor() {
 	const [retrieving, setRetrieving] = useState(false);
 	const [showMinter, setShowMinter] = useState(false);
 	const [showStaker, setShowStaker] = useState(false);
+	const [showCheckout, setShowCheckout] = useState(false);
 
 	const [transacting, setTransacting] = useState(false);
 	const [transactingMessage, setTransactingMessage] = useState(
@@ -106,16 +111,23 @@ function Constructor() {
 	const [selectedCompanions, setSelectedCompanions] = useState<number[]>([]);
 	const [stakedCompanions, setStakedCompanions] = useState<Set<number>>(new Set());
 	const [claimable, setClaimable] = useState<number>(0);
+	const [coupon, setCoupon] = useState<string>(null);
 
 	// Ref
 	const scrollableArea = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		setCoupon(
+			Array.isArray(router.query.coupon) ? router.query.coupon[0] : router.query.coupon || ""
+		);
+	}, [router.query.coupon]);
 
 	/****************************************************************/
 	/******************* WEB3 CONTRACT AND WALLET *******************/
 	/****************************************************************/
 	// Connect to web3 and get contract info
 	useEffect(() => {
-		if (web3React.active) {
+		if (web3React.active && web3React.chainId === preferredChain) {
 			let w3 = new Web3(web3React.library.provider);
 			setWeb3(w3);
 			setCompanionContract(new w3.eth.Contract(companionAbi, companionAddress));
@@ -331,7 +343,6 @@ function Constructor() {
 				address: web3React.account,
 			}),
 		});
-		console.log(request);
 		return request;
 	};
 	useEffect(updateSelectedCompanion, [selectedCompanions]);
@@ -358,12 +369,9 @@ function Constructor() {
 			toast.error(error);
 		}
 	};
-	const verifySpend = async (currHash: string) => {
+	const verifySpend = async ({ amount, currHash }: { amount: number; currHash?: string }) => {
 		const signature = await web3.eth.personal.sign(
-			messageToSign +
-				"\n\nAmount: " +
-				calcCustomizationCost(uneditedCompanion, companion) +
-				" $CSHIP",
+			messageToSign + "\n\nAmount: " + amount + " $CSHIP",
 			web3React.account,
 			"test"
 		);
@@ -379,10 +387,10 @@ function Constructor() {
 				companion,
 				uneditedCompanion,
 				signature,
+				coupon,
 				address: web3React.account,
 			}),
 		});
-		console.log(request);
 		return request;
 	};
 	const transactEth = async ({
@@ -508,32 +516,70 @@ function Constructor() {
 		});
 	};
 
-	const handleSpend = async (amount: string) => {
+	const handleSpend = async ({
+		amount,
+		onSuccess,
+	}: {
+		amount: number;
+		onSuccess: (response?: any) => void;
+	}) => {
 		setTransacting(true);
-		return await transactEth({
-			from: web3React.account,
-			to: shipAddress,
-			encodedData: shipContract.methods
-				.transfer(farmAddress, web3.utils.toHex(amount))
-				.encodeABI(),
-			onSuccess: async (currHash) => {
-				const response = await (await verifySpend(currHash)).json();
-				if (response.error) {
-					return toast.error(response.error);
-				}
-				setCustomizing(false);
+		if (amount > 0) {
+			return await transactEth({
+				from: web3React.account,
+				to: shipAddress,
+				encodedData: shipContract.methods
+					.transfer(farmAddress, web3.utils.toHex(amount + zeroPad))
+					.encodeABI(),
+				onSuccess: async (currHash) => {
+					const response = await (await verifySpend({ amount, currHash })).json();
+					if (response.error) {
+						setTransacting(false);
+						return toast.error(response.error);
+					}
+					setCustomizing(false);
+					setTransacting(false);
+					onSuccess(response);
+				},
+				onFailure: (error) => {
+					setTransacting(false);
+					toast.error(error);
+				},
+			});
+		} else {
+			const response = await (await verifySpend({ amount })).json();
+			if (response.error) {
 				setTransacting(false);
-				updateSelectedCompanion();
-			},
-			onFailure: (error) => {
-				setTransacting(false);
-				toast.error(error);
-			},
-		});
+				return toast.error(response.error);
+			}
+			setCustomizing(false);
+			setTransacting(false);
+			onSuccess(response);
+		}
 	};
 
 	return (
 		<>
+			{coupon && !customizing ? (
+				<div className="font-mono text-xs z-30 top-0 left-0 right-0 absolute p-2 bg-ui-black-darker text-default-yellow text-center flex justify-center items-center">
+					<div className="w-4 h-4"></div>
+					<div className="grow text-center">
+						Promotion applied: <strong>Free customization of your companion</strong>
+					</div>
+					<div>
+						<Button
+							className={`bg-ui-black-default text-default-white w-4 h-4 pl-0 pr-0 pt-0 pb-0 ${
+								transacting ? "opacity-20" : ""
+							}`}
+							onClick={() => {
+								if (confirm("Remove coupon from this session?")) setCoupon("");
+							}}
+						>
+							×
+						</Button>
+					</div>
+				</div>
+			) : null}
 			<div
 				ref={scrollableArea}
 				className={`
@@ -578,7 +624,7 @@ function Constructor() {
 						z-40 fixed flex flex-col 
 						max-h-screen
 						bottom-0
-						lg:bottom-auto lg:left-auto lg:right-0 lg:top-0 lg:p-6 
+						lg:bottom-auto lg:left-auto lg:right-0 lg:top-0 lg:p-6 ${coupon && "lg:pt-12"}
 						w-full lg:${customizing ? "w-1/3" : "w-1/4"} lg:max-h-full
 					`}
 				>
@@ -619,7 +665,7 @@ function Constructor() {
 						</div>
 						{customizing ? (
 							<>
-								<div className="fixed lg:sticky left-0 top-0 right-0 p-2 bg-ui-black-darker z-10">
+								<div className="fixed lg:sticky left-0 top-0 right-0 p-2 bg-ui-black-darker z-40">
 									<div className="flex justify-between">
 										<div>
 											<Button className="" onClick={handleExitCustomization}>
@@ -632,14 +678,9 @@ function Constructor() {
 													disabled={uneditedCompanion === null}
 													loading={transacting}
 													className={`${uneditedCompanion === null ? "opacity-20" : ""}`}
-													onClick={() => {
-														handleSpend(
-															calcCustomizationCost(uneditedCompanion, companion) + zeroPad
-														);
-													}}
+													onClick={() => setShowCheckout(true)}
 												>
-													Checkout ({calcCustomizationCost(uneditedCompanion, companion)}{" "}
-													$CSHIP)
+													Checkout
 												</Button>
 											</div>
 										) : (
@@ -747,6 +788,19 @@ function Constructor() {
 						setShowStaker(false);
 						retrieveCompanions();
 					}}
+				/>
+			) : null}
+
+			{showCheckout ? (
+				<CheckoutDialog
+					companion={companion}
+					uneditedCompanion={uneditedCompanion}
+					walletBalance={100}
+					handleSpend={handleSpend}
+					handleClose={() => setShowCheckout(false)}
+					transacting={transacting}
+					coupon={coupon}
+					setCoupon={setCoupon}
 				/>
 			) : null}
 			<ToastContainer position="bottom-left" />

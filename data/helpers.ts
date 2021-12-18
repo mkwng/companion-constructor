@@ -10,6 +10,7 @@ import {
 	LayerStaticWithData,
 	LayerWithData,
 	Pose,
+	Rarity,
 	Restrictions,
 	RGBColor,
 	Variant,
@@ -291,6 +292,46 @@ export const flattenCompanion = (
 		}
 	}
 	return flatCompanion;
+};
+
+export const companionToKeys = (companion: Companion) => {
+	let output = {};
+	for (const key in companion.properties) {
+		switch (key) {
+			case "pose":
+			case "gender":
+				output[key] = companion.properties[key];
+				break;
+			case "background":
+			case "hair":
+			case "skin":
+				output[key + "Color"] = colorToKey(companion.properties[key], colors[key]);
+				break;
+		}
+	}
+	for (const key in companion.attributes) {
+		if (!companion.attributes[key]?.name) {
+			continue;
+		}
+		const attribute = selectableAttributes[key];
+		const variant = attribute.variants.find(
+			(variant) => variant.name === companion.attributes[key].name
+		);
+		if (variant) {
+			output[key] = variant.name;
+			let i = 0;
+			for (const layer of variant.layers) {
+				if ("colorType" in layer && layer.colorType === "clothing") {
+					output[`${key}Color${i + 1}`] = colorToKey(
+						companion.attributes[key].color[i],
+						colors.clothing
+					);
+					i++;
+				}
+			}
+		}
+	}
+	return output;
 };
 
 export const companionToUrl = (companion: Companion): string => {
@@ -586,32 +627,93 @@ export const messageToSign =
 
 const isObject = (obj: any) => typeof obj === "object" && !Array.isArray(obj) && obj !== null;
 
-export const calcCustomizationCost = (oldCompanion: Companion, newCompanion: Companion) => {
-	if (!oldCompanion || !newCompanion) return 0;
-	let runningTotal = 0;
-	// Loop through oldCompanion.properties and see if anything's changed
-	for (const key in newCompanion.properties) {
-		if (newCompanion.properties.hasOwnProperty(key)) {
-			if (isObject(newCompanion.properties[key])) {
-				if (!_.isEqual(newCompanion.properties[key], oldCompanion.properties[key])) {
-					runningTotal += 1;
-				}
-			} else if (newCompanion.properties[key] !== oldCompanion.properties[key]) {
-				runningTotal += 1;
+const getKeyType = (key: string) => {
+	switch (key) {
+		case "tokenId":
+			throw new Error("Cannot change tokenId");
+		case "name":
+			return "name";
+		case "pose":
+		case "gender":
+		case "skinColor":
+		case "hairColor":
+		case "backgroundColor":
+			return "property";
+		default:
+			if (key.match(colorRegEx)) {
+				return "color";
+			}
+			if (key in selectableAttributes) {
+				return "attribute";
+			}
+	}
+};
+
+export const rarityToCost = {
+	common: 500,
+	uncommon: 1000,
+	rare: 5000,
+	mythic: 10000,
+};
+
+const getKeyCost = (key: string, value: string) => {
+	switch (getKeyType(key)) {
+		case "name":
+			return 1;
+		case "property":
+			return 250;
+		case "color":
+			return 100;
+		case "attribute":
+			const match = selectableAttributes[key].variants.find((v) => v.name === value);
+			if (!match) throw new Error("Invalid attribute value");
+			return rarityToCost[match.rarity || "common"];
+	}
+};
+
+export const getDifferences = (oldCompanion: Companion, newCompanion: Companion) => {
+	const differences: {
+		cost: number;
+		prev: string;
+		curr: string;
+		key: string;
+		type: string;
+	}[] = [];
+
+	const oldKeys = companionToKeys(oldCompanion);
+	const newKeys = companionToKeys(newCompanion);
+
+	for (const key in newKeys) {
+		if (oldKeys.hasOwnProperty(key)) {
+			if (newKeys[key] !== oldKeys[key]) {
+				differences.push({
+					cost: getKeyCost(key, newKeys[key]),
+					prev: oldKeys[key],
+					curr: newKeys[key],
+					key,
+					type: getKeyType(key),
+				});
 			}
 		} else {
-			runningTotal += 1;
+			differences.push({
+				cost: getKeyCost(key, newKeys[key]),
+				prev: "",
+				curr: newKeys[key],
+				key,
+				type: getKeyType(key),
+			});
 		}
 	}
-	// Loop through oldCompanion.attributes and see if anything's changed
-	for (const key in newCompanion.attributes) {
-		if (newCompanion.attributes.hasOwnProperty(key)) {
-			if (newCompanion.attributes[key].name !== oldCompanion.attributes[key].name) {
-				runningTotal += 1;
-			}
-		} else {
-			runningTotal += 1;
+	for (const key in oldKeys) {
+		if (!newKeys.hasOwnProperty(key)) {
+			differences.push({
+				cost: 0,
+				prev: oldKeys[key],
+				curr: "",
+				key,
+				type: getKeyType(key),
+			});
 		}
 	}
-	return runningTotal;
+	return differences;
 };

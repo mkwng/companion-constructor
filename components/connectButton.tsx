@@ -17,6 +17,15 @@ export function ConnectButton({
 	handleLogout,
 	handleConnectInjected,
 	handleConnectWalletConnect,
+	className,
+	loginMessage,
+}: {
+	account: string;
+	handleLogout: () => void;
+	handleConnectInjected: () => void;
+	handleConnectWalletConnect: () => void;
+	className?: string;
+	loginMessage?: string;
 }) {
 	const [expanded, setExpanded] = useState(false);
 
@@ -24,7 +33,7 @@ export function ConnectButton({
 		return (
 			<>
 				<Button
-					className="bg-default-yellow h-9"
+					className="bg-default-yellow h-9 text-ui-black-darker"
 					onClick={() => {
 						setExpanded(false);
 						handleConnectInjected();
@@ -36,7 +45,7 @@ export function ConnectButton({
 					<div>Metamask</div>
 				</Button>
 				<Button
-					className="bg-default-yellow h-9"
+					className="bg-default-yellow h-9 text-ui-black-darker"
 					onClick={() => {
 						setExpanded(false);
 						handleConnectWalletConnect();
@@ -54,7 +63,7 @@ export function ConnectButton({
 		return (
 			<>
 				<Button
-					className="bg-default-yellow"
+					className="bg-default-yellow text-ui-black-darker"
 					onClick={() => {
 						setExpanded(false);
 						handleLogout();
@@ -66,10 +75,14 @@ export function ConnectButton({
 		);
 	}
 	return (
-		<div className="relative m-2 z-20">
+		<div className="relative z-20">
 			<div className="cursor-pointer">
 				<Button
-					className={`bg-default-yellow ${expanded && "bg-ui-black-default bg-opacity-20"}`}
+					className={
+						className
+							? className
+							: `bg-default-yellow ${expanded && "bg-ui-black-default bg-opacity-20"}`
+					}
 					onClick={() => {
 						setExpanded((prev) => !prev);
 					}}
@@ -77,7 +90,9 @@ export function ConnectButton({
 						setTimeout(() => setExpanded(false), 500);
 					}}
 				>
-					{account ? "Manage " + getTruncatedAddress(account) : "Connect your wallet"}{" "}
+					{account
+						? "Manage " + getTruncatedAddress(account)
+						: loginMessage || "Connect your wallet"}{" "}
 					{expanded ? "▼" : "▶"}
 				</Button>
 
