@@ -193,7 +193,7 @@ function CompanionGift() {
 						className={`
 							fixed z-0 flex justify-center 
 							w-screen left-0 h-full
-							overflow-hidden transform-gpu scale-50
+							overflow-visible transform-gpu scale-50
 						`}
 						style={{
 							top: `${1600 * 0.5 - Math.min(1, rescale(0, 0.25, 0.75, 1, y)) * (1600 * 0.5)}px`,
@@ -221,7 +221,7 @@ function CompanionGift() {
 							}}
 						>
 							<div
-								className="absolute bg-ui-black-darker top-0 left-0 origin-bottom-left h-3 w-1/2 transform-gpu -translate-y-3"
+								className="absolute bg-ui-black-darker top-0 left-0 origin-bottom-left h-5 w-1/2 transform-gpu -translate-y-5"
 								style={{
 									// @ts-ignore
 									"--tw-rotate": rescale(0, 0.25, -60, -180, y) + "deg",
@@ -229,7 +229,7 @@ function CompanionGift() {
 								}}
 							></div>
 							<div
-								className="absolute bg-ui-black-darker top-0 right-0 origin-bottom-right h-3 w-1/2 transform-gpu -translate-y-3"
+								className="absolute bg-ui-black-darker top-0 right-0 origin-bottom-right h-5 w-1/2 transform-gpu -translate-y-5"
 								style={{
 									// @ts-ignore
 									"--tw-rotate": rescale(0, 0.25, 60, 180, y) + "deg",
@@ -260,7 +260,7 @@ function CompanionGift() {
 								max-w-6xl mx-auto 
 								bg-ui-black-default text-default-white rounded-3xl shadow-2xl 
 								flex flex-col justify-start gap-8 items-start
-								overflow-visible`}
+								overflow-hidden`}
 							>
 								<div className="w-full aspect-[8/3] md:aspect-[6/1] grid grid-cols-2 md:grid-cols-3 mb-8">
 									<div className="relative">
