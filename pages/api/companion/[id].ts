@@ -1,11 +1,9 @@
 import { Companion as PrismaCompanion } from ".prisma/client";
-import { data } from "autoprefixer";
 import { NextApiRequest, NextApiResponse } from "next";
-import { shipAbi } from "../../../components/contract";
 import { rgbToHex } from "../../../data/colors";
 import {
 	apiToKeys,
-	calcCustomizationCost,
+	getDifferences,
 	keysToCompanion,
 	messageToSign,
 	zeroPad,
@@ -23,6 +21,7 @@ interface UpdateCompanion {
 	type?: "fillEmpty" | "customize";
 	signature: string;
 	address: string;
+	coupon?: string;
 }
 const confirmHash = async (hash: string, requiredFee: string) => {
 	const receipt = await web3.eth.getTransactionReceipt(hash);
@@ -82,51 +81,84 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 				}
 			} else if (req.body.type === "customize") {
 				try {
-					const { uneditedCompanion, companion, hash, signature, address } =
+					const { uneditedCompanion, companion, hash, signature, address, coupon } =
 						req.body as UpdateCompanion;
 
-					let hashUsed;
-					try {
-						hashUsed = await prisma.transactions.findUnique({ where: { hash } });
-					} catch (e) {
-						console.error(e);
-					} finally {
-						if (hashUsed) {
-							throw new Error("Hash already used");
+					if (coupon) {
+						const couponResult = await prisma.coupon.findUnique({
+							where: { code: coupon },
+						});
+						if (!couponResult) {
+							throw new Error("Coupon is invalid");
 						}
+						if (couponResult.used) {
+							throw new Error("Coupon has already been used");
+						}
+						await prisma.coupon.update({
+							where: { code: coupon },
+							data: { used: true },
+						});
+					}
+					const differences = getDifferences(uneditedCompanion, companion);
+					const balance = coupon ? 0 : differences.reduce((acc, cur) => acc + cur.cost, 0);
 
+					if (balance > 0) {
+						let hashUsed;
+						try {
+							hashUsed = await prisma.transactions.findUnique({ where: { hash } });
+						} catch (e) {
+							console.error(e);
+						} finally {
+							if (hashUsed) {
+								throw new Error("Hash already used");
+							}
+
+							const recover = web3.eth.accounts.recover(
+								messageToSign + "\n\nAmount: " + balance + " $CSHIP",
+								signature
+							);
+							if (recover !== address) {
+								throw new Error("Signature is not valid");
+							}
+
+							const cost = balance + zeroPad;
+							const confirmed = await confirmHash(hash, cost);
+							if (confirmed) {
+								await prisma.transactions.create({
+									data: {
+										hash,
+										date: new Date(),
+										txnType: "customization",
+										txnValue: cost,
+									},
+								});
+								await updateCompanion({
+									tokenId: parseInt(tokenId),
+									companion,
+								});
+								return res.status(200).json({
+									message: "Successfully updated",
+								});
+							} else {
+								throw new Error("Could not confirm that this transaction was completed");
+							}
+						}
+					} else {
+						// No cost, just update
 						const recover = web3.eth.accounts.recover(
-							messageToSign +
-								"\n\nAmount: " +
-								calcCustomizationCost(uneditedCompanion, companion) +
-								" $CSHIP",
+							messageToSign + "\n\nAmount: " + balance + " $CSHIP",
 							signature
 						);
 						if (recover !== address) {
 							throw new Error("Signature is not valid");
 						}
-
-						const cost = calcCustomizationCost(uneditedCompanion, companion) + zeroPad;
-						const confirmed = await confirmHash(hash, cost);
-						if (confirmed) {
-							await prisma.transactions.create({
-								data: {
-									hash,
-									date: new Date(),
-									txnType: "customization",
-									txnValue: cost,
-								},
-							});
-							await updateCompanion({
-								tokenId: parseInt(tokenId),
-								companion,
-							});
-							return res.status(200).json({
-								message: "Successfully updated",
-							});
-						} else {
-							throw new Error("Could not confirm that this transaction was completed");
-						}
+						await updateCompanion({
+							tokenId: parseInt(tokenId),
+							companion,
+						});
+						return res.status(200).json({
+							message: "Successfully updated",
+						});
 					}
 				} catch (e) {
 					res.status(400).json({

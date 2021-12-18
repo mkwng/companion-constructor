@@ -44,7 +44,7 @@ export type AttributeType =
 type Gender = "m" | "f" | "w";
 type HeadShape = "big" | "flat";
 type ProfileShape = "flat" | "encroached";
-type Rarity = "common" | "uncommon" | "rare" | "mythic";
+export type Rarity = "common" | "uncommon" | "rare" | "mythic";
 
 export interface Variant {
 	attribute?: AttributeType;
