@@ -102,12 +102,14 @@ export const ControlPanel = ({
 				{/************ Account Management ************/}
 				{/********************************************/}
 				<div className="bg-background-yellow text-clothing-black">
-					<ConnectButton
-						account={account}
-						handleLogout={handleSignOut}
-						handleConnectInjected={handleConnectInjected}
-						handleConnectWalletConnect={handleConnectWalletConnect}
-					/>
+					<div className="m-2">
+						<ConnectButton
+							account={account}
+							handleLogout={handleSignOut}
+							handleConnectInjected={handleConnectInjected}
+							handleConnectWalletConnect={handleConnectWalletConnect}
+						/>
+					</div>
 				</div>
 
 				{/********************************************/}

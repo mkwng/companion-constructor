@@ -5,15 +5,19 @@ import useSWR from "swr";
 import Renderer from "../../components/renderer";
 import { colors } from "../../data/colors";
 import { colorToKey, keysToCompanion } from "../../data/helpers";
-import { randomCompanion } from "../../data/random";
 import { Companion, RGBColor } from "../../data/types";
 import { fetcher } from "../../lib/swr";
 import { Check } from "../../components/icons/check";
-import Button from "../../components/button";
 import { Web3Provider } from "@ethersproject/providers";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
-import { Web3ReactProvider } from "@web3-react/core";
+import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
+import { ConnectButton } from "../../components/connectButton";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import Web3 from "web3";
+import { Contract } from "web3-eth-contract";
+import { companionAbi, companionAddress } from "../../components/contract";
+import Button from "../../components/button";
 
 function getLibrary(provider) {
 	const library = new Web3Provider(provider);
@@ -153,10 +157,76 @@ function CompanionGift() {
 	const { data, error } = useSWR(`/api/companion/${router.query.id}?format=keys`, fetcher);
 	const scrollableArea = useRef<HTMLDivElement>(null);
 	const [y, setY] = useState(0);
+	const [owned, setOwned] = useState<boolean | null>(null);
+
+	const web3React = useWeb3React();
+	const [web3, setWeb3] = useState<Web3>(null);
+	const [loaded, setLoaded] = useState(false);
+	const [companionContract, setCompanionContract] = useState<Contract>(null);
+	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
+	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
+
+	useEffect(() => {
+		if (web3React.active) {
+			let w3 = new Web3(web3React.library.provider);
+			setWeb3(w3);
+			setCompanionContract(new w3.eth.Contract(companionAbi, companionAddress));
+		} else {
+			setCompanionContract(null);
+			setOwned(null);
+		}
+	}, [web3React.active]);
+	useEffect(() => {
+		if (latestOp == "connect" && latestConnector == "injected") {
+			injected
+				.isAuthorized()
+				.then((isAuthorized) => {
+					setLoaded(true);
+					if (isAuthorized && !web3React.active && !web3React.error) {
+						web3React.activate(injected);
+					}
+				})
+				.catch(() => {
+					setLoaded(true);
+				});
+		} else if (latestOp == "connect" && latestConnector == "walletconnect") {
+			web3React.activate(wcConnector);
+		}
+	}, []);
+
+	const handleConnectInjected = () => {
+		setLatestConnector(ConnectorNames.Injected);
+		setLatestOp(W3Operations.Connect);
+		web3React.activate(injected);
+	};
+	const handleConnectWalletConnect = () => {
+		setLatestConnector(ConnectorNames.WalletConnect);
+		setLatestOp(W3Operations.Connect);
+		web3React.activate(wcConnector);
+	};
+	const handleSignOut = () => {
+		setLatestOp(W3Operations.Disconnect);
+		web3React.deactivate();
+	};
+
+	const isOwner = async () => {
+		console.log(!isNaN(companion?.tokenId));
+		if (companionContract && !isNaN(companion?.tokenId)) {
+			const ownerOf = await companionContract.methods.ownerOf(companion.tokenId).call();
+			return ownerOf === web3React.account;
+		}
+	};
+	useEffect(() => {
+		console.log("Hello");
+		isOwner().then((result) => {
+			console.log(result);
+			setOwned(result);
+		});
+	}, [companionContract, web3React.account]);
 
 	useEffect(() => {
 		if (!data?.pose) {
-			setCompanion(randomCompanion());
+			setCompanion(null);
 			return;
 		}
 		setCompanion(keysToCompanion(data));
@@ -170,6 +240,7 @@ function CompanionGift() {
 			? colors.default.yellow
 			: colors.default.red;
 
+	// console.log(owned);
 	return (
 		<>
 			<div
@@ -212,30 +283,41 @@ function CompanionGift() {
 							/>
 						) : null}
 						<div
-							className="mt-12 absolute bg-ui-black-darker z-20 aspect-square w-full max-h-2/3-screen"
+							className="mt-12 absolute z-20 aspect-square w-full max-h-2/3-screen"
 							style={{
 								top: `calc(33% + ${Math.min(
-									720,
+									scrollableArea?.current?.offsetHeight,
 									y * 4 * scrollableArea?.current?.offsetHeight
 								)}px)`,
 							}}
 						>
 							<div
-								className="absolute bg-ui-black-darker top-0 left-0 origin-bottom-left h-5 w-1/2 transform-gpu -translate-y-5"
+								className="absolute top-6 left-6 origin-bottom-left h-5 w-1/2 transform-gpu -translate-y-5"
 								style={{
 									// @ts-ignore
 									"--tw-rotate": rescale(0, 0.25, -60, -180, y) + "deg",
 									transform: "var(--tw-transform)",
 								}}
-							></div>
+							>
+								<div className="relative w-full h-full">
+									<Image src="/lid.png" alt="lid" layout="fill" />
+								</div>
+							</div>
 							<div
-								className="absolute bg-ui-black-darker top-0 right-0 origin-bottom-right h-5 w-1/2 transform-gpu -translate-y-5"
+								className="absolute top-6 right-6 origin-bottom-right h-5 w-1/2 transform-gpu -translate-y-5"
 								style={{
 									// @ts-ignore
 									"--tw-rotate": rescale(0, 0.25, 60, 180, y) + "deg",
 									transform: "var(--tw-transform)",
 								}}
-							></div>
+							>
+								<div className="relative w-full h-full">
+									<Image src="/lid.png" alt="lid" layout="fill" />
+								</div>
+							</div>
+							<div className="relative w-full h-full">
+								<Image src="/box.png" alt="box" layout="fill" />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -298,14 +380,40 @@ function CompanionGift() {
 										</div>
 									</div>
 									<div className="flex flex-col md:flex-row gap-4 items-start">
-										{/* <div>
-							<Button className="border-default-white">View on OpenSea</Button>
-						</div> */}
 										<div>
-											<Button onClick={() => {}} className="border-default-white">
-												Check to see if you own it
-											</Button>
+											<Button className="border-default-white">View on OpenSea</Button>
 										</div>
+										<div>
+											<ConnectButton
+												loginMessage="Check to see if you're the owner"
+												className="border-default-white"
+												account={web3React.account}
+												handleLogout={handleSignOut}
+												handleConnectInjected={handleConnectInjected}
+												handleConnectWalletConnect={handleConnectWalletConnect}
+											/>
+										</div>
+									</div>
+
+									<div className="text-default-yellow">
+										{owned === true ? (
+											<>
+												Congratulations! You are the owner. Use this{" "}
+												<a className="underline" href={`/?coupon=coinbase${companion.tokenId}`}>
+													special one-time link
+												</a>{" "}
+												to further customize your companion cost-free.
+											</>
+										) : null}
+										{owned === false ? (
+											<>
+												Reach out to{" "}
+												<a className="underline" href="mailto:katie.ett@coinbase.com">
+													katie.ett@coinbase.com
+												</a>{" "}
+												to learn how to redeem your NFT.
+											</>
+										) : null}
 									</div>
 								</div>
 							</div>

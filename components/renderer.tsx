@@ -24,7 +24,6 @@ const imgLoadToPromise = (src): Promise<HTMLImageElement> => {
 		};
 		img.onerror = reject;
 		img.src = src;
-		console.log(src);
 	});
 };
 
