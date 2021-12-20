@@ -139,7 +139,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/02-bottom/pants_1-v_clothing.png",
 						2: "/attributes/pose2/02-bottoms/waist_1-v_clothing-g_f.png",
-						3: "/attributes/pose3/10-bottom/cropped_1-v_clothing.png",
+						3: "/attributes/pose3/10-bottom/pants_1-v_clothing.png",
 					},
 					colorType: "clothing",
 				},
@@ -147,16 +147,16 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/02-bottom/pants_2-c_shadow.png",
 						2: "/attributes/pose2/02-bottoms/waist_2-c_shadow.png",
-						3: "/attributes/pose3/10-bottom/cropped_2-c_shadow.png",
+						3: "/attributes/pose3/10-bottom/pants_2-c_shadow.png",
 					},
 					color: colors.default.gray,
 					blendMode: "multiply",
 				},
 				{
 					path: {
-						1: "/attributes/pose1/02-bottom/pants_3-c_outline.png",
+						1: "/attributes/pose1/02-bottom/waist_3-c_outline.png",
 						2: "/attributes/pose2/02-bottoms/waist_3-c_outline.png",
-						3: "/attributes/pose3/10-bottom/cropped_3-c_outline.png",
+						3: "/attributes/pose3/10-bottom/waist_3-c_outline.png",
 					},
 					color: colors.default.black,
 				},
@@ -170,7 +170,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/02-bottom/pants_1-v_clothing.png",
 						2: "/attributes/pose2/02-bottoms/pants_1-v_clothing.png",
-						3: "/attributes/pose3/10-bottom/cropped_1-v_clothing.png",
+						3: "/attributes/pose3/10-bottom/pants_1-v_clothing.png",
 					},
 					colorType: "clothing",
 				},
@@ -178,7 +178,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/02-bottom/pants_2-c_shadow.png",
 						2: "/attributes/pose2/02-bottoms/pants_2-c_shadow.png",
-						3: "/attributes/pose3/10-bottom/cropped_2-c_shadow.png",
+						3: "/attributes/pose3/10-bottom/pants_2-c_shadow.png",
 					},
 					color: colors.default.gray,
 					blendMode: "multiply",
@@ -187,7 +187,7 @@ export const bottom: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/02-bottom/pants_3-c_outline.png",
 						2: "/attributes/pose2/02-bottoms/pants_3-c_outline.png",
-						3: "/attributes/pose3/10-bottom/cropped_3-c_outline.png",
+						3: "/attributes/pose3/10-bottom/pants_3-c_outline.png",
 					},
 					color: colors.default.black,
 				},

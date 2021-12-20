@@ -42,28 +42,50 @@ export const top: AttributeDictionary = {
 			rarity: "mythic",
 			layers: [
 				{
-					path: { 2: "/attributes/pose2/05-tops/fisherman_1-v_clothing.png" },
+					path: {
+						1: "/attributes/pose1/13-top/fisherman_1-v_clothing.png",
+						2: "/attributes/pose2/05-tops/fisherman_1-v_clothing.png",
+						3: "/attributes/pose3/03-top/fisherman_1-v_clothing.png",
+					},
 					colorType: "clothing",
 				},
 				{
-					path: { 2: "/attributes/pose2/05-tops/fisherman_2-v_clothing.png" },
+					path: {
+						1: "/attributes/pose1/13-top/fisherman_2-v_clothing.png",
+						2: "/attributes/pose2/05-tops/fisherman_2-v_clothing.png",
+						3: "/attributes/pose3/03-top/fisherman_2-v_clothing.png",
+					},
 					colorType: "clothing",
 				},
 				{
-					path: { 2: "/attributes/pose2/05-tops/fisherman_3-v_clothing.png" },
+					path: {
+						2: "/attributes/pose2/05-tops/fisherman_3-v_clothing.png",
+						3: "/attributes/pose3/03-top/fisherman_3-v_clothing.png",
+					},
 					colorType: "clothing",
 				},
 				{
-					path: { 2: "/attributes/pose2/05-tops/fisherman_4-c_shadow.png" },
+					path: {
+						1: "/attributes/pose1/13-top/fisherman_4-c_shadow.png",
+						2: "/attributes/pose2/05-tops/fisherman_4-c_shadow.png",
+						3: "/attributes/pose3/03-top/fisherman_4-c_shadow.png",
+					},
 					color: colors.default.gray,
 					blendMode: "multiply",
 				},
 				{
-					path: { 2: "/attributes/pose2/05-tops/fisherman_5-c_outline.png" },
+					path: {
+						1: "/attributes/pose1/13-top/fisherman_5-c_outline.png",
+						2: "/attributes/pose2/05-tops/fisherman_5-c_outline.png",
+						3: "/attributes/pose3/03-top/fisherman_5-c_outline.png",
+					},
 					color: colors.default.black,
 				},
 				{
-					path: { 2: "/attributes/pose2/05-tops/fisherman_6-c_outline.png" },
+					path: {
+						1: "/attributes/pose1/13-top/fisherman_6-c_outline.png",
+						2: "/attributes/pose2/05-tops/fisherman_6-c_outline.png",
+					},
 					colorType: "clothing",
 				},
 			],
@@ -127,36 +149,36 @@ export const top: AttributeDictionary = {
 				},
 			],
 		},
-		{
-			attribute: "top",
-			name: "hoodiedown",
-			restrictions: { headShape: "flat" },
-			rarity: "mythic",
-			layers: [
-				{
-					path: { 2: "/attributes/pose2/05-tops/hoodieup_0-c_clothing-destination_over.png" },
-					colorType: "inherit",
-					blendMode: "destination-over",
-				},
-				{
-					path: { 2: "/attributes/pose2/05-tops/hoodieup_1-c_clothing.png" },
-					colorType: "clothing",
-				},
-				{
-					path: { 2: "/attributes/pose2/05-tops/hoodieup_2-c_shadow.png" },
-					color: colors.default.gray,
-					blendMode: "multiply",
-				},
-				{
-					path: { 2: "/attributes/pose2/05-tops/hoodieup_3-c_clothing.png" },
-					color: colors.default.white,
-				},
-				{
-					path: { 2: "/attributes/pose2/05-tops/hoodieup_4-c_outline.png" },
-					color: colors.default.black,
-				},
-			],
-		},
+		// {
+		// 	attribute: "top",
+		// 	name: "hoodiedown",
+		// 	restrictions: { headShape: "flat" },
+		// 	rarity: "mythic",
+		// 	layers: [
+		// 		{
+		// 			path: { 2: "/attributes/pose2/05-tops/hoodieup_0-c_clothing-destination_over.png" },
+		// 			colorType: "inherit",
+		// 			blendMode: "destination-over",
+		// 		},
+		// 		{
+		// 			path: { 2: "/attributes/pose2/05-tops/hoodieup_1-c_clothing.png" },
+		// 			colorType: "clothing",
+		// 		},
+		// 		{
+		// 			path: { 2: "/attributes/pose2/05-tops/hoodieup_2-c_shadow.png" },
+		// 			color: colors.default.gray,
+		// 			blendMode: "multiply",
+		// 		},
+		// 		{
+		// 			path: { 2: "/attributes/pose2/05-tops/hoodieup_3-c_clothing.png" },
+		// 			color: colors.default.white,
+		// 		},
+		// 		{
+		// 			path: { 2: "/attributes/pose2/05-tops/hoodieup_4-c_outline.png" },
+		// 			color: colors.default.black,
+		// 		},
+		// 	],
+		// },
 		{
 			attribute: "top",
 			name: "midriff",
@@ -1001,6 +1023,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/13-top/summer_1-v_clothing.png",
 						2: "/attributes/pose2/05-tops/beach_1-v_clothing.png",
+						3: "/attributes/pose3/03-top/beach_1-v_clothing.png",
 					},
 					colorType: "clothing",
 				},
@@ -1008,6 +1031,7 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/13-top/summer_2-c_shadow.png",
 						2: "/attributes/pose2/05-tops/beach_2-c_shadow.png",
+						3: "/attributes/pose3/03-top/beach_2-c_shadow.png",
 					},
 					color: colors.default.gray,
 					blendMode: "multiply",
@@ -1016,14 +1040,9 @@ export const top: AttributeDictionary = {
 					path: {
 						1: "/attributes/pose1/13-top/summer_3-c_outline.png",
 						2: "/attributes/pose2/05-tops/beach_3-c_outline.png",
+						3: "/attributes/pose3/03-top/beach_3-c_outline.png",
 					},
 					color: colors.default.black,
-				},
-				{
-					path: {
-						2: "/attributes/pose2/05-tops/beach_4-v_clothing.png",
-					},
-					colorType: "clothing",
 				},
 			],
 		},

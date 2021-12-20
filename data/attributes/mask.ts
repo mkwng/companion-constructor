@@ -31,6 +31,7 @@ export const mask: AttributeDictionary = {
 			attribute: "mask",
 			name: "warrior",
 			hides: ["nose", "mouth"],
+			rarity: "mythic",
 			layers: [
 				{
 					path: "/attributes/face/11-nose/warrior_1-v_clothing.png",

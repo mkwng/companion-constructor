@@ -51,6 +51,27 @@ const getVariants = (companion: Companion): Variant[] => {
 	});
 };
 
+export const sortVariants = (a, b) => {
+	const aRarity = a.rarity ? rarityToCost[a.rarity] : 0;
+	const bRarity = b.rarity ? rarityToCost[b.rarity] : 0;
+	if (aRarity !== bRarity) {
+		if (aRarity < bRarity) {
+			return -1;
+		} else {
+			return 1;
+		}
+	}
+	if (a.restrictions && !b.restrictions) return 1;
+	if (!a.restrictions && b.restrictions) return -1;
+	if (a.restrictions && b.restrictions) {
+		if (!a.restrictions.gender && b.restrictions.gender) return -1;
+		if (a.restrictions.gender && !b.restrictions.gender) return 1;
+		if (a.restrictions.gender > b.restrictions.gender) return -1;
+		if (a.restrictions.gender > b.restrictions.gender) return 1;
+	}
+	return a.name > b.name ? 1 : -1;
+};
+
 export const getLayers = (companion: Companion) => {
 	const pose = poses[companion.properties.pose];
 
@@ -172,7 +193,8 @@ export const colorToKey = (
 	colorObject: { [key: string]: RGBColor }
 ): string => {
 	if (!color) {
-		throw new Error("Color is undefined");
+		console.error("Color is undefined");
+		return "black";
 	}
 	for (const key in colorObject) {
 		if (
@@ -183,7 +205,7 @@ export const colorToKey = (
 			return key;
 		}
 	}
-	return "";
+	return "black";
 };
 
 const hasConflict = (

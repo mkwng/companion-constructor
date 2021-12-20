@@ -134,15 +134,6 @@ export const blemish: AttributeDictionary = {
 					batch: ["head"],
 				},
 			],
-			// },
-			// {
-			// 	name: "blushsoft",
-			// 	layers: [
-			// 		{
-			// 			path: "/attributes/face/02-blemish/blushsoft-c_red.png",
-			// 			color: colors.default.red,
-			// 		},
-			// 	],
 		},
 	],
 };

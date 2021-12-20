@@ -7,6 +7,7 @@ import {
 	getAllHides,
 	getRestrictions,
 	isCompatible,
+	sortVariants,
 } from "../data/helpers";
 import { randomProperty } from "../data/random";
 import { Companion, Pose, Restrictions, RGBColor, Variant } from "../data/types";
@@ -137,7 +138,7 @@ const AttributeSelector = ({
 }) => {
 	return (
 		<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-2 xl:grid-cols-3 gap-2 p-4">
-			{variants.map((variant) => {
+			{variants.sort(sortVariants).map((variant) => {
 				return (
 					<div key={variant.name}>
 						<Button
