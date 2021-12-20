@@ -234,6 +234,20 @@ export const headwear: AttributeDictionary = {
 				},
 			],
 		},
+		{
+			attribute: "headwear",
+			name: "cat",
+			layers: [
+				{
+					path: "/attributes/face/10-accessories/cat_1.png",
+					colorType: "clothing",
+				},
+				{
+					path: "/attributes/face/10-accessories/cat_2.png",
+					color: colors.skin[4],
+				},
+			],
+		},
 	],
 };
 
@@ -248,5 +262,6 @@ let headwearVariants = [
 	"ranger",
 	"turban",
 	"bucket",
+	"cat",
 ] as const;
 export type HeadwearVariant = typeof headwearVariants[number];

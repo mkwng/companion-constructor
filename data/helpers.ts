@@ -194,7 +194,7 @@ export const colorToKey = (
 ): string => {
 	if (!color) {
 		console.error("Color is undefined");
-		return "black";
+		return "";
 	}
 	for (const key in colorObject) {
 		if (
@@ -205,7 +205,7 @@ export const colorToKey = (
 			return key;
 		}
 	}
-	return "black";
+	return "";
 };
 
 const hasConflict = (

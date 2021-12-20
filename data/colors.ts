@@ -20,6 +20,7 @@ export const colors: {
 		purple: { r: 138, g: 116, b: 140 },
 		blue: { r: 72, g: 96, b: 108 },
 		red: { r: 187, g: 90, b: 35 },
+		pink: { r: 241, g: 90, b: 154 },
 		brown: { r: 134, g: 59, b: 17 },
 		black: { r: 37, g: 36, b: 49 },
 	},
