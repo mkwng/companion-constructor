@@ -56,7 +56,7 @@ const wcConnector = new WalletConnectConnector({
 	infuraId: "517bf3874a6848e58f99fa38ccf9fce4",
 });
 const injected = new InjectedConnector({ supportedChainIds: [1, 4] });
-const preferredChain = 4;
+const preferredChain = 1;
 
 function timeout(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
