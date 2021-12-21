@@ -118,7 +118,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			).data as Buffer;
 			res.setHeader("Content-Type", "image/png");
 			res.setHeader("Content-Length", boxBuffer.length);
-			res.setHeader("Cache-Control", "public, max-age=31536000");
 			res.status(200);
 			res.end(boxBuffer);
 			return;
@@ -137,7 +136,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		).data as Buffer;
 		res.setHeader("Content-Type", "image/png");
 		res.setHeader("Content-Length", boxBuffer.length);
-		res.setHeader("Cache-Control", "public, max-age=31536000");
 		res.status(200);
 		res.end(boxBuffer);
 		return;
@@ -247,7 +245,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	res.setHeader("Content-Type", "image/png");
 	res.setHeader("Content-Length", optimized.length);
-	res.setHeader("Cache-Control", "public, max-age=31536000");
 	res.status(200);
 	res.end(optimized);
 }
