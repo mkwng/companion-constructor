@@ -110,12 +110,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			where: { tokenId: parseInt(query.id) },
 		});
 		if (!result) {
-			res.status(404).send("No companion found");
+			const boxBuffer = (
+				await axios({
+					url: "https://companioninabox.art/box.png",
+					responseType: "arraybuffer",
+				})
+			).data as Buffer;
+			res.setHeader("Content-Type", "image/png");
+			res.setHeader("Content-Length", boxBuffer.length);
+			res.setHeader("Cache-Control", "public, max-age=31536000");
+			res.status(200);
+			res.end(boxBuffer);
 			return;
-			// companion = await createCompanion({
-			// 	tokenId: parseInt(query.id),
-			// 	companion: randomCompanion(),
-			// });
 		} else {
 			companion = keysToCompanion(apiToKeys(result));
 		}
