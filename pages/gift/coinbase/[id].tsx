@@ -243,7 +243,7 @@ function CompanionGift() {
 			? colors.default.yellow
 			: colors.default.red;
 
-	if (!tokenId || tokenId < 25 || tokenId > 145) {
+	if (!tokenId || tokenId < 25 || tokenId > 144) {
 		return <div>Invalid ID</div>;
 	}
 
