@@ -5,7 +5,7 @@ export default async function coupon(req: NextApiRequest, res: NextApiResponse) 
 	const { method } = req;
 	switch (method) {
 		case "GET":
-			if (req.query.coupon) {
+			if (req.query.code) {
 				// Check if coupon exists and has not been used
 				const coupon = await prisma.coupon.findUnique({
 					where: {
