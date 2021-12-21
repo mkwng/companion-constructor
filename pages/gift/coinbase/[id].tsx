@@ -2,22 +2,22 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
-import Renderer from "../../components/renderer";
-import { colors } from "../../data/colors";
-import { colorToKey, keysToCompanion } from "../../data/helpers";
-import { Companion, RGBColor } from "../../data/types";
-import { fetcher } from "../../lib/swr";
-import { Check } from "../../components/icons/check";
+import Renderer from "../../../components/renderer";
+import { colors } from "../../../data/colors";
+import { colorToKey, keysToCompanion } from "../../../data/helpers";
+import { Companion, RGBColor } from "../../../data/types";
+import { fetcher } from "../../../lib/swr";
+import { Check } from "../../../components/icons/check";
 import { Web3Provider } from "@ethersproject/providers";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
-import { ConnectButton } from "../../components/connectButton";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import { ConnectButton } from "../../../components/connectButton";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
-import { companionAbi, companionAddress } from "../../components/contract";
-import Button from "../../components/button";
+import { companionAbi, companionAddress } from "../../../components/contract";
+import Button from "../../../components/button";
 
 function getLibrary(provider) {
 	const library = new Web3Provider(provider);
@@ -154,7 +154,10 @@ const Logomark = ({ color }: { color: RGBColor }) => {
 function CompanionGift() {
 	const router = useRouter();
 	const [companion, setCompanion] = useState<Companion | null>(null);
-	const { data, error } = useSWR(`/api/companion/${router.query.id}?format=keys`, fetcher);
+	const tokenId = parseInt(
+		Array.isArray(router.query.id) ? router.query.id[0] : router.query.id
+	);
+	const { data, error } = useSWR(`/api/companion/${tokenId}?format=keys`, fetcher);
 	const scrollableArea = useRef<HTMLDivElement>(null);
 	const [y, setY] = useState(0);
 	const [owned, setOwned] = useState<boolean | null>(null);
@@ -240,7 +243,10 @@ function CompanionGift() {
 			? colors.default.yellow
 			: colors.default.red;
 
-	// console.log(owned);
+	if (!tokenId || tokenId < 25 || tokenId > 144) {
+		return <div>Invalid ID</div>;
+	}
+
 	return (
 		<>
 			<div
@@ -372,16 +378,28 @@ function CompanionGift() {
 									<div className="flex flex-col md:flex-row gap-2 md:gap-8 text-sm">
 										<div className="flex gap-2">
 											<Check />
-											<p>1/1 created just for {companion?.name || "a friend"}.</p>
+											<p>
+												{companion?.name
+													? "1/1 created just for " + companion.name
+													: "Automatically generated with love"}
+												.
+											</p>
 										</div>
 										<div className="flex gap-2">
 											<Check />
-											<p>100% customizable, if you choose</p>
+											<p>100% customizable, just log in below</p>
 										</div>
 									</div>
 									<div className="flex flex-col md:flex-row gap-4 items-start">
 										<div>
-											<Button className="border-default-white">View on OpenSea</Button>
+											<Button
+												className="border-default-white"
+												onClick={() => {
+													window.location.href = `https://opensea.com/${companionContract}/${tokenId}`;
+												}}
+											>
+												View on OpenSea
+											</Button>
 										</div>
 										<div>
 											<ConnectButton
@@ -402,7 +420,7 @@ function CompanionGift() {
 												<a className="underline" href={`/?coupon=coinbase${companion.tokenId}`}>
 													special one-time link
 												</a>{" "}
-												to further customize your companion cost-free.
+												to customize your companion cost-free.
 											</>
 										) : null}
 										{owned === false ? (

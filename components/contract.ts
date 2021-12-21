@@ -3,9 +3,13 @@
 
 import { AbiItem } from "./contract.types";
 
-export const companionAddress = "0xd15ee422B4f7FF91F170b16ddF3d279a50e888b7";
-export const farmAddress = "0xC1785c7421268df3B6c5C1AF2abF5D0ca55E60Bc";
-export const shipAddress = "0x391d5864de7E7B4F3Dd2aA6f6336cE4Faf996F01";
+// export const companionAddress = "0xd15ee422B4f7FF91F170b16ddF3d279a50e888b7"; // Rinkeby
+export const companionAddress = "0x13Bd2ac3779cBbCb2aC874C33f1145DD71Ce41ee";
+// export const farmAddress = "0xC1785c7421268df3B6c5C1AF2abF5D0ca55E60Bc"; // Rinkeby
+export const farmAddress = "0x2c50B30B7a5Ceb1c12B646b7c00626408F8cfd9f";
+// export const shipAddress = "0x391d5864de7E7B4F3Dd2aA6f6336cE4Faf996F01"; // Rinkeby
+export const shipAddress = "0xb33a59958e216B8Fc7e9d0ea7fAf57dE3D4F250b";
+export const ownerAddress = "0xe99F64eA8EF1b0072aCcB7eA00a6C7478C62f92c";
 export const priceEth = 0.08;
 export const priceCustomEth = 0.16;
 

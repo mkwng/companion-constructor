@@ -72,6 +72,7 @@ export const CheckoutDialog = ({
 		};
 	}, [transacting]);
 
+	console.log(data);
 	const differences = getDifferences(uneditedCompanion, companion);
 	const balance = data?.coupon ? 0 : differences.reduce((acc, cur) => acc + cur.cost, 0);
 

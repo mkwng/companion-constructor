@@ -1,13 +1,10 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
-import NodeCache from "node-cache";
+// import NodeCache from "node-cache";
 import sharp from "sharp";
 import { apiToKeys, drawLayer, getLayers, getPath, keysToCompanion } from "../../data/helpers";
-import { createCompanion } from "../../data/operations";
-import { randomCompanion } from "../../data/random";
 import { AttributeSelection, Companion, LayerWithData, Pose, RGBColor } from "../../data/types";
 import prisma from "../../lib/prisma";
-import { web3 } from "../../lib/web3";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Example url query:
@@ -103,6 +100,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	};
 
 	const query = req.query;
+
 	let companion: Companion | null;
 	const batches: Set<string> = new Set();
 	if (query.id && typeof query.id === "string") {
@@ -110,12 +108,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			where: { tokenId: parseInt(query.id) },
 		});
 		if (!result) {
-			res.status(404).send("No companion found");
+			const boxBuffer = (
+				await axios({
+					url: "https://companioninabox.art/box.png",
+					responseType: "arraybuffer",
+				})
+			).data as Buffer;
+			res.setHeader("Content-Type", "image/png");
+			res.setHeader("Content-Length", boxBuffer.length);
+			res.status(200);
+			res.end(boxBuffer);
 			return;
-			// companion = await createCompanion({
-			// 	tokenId: parseInt(query.id),
-			// 	companion: randomCompanion(),
-			// });
 		} else {
 			companion = keysToCompanion(apiToKeys(result));
 		}
@@ -123,7 +126,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		companion = keysToCompanion(query);
 	}
 	if (!companion?.properties?.pose) {
-		res.status(404).send("No companion found");
+		const boxBuffer = (
+			await axios({
+				url: "https://companioninabox.art/box.png",
+				responseType: "arraybuffer",
+			})
+		).data as Buffer;
+		res.setHeader("Content-Type", "image/png");
+		res.setHeader("Content-Length", boxBuffer.length);
+		res.status(200);
+		res.end(boxBuffer);
 		return;
 	}
 	const layers = getLayers(companion);
@@ -231,7 +243,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	res.setHeader("Content-Type", "image/png");
 	res.setHeader("Content-Length", optimized.length);
-	res.setHeader("Cache-Control", "public, max-age=31536000");
 	res.status(200);
 	res.end(optimized);
 }

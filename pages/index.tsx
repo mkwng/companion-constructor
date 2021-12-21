@@ -56,7 +56,7 @@ const wcConnector = new WalletConnectConnector({
 	infuraId: "517bf3874a6848e58f99fa38ccf9fce4",
 });
 const injected = new InjectedConnector({ supportedChainIds: [1, 4] });
-const preferredChain = 4;
+const preferredChain = 1;
 
 function timeout(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
@@ -130,9 +130,10 @@ function Constructor() {
 		if (web3React.active && web3React.chainId === preferredChain) {
 			let w3 = new Web3(web3React.library.provider);
 			setWeb3(w3);
-			setCompanionContract(new w3.eth.Contract(companionAbi, companionAddress));
-			setFarmContract(new w3.eth.Contract(farmAbi, farmAddress));
-			setShipContract(new w3.eth.Contract(shipAbi, shipAddress));
+			if (companionAddress)
+				setCompanionContract(new w3.eth.Contract(companionAbi, companionAddress));
+			if (farmAddress) setFarmContract(new w3.eth.Contract(farmAbi, farmAddress));
+			if (shipAddress) setShipContract(new w3.eth.Contract(shipAbi, shipAddress));
 		} else {
 			setCompanionContract(null);
 			setFarmContract(null);
@@ -256,17 +257,21 @@ function Constructor() {
 			}
 
 			// In range
-			const stakedCompResult = await farmContract.methods.depositsOf(web3React.account).call();
+			const stakedCompResult = farmContract
+				? await farmContract.methods.depositsOf(web3React.account).call()
+				: [];
 			if (stakedCompResult.length > 0) {
 				setStakedCompanions(new Set(stakedCompResult));
 			}
 
-			const rewardsResult = await farmContract.methods
-				.calculateRewards(web3React.account, stakedCompResult)
-				.call();
+			const rewardsResult = farmContract
+				? await farmContract.methods
+						.calculateRewards(web3React.account, stakedCompResult)
+						.call()
+				: [];
 			setClaimable(
 				rewardsResult.reduce((acc, cur) => {
-					return acc + parseInt(cur.substring(0, cur.length - zeroPad.length));
+					return acc + (parseInt(cur.substring(0, cur.length - zeroPad.length)) || 0);
 				}, 0)
 			);
 

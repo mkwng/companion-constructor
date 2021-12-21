@@ -1,6 +1,6 @@
 import { Companion as PrismaCompanion } from ".prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { rgbToHex } from "../../../data/colors";
+import { colors, rgbToHex } from "../../../data/colors";
 import {
 	apiToKeys,
 	getDifferences,
@@ -13,6 +13,8 @@ import { randomCompanion } from "../../../data/random";
 import { Companion } from "../../../data/types";
 import prisma from "../../../lib/prisma";
 import { web3 } from "../../../lib/web3";
+
+const isRevealed = false;
 
 interface UpdateCompanion {
 	uneditedCompanion?: Companion;
@@ -193,6 +195,17 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 						return res.status(200).json(keysToCompanion(apiToKeys(prismaResponse)));
 					case "metadata":
 					default:
+						if (!isRevealed) {
+							return res.status(200).json({
+								token_id: req.query.id,
+								name: `Companion #${req.query.id}`,
+								image: `https://companioninabox.art/box.png`,
+								external_url: `https://companioninabox.art/`,
+								background_color: rgbToHex(colors.background.red),
+								description:
+									"Boxed in a small, wooden box, this companion is a bit of a mystery.",
+							});
+						}
 						const {
 							tokenId,
 							createdAt,
