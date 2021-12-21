@@ -1,17 +1,58 @@
+import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
+import { InjectedConnector } from "@web3-react/injected-connector";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import useSWR from "swr";
+import Web3 from "web3";
 import Button from "../../components/button";
+import { ConnectButton } from "../../components/connectButton";
+import { ownerAddress } from "../../components/contract";
 import Editor from "../../components/editor";
 import Renderer from "../../components/renderer";
 import { colors } from "../../data/colors";
-import { colorToKey, keysToCompanion } from "../../data/helpers";
+import { colorToKey, keysToCompanion, messageToSign } from "../../data/helpers";
 import { randomCompanion } from "../../data/random";
 import { Companion } from "../../data/types";
+import useLocalStorage from "../../hooks/useLocalStorage";
 import { fetcher } from "../../lib/swr";
 
-export default function CompanionDetails() {
+function getLibrary(provider) {
+	const library = new Web3Provider(provider);
+	return library;
+}
+
+const ConnectorNames = {
+	Injected: "injected",
+	WalletConnect: "walletconnect",
+};
+const W3Operations = {
+	Connect: "connect",
+	Disconnect: "disconnect",
+};
+const wcConnector = new WalletConnectConnector({
+	infuraId: "517bf3874a6848e58f99fa38ccf9fce4",
+});
+const injected = new InjectedConnector({ supportedChainIds: [1, 4] });
+
+function timeout(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export default function WrapperHome() {
+	return (
+		<Web3ReactProvider getLibrary={getLibrary}>
+			<CompanionDetails />
+		</Web3ReactProvider>
+	);
+}
+function CompanionDetails() {
+	const web3React = useWeb3React();
+	const [web3, setWeb3] = useState<Web3>(null);
+	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
+	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
 	const router = useRouter();
 	const [companion, setCompanion] = useState<Companion | null>(null);
 	const [companionUnedited, setCompanionUnedited] = useState<Companion | null>(null);
@@ -19,6 +60,29 @@ export default function CompanionDetails() {
 	const { data, error } = useSWR(`/api/companion/${tokenId}?format=keys`, fetcher);
 	const [name, setName] = useState("");
 	const [saving, setSaving] = useState(false);
+
+	useEffect(() => {
+		if (web3React.active) {
+			let w3 = new Web3(web3React.library.provider);
+			setWeb3(w3);
+		} else {
+		}
+	}, [web3React.active]);
+
+	useEffect(() => {
+		if (latestOp == "connect" && latestConnector == "injected") {
+			injected
+				.isAuthorized()
+				.then((isAuthorized) => {
+					if (isAuthorized && !web3React.active && !web3React.error) {
+						web3React.activate(injected);
+					}
+				})
+				.catch(() => {});
+		} else if (latestOp == "connect" && latestConnector == "walletconnect") {
+			web3React.activate(wcConnector);
+		}
+	}, []);
 
 	useEffect(() => {
 		const queryToken = parseInt(
@@ -39,9 +103,29 @@ export default function CompanionDetails() {
 		}
 	}, [data]);
 
+	const handleConnectInjected = () => {
+		setLatestConnector(ConnectorNames.Injected);
+		setLatestOp(W3Operations.Connect);
+		web3React.activate(injected);
+	};
+	const handleConnectWalletConnect = () => {
+		setLatestConnector(ConnectorNames.WalletConnect);
+		setLatestOp(W3Operations.Connect);
+		web3React.activate(wcConnector);
+	};
+	const handleSignOut = () => {
+		setLatestOp(W3Operations.Disconnect);
+		web3React.deactivate();
+	};
+
 	const handleSave = async () => {
 		setSaving(true);
 
+		const signature = await web3.eth.personal.sign(
+			messageToSign + "\n\nUpdate companion",
+			web3React.account,
+			"test"
+		);
 		const result = await (
 			await fetch(`/api/companion/admin/${tokenId}`, {
 				method: "POST",
@@ -50,6 +134,7 @@ export default function CompanionDetails() {
 				},
 				body: JSON.stringify({
 					companion: { ...companion, name: name },
+					signature,
 				}),
 			})
 		).json();
@@ -64,6 +149,24 @@ export default function CompanionDetails() {
 		setSaving(false);
 	};
 
+	if (web3React.account !== ownerAddress) {
+		return (
+			<>
+				Not authorized
+				<div>
+					<ConnectButton
+						loginMessage="Check to see if you're the owner"
+						className="border-default-white"
+						account={web3React.account}
+						handleLogout={handleSignOut}
+						handleConnectInjected={handleConnectInjected}
+						handleConnectWalletConnect={handleConnectWalletConnect}
+					/>
+				</div>
+			</>
+		);
+	}
+
 	return (
 		<div className="bg-ui-black-darker grid grid-cols-5 font-mono text-sm">
 			<div className="col-span-3 h-screen">
@@ -74,7 +177,7 @@ export default function CompanionDetails() {
 				>
 					{companion ? (
 						<div className="w-full h-full flex justify-center relative">
-							<Renderer companion={companion} />
+							<Renderer companion={companion} hideBackground={true} />
 							<div className="absolute top-4 left-4">
 								<Button
 									onClick={() => {
