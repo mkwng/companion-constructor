@@ -14,7 +14,7 @@ import { Companion } from "../../../data/types";
 import prisma from "../../../lib/prisma";
 import { web3 } from "../../../lib/web3";
 
-const isRevealed = false;
+const isRevealed = true;
 
 interface UpdateCompanion {
 	uneditedCompanion?: Companion;
