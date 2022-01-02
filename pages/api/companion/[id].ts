@@ -246,7 +246,7 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 						const companion = keysToCompanion(apiToKeys(prismaResponse));
 						return res.status(200).json({
 							token_id: tokenId,
-							name: companion.name || `Companion #${tokenId}`,
+							name: `Companion #${tokenId}`,
 							image: `https://${
 								process.env.RAILWAY_STATIC_URL || process.env.NEXT_PUBLIC_URL
 							}/api/companion.png?id=${tokenId}`,
