@@ -22,6 +22,7 @@ export const colors: {
 		red: { r: 187, g: 90, b: 35 },
 		pink: { r: 241, g: 90, b: 154 },
 		brown: { r: 134, g: 59, b: 17 },
+		darkbrown: { r: 92, g: 42, b: 13 },
 		black: { r: 37, g: 36, b: 49 },
 	},
 	skin: {
