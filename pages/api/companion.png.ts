@@ -103,7 +103,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	const query = req.query;
 
-	let optimized: Buffer = typeof query.id === 'string' && !isNaN(parseFloat(query.id)) ? null : await imageCache.get(query.id);
+	let optimized: Buffer = typeof query.id === 'string' 
+	 ? !isNaN(parseFloat(query.id)) 
+	 	? null 
+		: await imageCache.get(query.id) 
+	 : null;
 
 	if(!optimized) {
 
