@@ -207,9 +207,12 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 							});
 						}
 						const {
+							id,
+							name,
 							tokenId,
 							createdAt,
 							updatedAt,
+							accessoryColors,
 							hairColors,
 							headwearColors,
 							eyewearColors,

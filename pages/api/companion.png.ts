@@ -1,10 +1,12 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
-// import NodeCache from "node-cache";
+import NodeCache from "node-cache";
 import sharp from "sharp";
 import { apiToKeys, drawLayer, getLayers, getPath, keysToCompanion } from "../../data/helpers";
 import { AttributeSelection, Companion, LayerWithData, Pose, RGBColor } from "../../data/types";
 import prisma from "../../lib/prisma";
+
+const imageCache = new NodeCache();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Example url query:
@@ -101,13 +103,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	const query = req.query;
 
-	let companion: Companion | null;
-	const batches: Set<string> = new Set();
-	if (query.id && typeof query.id === "string") {
-		const result = await prisma.companion.findUnique({
-			where: { tokenId: parseInt(query.id) },
-		});
-		if (!result) {
+	let optimized: Buffer = !isNaN(parseFloat(query.id)) && !isNaN(query.id - 0) ? null : await imageCache.get(query.id);
+
+	if(!optimized) {
+
+		let companion: Companion | null;
+		const batches: Set<string> = new Set();
+		if (!isNaN(parseFloat(query.id)) && !isNaN(query.id - 0)) {
+			const result = await prisma.companion.findUnique({
+				where: { tokenId: parseInt(query.id) },
+			});
+			if (!result) {
+				const boxBuffer = (
+					await axios({
+						url: "https://companioninabox.art/box.png",
+						responseType: "arraybuffer",
+					})
+				).data as Buffer;
+				res.setHeader("Content-Type", "image/png");
+				res.setHeader("Content-Length", boxBuffer.length);
+				res.status(200);
+				res.end(boxBuffer);
+				return;
+			} else {
+				companion = keysToCompanion(apiToKeys(result));
+			}
+		} else {
+			companion = keysToCompanion(query);
+		}
+		if (!companion?.properties?.pose) {
 			const boxBuffer = (
 				await axios({
 					url: "https://companioninabox.art/box.png",
@@ -119,127 +143,112 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			res.status(200);
 			res.end(boxBuffer);
 			return;
-		} else {
-			companion = keysToCompanion(apiToKeys(result));
 		}
-	} else {
-		companion = keysToCompanion(query);
-	}
-	if (!companion?.properties?.pose) {
-		const boxBuffer = (
-			await axios({
-				url: "https://companioninabox.art/box.png",
-				responseType: "arraybuffer",
-			})
-		).data as Buffer;
-		res.setHeader("Content-Type", "image/png");
-		res.setHeader("Content-Length", boxBuffer.length);
-		res.status(200);
-		res.end(boxBuffer);
-		return;
-	}
-	const layers = getLayers(companion);
+		const layers = getLayers(companion);
 
-	const imageBuffers = layers.map(async ([layer]) => {
-		const imgBuffer = (
-			await axios({
-				url: "https://companioninabox.art" + getPath(layer, companion.properties.pose),
-				responseType: "arraybuffer",
-			})
-		).data as Buffer;
-		return sharp(imgBuffer).resize(w, h).toBuffer();
-	});
-	const results = await Promise.all(imageBuffers);
+		const imageBuffers = layers.map(async ([layer]) => {
+			const imgBuffer = (
+				await axios({
+					url: "https://companioninabox.art" + getPath(layer, companion.properties.pose),
+					responseType: "arraybuffer",
+				})
+			).data as Buffer;
+			return sharp(imgBuffer).resize(w, h).toBuffer();
+		});
+		const results = await Promise.all(imageBuffers);
 
-	const layersWithData: [LayerWithData, AttributeSelection?, boolean?][] = layers.map(
-		([layer, ...rest], i) => {
-			return [
-				{
-					imgData: results[i],
-					...layer,
-				},
-				...rest,
-			];
-		}
-	);
-
-	const final = await layersWithData.reduce(
-		async (canvas, [layer], i) => {
-			await canvas;
-			if (layer.batch) {
-				if (layer.batch?.length && layer.batch.some((item) => batches.has(item))) {
-					return canvas;
-				}
+		const layersWithData: [LayerWithData, AttributeSelection?, boolean?][] = layers.map(
+			([layer, ...rest], i) => {
+				return [
+					{
+						imgData: results[i],
+						...layer,
+					},
+					...rest,
+				];
 			}
+		);
 
-			const result = await drawLayer({
-				companion,
-				canvas: await canvas,
-				layers: layersWithData,
-				drawIndex: i,
-				usedBatches: batches,
-				paint: (input: Buffer, target: Buffer, blendMode) => {
-					const blend = blendMode
-						? ((): "multiply" | "dest-over" | "over" => {
-								switch (blendMode) {
-									case "multiply":
-										return "multiply";
-									case "destination-over":
-										return "dest-over";
-									default:
-										return "over";
-								}
-						  })()
-						: "over";
-					const result = sharp(target).composite([{ input, blend }]).toBuffer();
-					return result;
-				},
-				createCanvas: () => {
-					return sharp({
-						create: {
-							width: w,
-							height: h,
-							channels: 4,
-							background: { r: 255, g: 255, b: 255, alpha: 0 },
-						},
-					})
-						.png()
-						.toBuffer();
-				},
-				replaceColor: applyColor,
-				translateImage: applyTransformation,
-				debugEscape: async (buffer) => {
-					optimized = await sharp(buffer)
-						.flatten()
-						.png({ compressionLevel: 8, quality: 80 })
-						.toBuffer();
-					res.setHeader("Content-Type", "image/png");
-					res.setHeader("Content-Length", optimized.length);
-					res.setHeader("Cache-Control", "public, max-age=31536000");
-					res.status(200);
-					res.end(optimized);
-					return;
-				},
-				debugDeep: false,
-			});
-			return result;
-		},
-		sharp({
-			create: {
-				width: w,
-				height: h,
-				channels: 4,
-				background: { r: 255, g: 255, b: 255, alpha: 0 },
+		const final = await layersWithData.reduce(
+			async (canvas, [layer], i) => {
+				await canvas;
+				if (layer.batch) {
+					if (layer.batch?.length && layer.batch.some((item) => batches.has(item))) {
+						return canvas;
+					}
+				}
+
+				const result = await drawLayer({
+					companion,
+					canvas: await canvas,
+					layers: layersWithData,
+					drawIndex: i,
+					usedBatches: batches,
+					paint: (input: Buffer, target: Buffer, blendMode) => {
+						const blend = blendMode
+							? ((): "multiply" | "dest-over" | "over" => {
+									switch (blendMode) {
+										case "multiply":
+											return "multiply";
+										case "destination-over":
+											return "dest-over";
+										default:
+											return "over";
+									}
+							})()
+							: "over";
+						const result = sharp(target).composite([{ input, blend }]).toBuffer();
+						return result;
+					},
+					createCanvas: () => {
+						return sharp({
+							create: {
+								width: w,
+								height: h,
+								channels: 4,
+								background: { r: 255, g: 255, b: 255, alpha: 0 },
+							},
+						})
+							.png()
+							.toBuffer();
+					},
+					replaceColor: applyColor,
+					translateImage: applyTransformation,
+					debugEscape: async (buffer) => {
+						optimized = await sharp(buffer)
+							.flatten()
+							.png({ compressionLevel: 8, quality: 80 })
+							.toBuffer();
+						res.setHeader("Content-Type", "image/png");
+						res.setHeader("Content-Length", optimized.length);
+						res.setHeader("Cache-Control", "public, max-age=31536000");
+						res.status(200);
+						res.end(optimized);
+						return;
+					},
+					debugDeep: false,
+				});
+				return result;
 			},
-		})
-			.png()
-			.toBuffer()
-	);
+			sharp({
+				create: {
+					width: w,
+					height: h,
+					channels: 4,
+					background: { r: 255, g: 255, b: 255, alpha: 0 },
+				},
+			})
+				.png()
+				.toBuffer()
+		);
 
-	let optimized = await sharp(final as Buffer)
-		.flatten()
-		.png({ compressionLevel: 8, quality: 80 })
-		.toBuffer();
+		optimized = await sharp(final as Buffer)
+			.flatten()
+			.png({ compressionLevel: 8, quality: 80 })
+			.toBuffer();
+
+		imageCache.set(query.id, optimized);
+	}
 
 	res.setHeader("Content-Type", "image/png");
 	res.setHeader("Content-Length", optimized.length);
