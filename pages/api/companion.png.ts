@@ -14,8 +14,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	// http://localhost:3000/api/companion.png?pose=2&gender=f&skinColor=0&hairColor=purple&backgroundColor=bga&hair=crop&eyes=dart&brows=bushy&mouth=handlebars&nose=hook&headwear=cap&headwearColor1=red&headwearColor2=blue
 
 	const { w, h } = {
-		w: req.query.size ? parseInt(req.query.size as string) || 720 : 720,
-		h: req.query.size ? parseInt(req.query.size as string) || 720 : 720,
+		w: req.query.size ? parseInt(req.query.size as string) || 512 : 512,
+		h: req.query.size ? parseInt(req.query.size as string) || 512 : 512,
 	};
 	const ratio = w / 2048;
 
