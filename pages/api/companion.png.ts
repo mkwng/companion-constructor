@@ -103,13 +103,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	const query = req.query;
 
-	let optimized: Buffer = !isNaN(parseFloat(query.id)) && !isNaN(query.id - 0) ? null : await imageCache.get(query.id);
+	let optimized: Buffer = typeof query.id === 'string' && !isNaN(parseFloat(query.id)) && !isNaN(query.id - 0) ? null : await imageCache.get(query.id);
 
 	if(!optimized) {
 
 		let companion: Companion | null;
 		const batches: Set<string> = new Set();
-		if (!isNaN(parseFloat(query.id)) && !isNaN(query.id - 0)) {
+		if (typeof query.id === 'string' && !isNaN(parseFloat(query.id)) && !isNaN(query.id - 0)) {
 			const result = await prisma.companion.findUnique({
 				where: { tokenId: parseInt(query.id) },
 			});
