@@ -251,7 +251,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			.png({ compressionLevel: 8, quality: 80 })
 			.toBuffer();
 
-		imageCache.set(query.id, optimized);
+		if(typeof query.id === 'string' && !isNaN(parseFloat(query.id))) {
+			imageCache.set(query.id, optimized);
+		}
 	}
 
 	res.setHeader("Content-Type", "image/png");
