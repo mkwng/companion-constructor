@@ -182,8 +182,14 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 					where: { tokenId: parseInt(req.query.id) },
 				});
 				if (!prismaResponse) {
-					return res.status(404).json({
-						error: "Companion not found",
+					return res.status(200).json({
+						token_id: req.query.id,
+						name: `Companion #${req.query.id}`,
+						image: `https://companioninabox.art/box.png`,
+						external_url: `https://companioninabox.art/`,
+						background_color: rgbToHex(colors.background.red),
+						description:
+							"There seems to be an issue with this box. Contact @companioninabox.",
 					});
 				}
 				switch (req.query.format) {
