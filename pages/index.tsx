@@ -775,7 +775,7 @@ function Constructor() {
 					mintQtyState={mintQtyState}
 					handleMint={handleMint}
 					minting={transacting}
-					saleIsActive={false}
+					saleIsActive={true}
 					account={web3React?.account}
 					handleConnectInjected={handleConnectInjected}
 					handleConnectWalletConnect={handleConnectWalletConnect}
