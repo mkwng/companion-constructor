@@ -68,7 +68,7 @@ export const MyCompanions = ({
 									{/* #{tokenId} */}
 									{/* eslint-disable */}
 									<img
-										src={`/api/companion.png?id=${tokenId}&size=128`}
+										src={`https://railway.companioninabox.art/api/companion.png?id=${tokenId}&size=128`}
 										alt={`#${tokenId}`}
 										className="absolute inset-0 w-full h-full"
 									/>
