@@ -72,6 +72,9 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 						if (owner !== req.body.address) {
 							return res.status(400).json({ error: "address is not the owner of the token" });
 						}
+					})
+					.catch((err) => {
+						return res.status(400).json({ error: err.message });
 					});
 			}
 
