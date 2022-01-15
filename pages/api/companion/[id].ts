@@ -1,5 +1,6 @@
 import { Companion as PrismaCompanion } from ".prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
+import { ownerAddress } from "../../../components/contract";
 import { colors, rgbToHex } from "../../../data/colors";
 import {
 	apiToKeys,
@@ -12,7 +13,7 @@ import { updateCompanion } from "../../../data/operations";
 import { randomCompanion } from "../../../data/random";
 import { Companion } from "../../../data/types";
 import prisma from "../../../lib/prisma";
-import { web3 } from "../../../lib/web3";
+import { companionContract, web3 } from "../../../lib/web3";
 
 const isRevealed = true;
 
@@ -52,6 +53,7 @@ const confirmHash = async (hash: string, requiredFee: string) => {
 		return false;
 	}
 };
+
 export default async function apiCompanions(req: NextApiRequest, res: NextApiResponse) {
 	const { method } = req;
 	switch (method) {
@@ -60,8 +62,27 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 			if (typeof tokenId !== "string") {
 				return res.status(400).json({ error: "tokenId should be a string" });
 			}
+
+			// Verify that the address owns the token
+			if (req.body.address !== ownerAddress) {
+				companionContract.methods
+					.ownerOf(tokenId)
+					.call()
+					.then((owner) => {
+						if (owner !== req.body.address) {
+							return res.status(400).json({ error: "address is not the owner of the token" });
+						}
+					});
+			}
+
 			if (req.body.type === "fillEmpty") {
 				try {
+					let prismaResponse: PrismaCompanion = await prisma.companion.findUnique({
+						where: { tokenId: parseInt(tokenId) },
+					});
+					if (prismaResponse) {
+						return res.status(400).json({ error: "Companion already exists" });
+					}
 					const { signature, address } = req.body as UpdateCompanion;
 					const recover = web3.eth.accounts.recover(
 						messageToSign + "\n\nGenerate random companion",
@@ -188,8 +209,7 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 						image: `https://companioninabox.art/box.png`,
 						external_url: `https://companioninabox.art/`,
 						background_color: rgbToHex(colors.background.red),
-						description:
-							"There seems to be an issue with this box. Contact @companioninabox.",
+						description: "There seems to be an issue with this box. Contact @companioninabox.",
 					});
 				}
 				switch (req.query.format) {
