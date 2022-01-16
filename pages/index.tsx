@@ -493,7 +493,11 @@ function Constructor() {
 		}
 	};
 	const handleApprove = async (tokenId: number): Promise<boolean> => {
-		console.log("handleApprove");
+		// Check if already approved
+		const approvedAddress = await companionContract.methods.getApproved(tokenId).call();
+		if (approvedAddress === farmAddress) {
+			return true;
+		}
 		return await transactEth({
 			from: web3React.account,
 			to: companionAddress,
