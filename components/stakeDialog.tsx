@@ -28,6 +28,7 @@ const Approvals = ({
 				You&apos;re about to be asked to approve us, the Companion Range, to be able to move
 				your Companions. This will cost gas.
 			</p>
+			<p>(If you&apos;ve previously approved, clicking below should not cost any gas.)</p>
 			<div>
 				<Button
 					loading={loading}
