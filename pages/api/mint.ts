@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { companionAddress, priceCustomEth, priceEth } from "../../components/contract";
 import { Companion } from "../../data/types";
-import { companionContract, web3 } from "../../lib/web3";
+import { web3 } from "../../lib/web3";
 import { randomCompanion } from "../../data/random";
 import { createCompanion } from "../../data/operations";
 import prisma from "../../lib/prisma";
@@ -23,7 +23,9 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 				where: { hash },
 			});
 			if (hashUsed) {
-				throw new Error("Hash already used");
+				return res.status(400).json({
+					error: "Hash already used",
+				});
 			}
 
 			const requiredFee =
