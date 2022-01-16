@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { priceCustomEth, priceEth } from "../../components/contract";
+import { companionAddress, priceCustomEth, priceEth } from "../../components/contract";
 import { Companion } from "../../data/types";
-import { web3 } from "../../lib/web3";
+import { companionContract, web3 } from "../../lib/web3";
 import { randomCompanion } from "../../data/random";
 import { createCompanion } from "../../data/operations";
 import prisma from "../../lib/prisma";
@@ -41,6 +41,11 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 						return;
 					}
 					const receipt = await web3.eth.getTransactionReceipt(hash);
+					if (receipt.to !== companionAddress) {
+						return res.status(400).json({
+							error: "Transaction not sent to Companion contract",
+						});
+					}
 					const companionIds = [];
 					for (let i = 0; i < receipt.logs.length; i++) {
 						const tokenId = web3.utils.hexToNumber(receipt.logs[i].topics[3]);
