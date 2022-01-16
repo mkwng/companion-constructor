@@ -422,7 +422,7 @@ function Constructor() {
 						to,
 						data: encodedData,
 						nonce: (await web3.eth.getTransactionCount(web3React.account, "latest")) + "",
-						value: value.substring(0, 2) === "0x" ? value : "0x" + value,
+						value: value ? (value.substring(0, 2) === "0x" ? value : "0x" + value) : undefined,
 					},
 				],
 			});
@@ -493,6 +493,7 @@ function Constructor() {
 		}
 	};
 	const handleApprove = async (tokenId: number): Promise<boolean> => {
+		console.log("handleApprove");
 		return await transactEth({
 			from: web3React.account,
 			to: companionAddress,
