@@ -41,7 +41,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 						return;
 					}
 					const receipt = await web3.eth.getTransactionReceipt(hash);
-					if (receipt.to !== companionAddress) {
+					if (receipt.to.toLowerCase() !== companionAddress.toLowerCase()) {
 						return res.status(400).json({
 							error: "Transaction not sent to Companion contract",
 						});
