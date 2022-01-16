@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { priceCustomEth, priceEth } from "../../components/contract";
+import { companionAddress, priceCustomEth, priceEth } from "../../components/contract";
 import { Companion } from "../../data/types";
 import { web3 } from "../../lib/web3";
 import { randomCompanion } from "../../data/random";
@@ -23,7 +23,9 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 				where: { hash },
 			});
 			if (hashUsed) {
-				throw new Error("Hash already used");
+				return res.status(400).json({
+					error: "Hash already used",
+				});
 			}
 
 			const requiredFee =
@@ -41,6 +43,11 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 						return;
 					}
 					const receipt = await web3.eth.getTransactionReceipt(hash);
+					if (receipt.to.toLowerCase() !== companionAddress.toLowerCase()) {
+						return res.status(400).json({
+							error: "Transaction not sent to Companion contract",
+						});
+					}
 					const companionIds = [];
 					for (let i = 0; i < receipt.logs.length; i++) {
 						const tokenId = web3.utils.hexToNumber(receipt.logs[i].topics[3]);
