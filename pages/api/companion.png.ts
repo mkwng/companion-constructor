@@ -153,7 +153,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		const imageBuffers = layers.map(async ([layer]) => {
 			const imgBuffer = (
 				await axios({
-					url: "https://companioninabox.art" + getPath(layer, companion.properties.pose),
+					url: "https://railway.companioninabox.art" + getPath(layer, companion.properties.pose),
 					responseType: "arraybuffer",
 				})
 			).data as Buffer;
