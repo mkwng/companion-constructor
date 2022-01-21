@@ -5,7 +5,7 @@
 - `pscale auth login`
 - `pscale connect companions initial-setup --port 3309`
 - `pscale connect companions shadow --port 3310`
-- `yarn prisma studio`
+- Optional: `yarn prisma studio`
 - `yarn dev`
 
 ### Updating the schema
