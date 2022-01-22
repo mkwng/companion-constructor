@@ -1,12 +1,9 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
-import NodeCache from "node-cache";
 import sharp from "sharp";
 import { apiToKeys, drawLayer, getLayers, getPath, keysToCompanion } from "../../data/helpers";
 import { AttributeSelection, Companion, LayerWithData, Pose, RGBColor } from "../../data/types";
 import prisma from "../../lib/prisma";
-
-const imageCache = new NodeCache();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Example url query:
@@ -103,13 +100,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	const query = req.query;
 
-	let optimized: Buffer = typeof query.id === 'string' 
-	 ? !isNaN(parseFloat(query.id)) 
-	 	? null 
-		: await imageCache.get(query.id) 
-	 : null;
-
-	if(!optimized) {
+	let optimized: Buffer
 
 		let companion: Companion | null;
 		const batches: Set<string> = new Set();
@@ -250,11 +241,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			.flatten()
 			.png({ compressionLevel: 8, quality: 80 })
 			.toBuffer();
-
-		if(typeof query.id === 'string' && !isNaN(parseFloat(query.id))) {
-			imageCache.set(query.id, optimized);
-		}
-	}
 
 	res.setHeader("Content-Type", "image/png");
 	res.setHeader("Content-Length", optimized.length);
