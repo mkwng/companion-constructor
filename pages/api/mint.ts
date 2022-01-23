@@ -23,9 +23,11 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 				where: { hash },
 			});
 			if (hashUsed) {
-				return res.status(400).json({
-					error: "Hash already used",
-				});
+				if (hashUsed.complete) {
+					return res.status(400).json({
+						error: "Hash already used",
+					});
+				}
 			}
 
 			const requiredFee =
@@ -35,7 +37,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 
 			const checkMintStatus = async () => {
 				const transaction = await web3.eth.getTransaction(hash);
-				if (transaction.transactionIndex) {
+				if (transaction.transactionIndex && transaction.blockNumber) {
 					if (parseInt(transaction.value) < parseInt(requiredFee)) {
 						res.status(400).json({
 							error: "Not enough ETH sent",
@@ -54,10 +56,17 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 						if (!isNaN(tokenId)) {
 							let query;
 							if (mintType == "custom" && companion) {
-								query = createCompanion({
-									tokenId,
-									companion,
-								});
+								if (hashUsed && hashUsed.companionId) {
+									query = prisma.companion.update({
+										where: { id: hashUsed.companionId },
+										data: { tokenId },
+									});
+								} else {
+									query = createCompanion({
+										tokenId,
+										companion,
+									});
+								}
 							} else {
 								query = createCompanion({
 									tokenId,
@@ -72,25 +81,49 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 						}
 					}
 					if (companionIds.length == receipt.logs.length) {
-						await prisma.transactions.create({
-							data: {
-								hash,
-								date: new Date(),
-								txnType: "customization",
-								txnValue: requiredFee,
-							},
-						});
-						res.status(200).json({
-							companionIds,
-						});
+						if (!hashUsed) {
+							await prisma.transactions.create({
+								data: {
+									hash,
+									date: new Date(),
+									txnType: "customization",
+									txnValue: requiredFee,
+								},
+							});
+							res.status(200).json({
+								companionIds,
+							});
+						} else {
+							await prisma.transactions.update({
+								where: { hash },
+								data: {
+									complete: true,
+								},
+							});
+						}
 					} else {
 						res.status(400).json({
 							error: "Something went wrong",
 						});
 					}
 				} else {
-					await new Promise((resolve) => setTimeout(resolve, 5000));
-					return await checkMintStatus();
+					if (mintType == "custom" && companion) {
+						const incompleteCompanion = await createCompanion({
+							companion,
+						});
+						await prisma.transactions.create({
+							data: {
+								hash,
+								date: new Date(),
+								txnType: "customization",
+								txnValue: requiredFee,
+								complete: false,
+								companionId: incompleteCompanion.id,
+							},
+						});
+					}
+					// await new Promise((resolve) => setTimeout(resolve, 5000));
+					// return await checkMintStatus();
 				}
 			};
 			return await checkMintStatus();

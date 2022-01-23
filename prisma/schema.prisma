@@ -15,6 +15,10 @@ model Transactions {
   date     DateTime
   txnType  String
   txnValue String
+  complete Boolean  @default(value: true)
+
+  companionId Int?
+  Companion   Companion? @relation(fields: [companionId], references: [id])
 }
 
 model Emails {
@@ -28,7 +32,7 @@ model Coupon {
 
 model Companion {
   id        Int      @id @default(autoincrement())
-  tokenId   Int      @unique
+  tokenId   Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String?
@@ -66,4 +70,5 @@ model Companion {
   mouthColors     String?
 
 
+  Transactions Transactions[]
 }
