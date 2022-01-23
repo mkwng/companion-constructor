@@ -64,9 +64,7 @@ const applyTransformation = async (input: Buffer, pose: Pose): Promise<Buffer> =
 				},
 			})
 				.png()
-				.composite([
-					{ input: await sharp(input).flip().rotate(90).toBuffer(), top: 0, left: 246 },
-				])
+				.composite([{ input: await sharp(input).flip().rotate(90).toBuffer(), top: 0, left: 246 }])
 				.toBuffer();
 	}
 };
@@ -85,9 +83,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		let companion: Companion | null;
 		const batches: Set<string> = new Set();
 		if (req.query.id && typeof req.query.id === "string") {
-			const result = await prisma.companion.findUnique({
-				where: { tokenId: parseInt(req.query.id) },
-			});
+			const result = (
+				await prisma.companion.findMany({
+					where: { tokenId: parseInt(req.query.id) },
+				})
+			)[0];
 			companion = keysToCompanion(apiToKeys(result));
 		} else {
 			companion = keysToCompanion(req.query);
@@ -117,17 +117,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		});
 		const results = await Promise.all(imageBuffers);
 
-		const layersWithData: [LayerWithData, AttributeSelection?, boolean?][] = layers.map(
-			([layer, ...rest], i) => {
-				return [
-					{
-						imgData: results[i],
-						...layer,
-					},
-					...rest,
-				];
-			}
-		);
+		const layersWithData: [LayerWithData, AttributeSelection?, boolean?][] = layers.map(([layer, ...rest], i) => {
+			return [
+				{
+					imgData: results[i],
+					...layer,
+				},
+				...rest,
+			];
+		});
 
 		const final = await layers.reduce(
 			async (canvas, [layer], i) => {

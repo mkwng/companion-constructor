@@ -28,11 +28,13 @@ export const updateCompanion = async ({
 		prevCompanionFlat = flattenCompanion(prevCompanion);
 	} else {
 		// if no new companion, get it from the database
-		const prevCompanion: PrismaCompanion = await prisma.companion.findUnique({
-			where: {
-				tokenId,
-			},
-		});
+		const prevCompanion: PrismaCompanion = (
+			await prisma.companion.findMany({
+				where: {
+					tokenId,
+				},
+			})
+		)[0];
 		prevCompanionFlat = prevCompanion ? flattenCompanion(keysToCompanion(apiToKeys(prevCompanion))) : {};
 	}
 	Object.keys(prevCompanionFlat).forEach((key) => {

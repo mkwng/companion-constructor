@@ -2,13 +2,7 @@ import { Companion as PrismaCompanion } from ".prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ownerAddress } from "../../../components/contract";
 import { colors, rgbToHex } from "../../../data/colors";
-import {
-	apiToKeys,
-	getDifferences,
-	keysToCompanion,
-	messageToSign,
-	zeroPad,
-} from "../../../data/helpers";
+import { apiToKeys, getDifferences, keysToCompanion, messageToSign, zeroPad } from "../../../data/helpers";
 import { updateCompanion } from "../../../data/operations";
 import { randomCompanion } from "../../../data/random";
 import { Companion } from "../../../data/types";
@@ -80,17 +74,16 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 
 			if (req.body.type === "fillEmpty") {
 				try {
-					let prismaResponse: PrismaCompanion = await prisma.companion.findUnique({
-						where: { tokenId: parseInt(tokenId) },
-					});
+					let prismaResponse: PrismaCompanion = (
+						await prisma.companion.findMany({
+							where: { tokenId: parseInt(tokenId) },
+						})
+					)[0];
 					if (prismaResponse) {
 						return res.status(400).json({ error: "Companion already exists" });
 					}
 					const { signature, address } = req.body as UpdateCompanion;
-					const recover = web3.eth.accounts.recover(
-						messageToSign + "\n\nGenerate random companion",
-						signature
-					);
+					const recover = web3.eth.accounts.recover(messageToSign + "\n\nGenerate random companion", signature);
 					if (recover !== address) {
 						throw new Error("Signature is not valid");
 					}
@@ -107,8 +100,7 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 				}
 			} else if (req.body.type === "customize") {
 				try {
-					const { uneditedCompanion, companion, hash, signature, address, coupon } =
-						req.body as UpdateCompanion;
+					const { uneditedCompanion, companion, hash, signature, address, coupon } = req.body as UpdateCompanion;
 
 					if (coupon) {
 						const couponResult = await prisma.coupon.findUnique({
@@ -139,10 +131,7 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 								throw new Error("Hash already used");
 							}
 
-							const recover = web3.eth.accounts.recover(
-								messageToSign + "\n\nAmount: " + balance + " $CSHIP",
-								signature
-							);
+							const recover = web3.eth.accounts.recover(messageToSign + "\n\nAmount: " + balance + " $CSHIP", signature);
 							if (recover !== address) {
 								throw new Error("Signature is not valid");
 							}
@@ -171,10 +160,7 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 						}
 					} else {
 						// No cost, just update
-						const recover = web3.eth.accounts.recover(
-							messageToSign + "\n\nAmount: " + balance + " $CSHIP",
-							signature
-						);
+						const recover = web3.eth.accounts.recover(messageToSign + "\n\nAmount: " + balance + " $CSHIP", signature);
 						if (recover !== address) {
 							throw new Error("Signature is not valid");
 						}
@@ -202,9 +188,11 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 				if (req.query.id === "" || req.query.id === null || req.query.id === undefined) {
 					res.status(405).end(`Not Allowed`);
 				}
-				let prismaResponse: PrismaCompanion = await prisma.companion.findUnique({
-					where: { tokenId: parseInt(req.query.id) },
-				});
+				let prismaResponse: PrismaCompanion = (
+					await prisma.companion.findMany({
+						where: { tokenId: parseInt(req.query.id) },
+					})
+				)[0];
 				if (!prismaResponse) {
 					return res.status(200).json({
 						token_id: req.query.id,
@@ -231,8 +219,7 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 								image: `https://companioninabox.art/box.png`,
 								external_url: `https://companioninabox.art/`,
 								background_color: rgbToHex(colors.background.red),
-								description:
-									"Boxed in a small, wooden box, this companion is a bit of a mystery.",
+								description: "Boxed in a small, wooden box, this companion is a bit of a mystery.",
 							});
 						}
 						const {
@@ -279,13 +266,10 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 						return res.status(200).json({
 							token_id: tokenId,
 							name: `Companion #${tokenId}`,
-							image: `https://${
-								process.env.RAILWAY_STATIC_URL || process.env.NEXT_PUBLIC_URL
-							}/api/companion.png?id=${tokenId}`,
+							image: `https://${process.env.RAILWAY_STATIC_URL || process.env.NEXT_PUBLIC_URL}/api/companion.png?id=${tokenId}`,
 							external_url: `https://companioninabox.art/companion/${tokenId}`,
 							background_color: rgbToHex(companion.properties.background),
-							description:
-								"Boxed in a small, wooden box, this companion is a bit of a mystery.",
+							description: "Boxed in a small, wooden box, this companion is a bit of a mystery.",
 							attributes,
 						});
 				}
