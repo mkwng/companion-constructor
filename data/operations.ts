@@ -50,7 +50,7 @@ export const updateCompanion = async ({
 	if (target) {
 		return await prisma.companion.update({
 			where: { id: target?.id },
-			update: { ...newCompanionFlat },
+			data: { ...newCompanionFlat },
 		});
 	} else {
 		return await prisma.companion.create({
