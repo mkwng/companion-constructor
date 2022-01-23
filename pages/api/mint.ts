@@ -35,7 +35,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 
 			const checkMintStatus = async () => {
 				const transaction = await web3.eth.getTransaction(hash);
-				if (transaction.transactionIndex && transaction.blockNumber) {
+				if (transaction?.transactionIndex && transaction?.blockNumber) {
 					console.log("Transaction mined");
 					if (parseInt(transaction.value) < parseInt(requiredFee)) {
 						return res.status(400).json({
