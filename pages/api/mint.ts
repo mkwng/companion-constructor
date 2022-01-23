@@ -39,7 +39,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 				const transaction = await web3.eth.getTransaction(hash);
 				if (transaction.transactionIndex && transaction.blockNumber) {
 					if (parseInt(transaction.value) < parseInt(requiredFee)) {
-						res.status(400).json({
+						return res.status(400).json({
 							error: "Not enough ETH sent",
 						});
 						return;
@@ -90,9 +90,6 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 									txnValue: requiredFee,
 								},
 							});
-							res.status(200).json({
-								companionIds,
-							});
 						} else {
 							await prisma.transactions.update({
 								where: { hash },
@@ -101,8 +98,11 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 								},
 							});
 						}
+						return res.status(200).json({
+							companionIds,
+						});
 					} else {
-						res.status(400).json({
+						return res.status(400).json({
 							error: "Something went wrong",
 						});
 					}
@@ -124,6 +124,9 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 					}
 					// await new Promise((resolve) => setTimeout(resolve, 5000));
 					// return await checkMintStatus();
+					return res.status(200).json({
+						status: "transaction started, waiting for it to finish",
+					});
 				}
 			};
 			return await checkMintStatus();
