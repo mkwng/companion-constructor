@@ -22,12 +22,10 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 			const hashUsed = await prisma.transactions.findUnique({
 				where: { hash },
 			});
-			if (hashUsed) {
-				if (hashUsed.complete) {
-					return res.status(400).json({
-						error: "Hash already used",
-					});
-				}
+			if (hashUsed?.complete) {
+				return res.status(400).json({
+					error: "Hash already used",
+				});
 			}
 
 			const requiredFee =
@@ -38,6 +36,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 			const checkMintStatus = async () => {
 				const transaction = await web3.eth.getTransaction(hash);
 				if (transaction.transactionIndex && transaction.blockNumber) {
+					console.log("Transaction mined");
 					if (parseInt(transaction.value) < parseInt(requiredFee)) {
 						return res.status(400).json({
 							error: "Not enough ETH sent",
@@ -107,10 +106,12 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 						});
 					}
 				} else {
-					if (mintType == "custom" && companion) {
+					console.log("Transaction not yet mined");
+					if (companion?.properties.background) {
 						const incompleteCompanion = await createCompanion({
 							companion,
 						});
+						console.log(`Incomplete companion id = ${incompleteCompanion.id}`);
 						await prisma.transactions.create({
 							data: {
 								hash,

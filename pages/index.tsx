@@ -440,6 +440,7 @@ function Constructor() {
 				encodedData: companionContract.methods.mint(mintType == "custom" ? 1 : mintQty).encodeABI(),
 				value: web3.utils.toHex(wei),
 				onStart: (hash) => {
+					console.log("Minting...");
 					fetch("/api/mint", {
 						method: "POST",
 						headers: {
@@ -454,6 +455,7 @@ function Constructor() {
 					});
 				},
 				onSuccess: (hash) => {
+					console.log("Minted, saving metadata...");
 					verifyMint(hash).then(async (result) => {
 						setTransacting(false);
 						if (result.error) {
