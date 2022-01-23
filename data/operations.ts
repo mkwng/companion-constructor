@@ -47,12 +47,17 @@ export const updateCompanion = async ({
 			where: { tokenId },
 		})
 	)[0];
-	return await prisma.companion.upsert({
-		where: { id: target.id },
-		update: { ...newCompanionFlat },
-		create: {
-			tokenId,
-			...newCompanionFlat,
-		},
-	});
+	if (target) {
+		return await prisma.companion.update({
+			where: { id: target?.id },
+			update: { ...newCompanionFlat },
+		});
+	} else {
+		return await prisma.companion.create({
+			data: {
+				tokenId,
+				...newCompanionFlat,
+			},
+		});
+	}
 };
