@@ -73,11 +73,8 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 				);
 			});
 			const results = await Promise.all(promises);
-			const errors = results.filter((result) => result?.error);
-			const successes = results.filter((result) => !result?.error);
 			res.status(200).json({
-				errors,
-				successes,
+				results,
 			});
 			break;
 		case "GET":
