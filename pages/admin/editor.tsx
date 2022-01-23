@@ -60,6 +60,7 @@ function CompanionDetails() {
 	const { data, error } = useSWR(`/api/companion/${tokenId}?format=keys`, fetcher);
 	const [name, setName] = useState("");
 	const [saving, setSaving] = useState(false);
+	const [hideBackground, setHideBackground] = useState(true);
 
 	useEffect(() => {
 		if (web3React.active) {
@@ -177,7 +178,7 @@ function CompanionDetails() {
 				>
 					{companion ? (
 						<div className="w-full h-full flex justify-center relative">
-							<Renderer companion={companion} hideBackground={true} />
+							<Renderer companion={companion} hideBackground={hideBackground} />
 							<div className="absolute top-4 left-4">
 								<Button
 									onClick={() => {
