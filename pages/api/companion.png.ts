@@ -1,9 +1,12 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import sharp from "sharp";
+import NodeCache from "node-cache";
 import { apiToKeys, drawLayer, getLayers, getPath, keysToCompanion } from "../../data/helpers";
 import { AttributeSelection, Companion, LayerWithData, Pose, RGBColor } from "../../data/types";
 import prisma from "../../lib/prisma";
+
+const imageCache = new NodeCache();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Example url query:
@@ -142,12 +145,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		const layers = getLayers(companion);
 
 		const imageBuffers = layers.map(async ([layer]) => {
-			const imgBuffer = (
-				await axios({
-					url: "https://railway.companioninabox.art" + getPath(layer, companion.properties.pose),
-					responseType: "arraybuffer",
-				})
-			).data as Buffer;
+			const gottenPath = getPath(layer, companion.properties.pose)
+
+
+
+			let imgBuffer: Buffer = await imageCache.get(gottenPath)
+			if (!imgBuffer) {
+				imgBuffer = (
+					await axios({
+						url: "https://railway.companioninabox.art" + gottenPath,
+						responseType: "arraybuffer",
+					})
+					).data as Buffer;
+				imageCache.set(gottenPath, imgBuffer);
+			}
 			return sharp(imgBuffer).resize(w, h).toBuffer();
 		});
 		const results = await Promise.all(imageBuffers);
