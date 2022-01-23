@@ -109,6 +109,21 @@ function CouponEditor() {
 	}
 	return (
 		<>
+			<button
+				onClick={() => {
+					fetch(`/api/checkIncompletes`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+					}).then((result) => {
+						alert("done?");
+						console.log(result);
+					});
+				}}
+			>
+				Update incompletes
+			</button>
 			<h1>Coupons</h1>
 			{/* A table of all coupons */}
 			<table className="w-full p-8 max-w-lg">
