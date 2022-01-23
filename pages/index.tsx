@@ -28,13 +28,7 @@ import { MintDialog } from "../components/mintDialog";
 import Renderer from "../components/renderer";
 import { StakeDialog } from "../components/stakeDialog";
 import { colors } from "../data/colors";
-import {
-	apiToKeys,
-	colorToKey,
-	keysToCompanion,
-	messageToSign,
-	zeroPad,
-} from "../data/helpers";
+import { apiToKeys, colorToKey, keysToCompanion, messageToSign, zeroPad } from "../data/helpers";
 import { randomCompanion } from "../data/random";
 import { Companion } from "../data/types";
 import useLocalStorage from "../hooks/useLocalStorage";
@@ -94,9 +88,7 @@ function Constructor() {
 	const [showCheckout, setShowCheckout] = useState(false);
 
 	const [transacting, setTransacting] = useState(false);
-	const [transactingMessage, setTransactingMessage] = useState(
-		"Confirm the transfer to continue..."
-	);
+	const [transactingMessage, setTransactingMessage] = useState("Confirm the transfer to continue...");
 	const mintTypeState = useState<"custom" | "random">("custom");
 	const mintQtyState = useState(1);
 	const [mintType, setMintType] = mintTypeState;
@@ -117,9 +109,7 @@ function Constructor() {
 	const scrollableArea = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		setCoupon(
-			Array.isArray(router.query.coupon) ? router.query.coupon[0] : router.query.coupon || ""
-		);
+		setCoupon(Array.isArray(router.query.coupon) ? router.query.coupon[0] : router.query.coupon || "");
 	}, [router.query.coupon]);
 
 	/****************************************************************/
@@ -130,8 +120,7 @@ function Constructor() {
 		if (web3React.active && web3React.chainId === preferredChain) {
 			let w3 = new Web3(web3React.library.provider);
 			setWeb3(w3);
-			if (companionAddress)
-				setCompanionContract(new w3.eth.Contract(companionAbi, companionAddress));
+			if (companionAddress) setCompanionContract(new w3.eth.Contract(companionAbi, companionAddress));
 			if (farmAddress) setFarmContract(new w3.eth.Contract(farmAbi, farmAddress));
 			if (shipAddress) setShipContract(new w3.eth.Contract(shipAbi, shipAddress));
 		} else {
@@ -240,9 +229,7 @@ function Constructor() {
 				const tokenIdPromises = [];
 				const companionNums = [];
 				for (let i = 0; i < result; i++) {
-					tokenIdPromises[i] = companionContract.methods
-						.tokenOfOwnerByIndex(web3React.account, i)
-						.call();
+					tokenIdPromises[i] = companionContract.methods.tokenOfOwnerByIndex(web3React.account, i).call();
 				}
 
 				const tokenIds = await Promise.all(tokenIdPromises);
@@ -257,17 +244,13 @@ function Constructor() {
 			}
 
 			// In range
-			const stakedCompResult = farmContract
-				? await farmContract.methods.depositsOf(web3React.account).call()
-				: [];
+			const stakedCompResult = farmContract ? await farmContract.methods.depositsOf(web3React.account).call() : [];
 			if (stakedCompResult.length > 0) {
 				setStakedCompanions(new Set(stakedCompResult));
 			}
 
 			const rewardsResult = farmContract
-				? await farmContract.methods
-						.calculateRewards(web3React.account, stakedCompResult)
-						.call()
+				? await farmContract.methods.calculateRewards(web3React.account, stakedCompResult).call()
 				: [];
 			setClaimable(
 				rewardsResult.reduce((acc, cur) => {
@@ -292,19 +275,13 @@ function Constructor() {
 						if (data.error) {
 							switch (data.error) {
 								case "Companion not found":
-									if (
-										confirm(
-											"It looks like no companion was generated for this token. Generate a random one?"
-										)
-									) {
+									if (confirm("It looks like no companion was generated for this token. Generate a random one?")) {
 										fillEmpty().then((result) => {
 											result.json().then((data) => {
 												if (data.error) {
 													toast.error(data.error);
 												} else {
-													setCompanion(
-														keysToCompanion(apiToKeys(data.companion as PrismaCompanion))
-													);
+													setCompanion(keysToCompanion(apiToKeys(data.companion as PrismaCompanion)));
 												}
 											});
 										});
@@ -332,11 +309,7 @@ function Constructor() {
 		}
 	};
 	const fillEmpty = async () => {
-		const signature = await web3.eth.personal.sign(
-			messageToSign + "\n\nGenerate random companion",
-			web3React.account,
-			"test"
-		);
+		const signature = await web3.eth.personal.sign(messageToSign + "\n\nGenerate random companion", web3React.account, "test");
 		const request = await fetch(`/api/companion/${selectedCompanions[0]}`, {
 			method: "PUT",
 			headers: {
@@ -403,6 +376,7 @@ function Constructor() {
 		to,
 		encodedData,
 		value,
+		onStart,
 		onSuccess,
 		onFailure,
 	}: {
@@ -410,6 +384,7 @@ function Constructor() {
 		to: string;
 		encodedData: any;
 		value?: string;
+		onStart?: (hash: string) => void;
 		onSuccess?: (hash: string) => void;
 		onFailure?: (error?: any) => void;
 	}): Promise<boolean> => {
@@ -426,6 +401,7 @@ function Constructor() {
 					},
 				],
 			});
+			onStart?.(hash);
 			let success = false;
 			let time = 0;
 			while (!success) {
@@ -455,18 +431,28 @@ function Constructor() {
 		setTransacting(true);
 
 		const wei = parseInt(
-			mintType == "custom"
-				? web3.utils.toWei(priceCustomEth + "", "ether")
-				: web3.utils.toWei(priceEth * mintQty + "", "ether")
+			mintType == "custom" ? web3.utils.toWei(priceCustomEth + "", "ether") : web3.utils.toWei(priceEth * mintQty + "", "ether")
 		);
 		try {
 			await transactEth({
 				from: web3React.account,
 				to: companionAddress,
-				encodedData: companionContract.methods
-					.mint(mintType == "custom" ? 1 : mintQty)
-					.encodeABI(),
+				encodedData: companionContract.methods.mint(mintType == "custom" ? 1 : mintQty).encodeABI(),
 				value: web3.utils.toHex(wei),
+				onStart: (hash) => {
+					fetch("/api/mint", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							hash,
+							mintType,
+							mintQty: mintType === "random" ? mintQty : 1,
+							companion,
+						}),
+					});
+				},
 				onSuccess: (hash) => {
 					verifyMint(hash).then(async (result) => {
 						setTransacting(false);
@@ -526,21 +512,13 @@ function Constructor() {
 		});
 	};
 
-	const handleSpend = async ({
-		amount,
-		onSuccess,
-	}: {
-		amount: number;
-		onSuccess: (response?: any) => void;
-	}) => {
+	const handleSpend = async ({ amount, onSuccess }: { amount: number; onSuccess: (response?: any) => void }) => {
 		setTransacting(true);
 		if (amount > 0) {
 			return await transactEth({
 				from: web3React.account,
 				to: shipAddress,
-				encodedData: shipContract.methods
-					.transfer(farmAddress, web3.utils.toHex(amount + zeroPad))
-					.encodeABI(),
+				encodedData: shipContract.methods.transfer(farmAddress, web3.utils.toHex(amount + zeroPad)).encodeABI(),
 				onSuccess: async (currHash) => {
 					const response = await (await verifySpend({ amount, currHash })).json();
 					if (response.error) {
@@ -757,12 +735,7 @@ function Constructor() {
 					${customizing ? "lg:w-2/3 h-4/6" : "h-5/6"}`}
 				>
 					{companion ? (
-						<Renderer
-							showTitle={!customizing}
-							companion={companion}
-							hideBackground={true}
-							maxHeight={true}
-						/>
+						<Renderer showTitle={!customizing} companion={companion} hideBackground={true} maxHeight={true} />
 					) : null}
 				</div>
 			</div>
