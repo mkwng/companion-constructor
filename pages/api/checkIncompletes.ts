@@ -5,7 +5,7 @@ import { web3 } from "../../lib/web3";
 
 const recheckMint = async (hash, requiredFee, companionId) => {
 	const transaction = await web3.eth.getTransaction(hash);
-	if (transaction.transactionIndex && transaction.blockNumber) {
+	if (transaction?.transactionIndex && transaction?.blockNumber) {
 		if (parseInt(transaction.value) < parseInt(requiredFee)) {
 			return {
 				error: "Not enough ETH sent",
