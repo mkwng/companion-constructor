@@ -395,7 +395,7 @@ function CompanionGift() {
 											<Button
 												className="border-default-white"
 												onClick={() => {
-													window.location.href = `https://opensea.io/${companionAddress}/${tokenId}`;
+													window.location.href = `https://opensea.io/assets/${companionAddress}/${tokenId}`;
 												}}
 											>
 												View on OpenSea
