@@ -188,7 +188,7 @@ function Constructor() {
 		}
 	};
 	const handleRandomize = () => {
-		setCompanion(randomCompanion());
+		setCompanion(randomCompanion(true));
 		scrollableArea.current?.scrollTo({ top: 0, behavior: "smooth" });
 	};
 	const handleCleanSlate = () => {
@@ -197,7 +197,7 @@ function Constructor() {
 	useEffect(() => {
 		if (showMinter && selectedCompanions.length) {
 			setSelectedCompanions([]);
-			setCompanion(randomCompanion());
+			setCompanion(randomCompanion(true));
 		}
 	}, [showMinter]);
 
@@ -303,7 +303,7 @@ function Constructor() {
 					console.error(error);
 				});
 		} else if (selectedCompanions.length == 0 && !showMinter) {
-			setCompanion(randomCompanion());
+			setCompanion(randomCompanion(true));
 		} else {
 			return;
 		}
@@ -602,7 +602,7 @@ function Constructor() {
 				{!companion && (
 					<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
 						<div>
-							<Button className="text-xs" onClick={() => setCompanion(randomCompanion())}>
+							<Button className="text-xs" onClick={() => setCompanion(randomCompanion(true))}>
 								Generate random companion
 							</Button>
 						</div>

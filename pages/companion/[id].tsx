@@ -19,7 +19,7 @@ export default function CompanionDetails() {
 
 	useEffect(() => {
 		if (!data?.pose) {
-			setCompanion(randomCompanion());
+			setCompanion(randomCompanion(true));
 			return;
 		}
 		const {
@@ -68,9 +68,7 @@ export default function CompanionDetails() {
 		<div>
 			<Renderer companion={companion} hideBackground={!showBg} />
 			<div className="flex m-8 gap-8">
-				<Button onClick={() => setShowBg((prev) => !prev)}>
-					Toggle background ({showBg ? "On" : "Off"})
-				</Button>
+				<Button onClick={() => setShowBg((prev) => !prev)}>Toggle background ({showBg ? "On" : "Off"})</Button>
 				<Button onClick={() => setCompanion(randomCompanion())}>Random</Button>
 			</div>
 			<div className="bg-ui-black-default text-default-white">

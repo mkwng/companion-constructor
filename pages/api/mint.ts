@@ -55,6 +55,8 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 						if (!isNaN(tokenId)) {
 							let query;
 							if (mintType == "custom" && companion) {
+								// Todo: Check if there are any "mythic" variants applied...
+
 								if (hashUsed && hashUsed.companionId) {
 									query = prisma.companion.update({
 										where: { id: hashUsed.companionId },

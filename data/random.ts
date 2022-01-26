@@ -19,7 +19,7 @@ export var randomProperty = function (obj) {
 	return obj[keys[(keys.length * Math.random()) << 0]];
 };
 
-export const randomCompanion = (): Companion => {
+export const randomCompanion = (hideRare?: boolean): Companion => {
 	const companionProps: Companion["properties"] = {
 		pose: Math.floor(Math.random() * 3) + 1,
 		gender: Math.random() < 0.5 ? "m" : "f",
@@ -49,18 +49,14 @@ export const randomCompanion = (): Companion => {
 				? (() => {
 						switch (variant.rarity) {
 							case "mythic":
-								return 1;
-								break;
+								return hideRare ? 0 : 1;
 							case "rare":
 								return 5;
-								break;
 							case "uncommon":
 								return 10;
-								break;
 							case "common":
 							default:
 								return 15;
-								break;
 						}
 				  })()
 				: 15;
@@ -82,9 +78,7 @@ export const randomCompanion = (): Companion => {
 		}
 
 		const randomName = randomElementFromArray(listOfPossibles);
-		const randomVariant = selectableAttributes[key].variants.find(
-			(variant) => variant.name === randomName
-		);
+		const randomVariant = selectableAttributes[key].variants.find((variant) => variant.name === randomName);
 
 		// Add to attributes
 		if (!randomVariant) return;
