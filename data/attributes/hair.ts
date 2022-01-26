@@ -93,6 +93,12 @@ export const hair: AttributeDictionary = {
 		},
 		{
 			attribute: "hair",
+			name: "bald",
+			restrictions: { gender: "m", headShape: "flat" },
+			layers: [],
+		},
+		{
+			attribute: "hair",
 			name: "balding",
 			restrictions: { gender: "m", headShape: "flat" },
 			layers: [
@@ -616,6 +622,7 @@ export const hair: AttributeDictionary = {
 let hairVariants = [
 	"alfalfa",
 	"anime",
+	"bald",
 	"balding",
 	"braided",
 	"braids",
