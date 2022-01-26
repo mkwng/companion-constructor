@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		w: req.query.size ? parseInt(req.query.size as string) || 512 : 512,
 		h: req.query.size ? parseInt(req.query.size as string) || 512 : 512,
 	};
-	const ratio = w / 2048;
+	const ratio = w / 1024;
 
 	const applyColor = async (input: Buffer, color: RGBColor): Promise<Buffer> => {
 		if (!input) return input;
