@@ -69,6 +69,6 @@ model Companion {
   accessoryColors String?
   mouthColors     String?
 
-
+  iteration    Int?           @default(value: 0)
   Transactions Transactions[]
 }

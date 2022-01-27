@@ -21,41 +21,32 @@ export const updateCompanion = async ({
 	prevCompanion?: Companion;
 	tokenId: number;
 }) => {
+	const prevCompanionData: PrismaCompanion = (
+		await prisma.companion.findMany({
+			where: { tokenId },
+		})
+	)[0];
+
 	const newCompanionFlat = flattenCompanion(companion);
-	let prevCompanionFlat;
-	if (prevCompanion) {
-		// replace all attributes that prevCompanion has that companion does not with null values
-		prevCompanionFlat = flattenCompanion(prevCompanion);
-	} else {
-		// if no new companion, get it from the database
-		const prevCompanion: PrismaCompanion = (
-			await prisma.companion.findMany({
-				where: {
-					tokenId,
-				},
-			})
-		)[0];
-		prevCompanionFlat = prevCompanion ? flattenCompanion(keysToCompanion(apiToKeys(prevCompanion))) : {};
-	}
+	const prevCompanionFlat = prevCompanionData ? flattenCompanion(keysToCompanion(apiToKeys(prevCompanionData))) : {};
+
+	// replace all attributes that prevCompanion has that companion does not with null values
 	Object.keys(prevCompanionFlat).forEach((key) => {
 		if (!newCompanionFlat[key]) {
 			newCompanionFlat[key] = null;
 		}
 	});
-	const target = (
-		await prisma.companion.findMany({
-			where: { tokenId },
-		})
-	)[0];
-	if (target) {
+
+	if (prevCompanionData) {
 		return await prisma.companion.update({
-			where: { id: target?.id },
-			data: { ...newCompanionFlat },
+			where: { id: prevCompanionData?.id },
+			data: { ...newCompanionFlat, iteration: (prevCompanionData.iteration || 0) + 1 },
 		});
 	} else {
 		return await prisma.companion.create({
 			data: {
 				tokenId,
+				iteration: 0,
 				...newCompanionFlat,
 			},
 		});

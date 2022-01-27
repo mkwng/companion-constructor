@@ -226,6 +226,7 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 							id,
 							name,
 							tokenId,
+							iteration,
 							createdAt,
 							updatedAt,
 							accessoryColors,
@@ -266,7 +267,9 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 						return res.status(200).json({
 							token_id: tokenId,
 							name: `Companion #${tokenId}`,
-							image: `https://${process.env.RAILWAY_STATIC_URL || process.env.NEXT_PUBLIC_URL}/api/companion.png?id=${tokenId}`,
+							image: `https://${
+								process.env.RAILWAY_STATIC_URL || process.env.NEXT_PUBLIC_URL
+							}/api/companion.png?id=${tokenId}&iteration=${iteration || 0}`,
 							external_url: `https://companioninabox.art/companion/${tokenId}`,
 							background_color: rgbToHex(companion.properties.background),
 							description: "Boxed in a small, wooden box, this companion is a bit of a mystery.",
