@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { companionAddress, priceCustomEth, priceEth } from "../../components/contract";
+import { createCompanion } from "../../data/operations";
+import { randomCompanion } from "../../data/random";
 import prisma from "../../lib/prisma";
 import { web3 } from "../../lib/web3";
 
@@ -22,10 +24,17 @@ const recheckMint = async (hash, requiredFee, companionId) => {
 			const tokenId = web3.utils.hexToNumber(receipt.logs[i].topics[3]);
 			if (!isNaN(tokenId)) {
 				let query;
-				query = prisma.companion.update({
-					where: { id: companionId },
-					data: { tokenId },
-				});
+				if (companionId) {
+					query = prisma.companion.update({
+						where: { id: companionId },
+						data: { tokenId },
+					});
+				} else {
+					query = createCompanion({
+						tokenId,
+						companion: randomCompanion(),
+					});
+				}
 				const result = await query;
 				companionIds.push(result.tokenId);
 			} else {
