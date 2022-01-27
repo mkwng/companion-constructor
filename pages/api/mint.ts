@@ -87,7 +87,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 								data: {
 									hash,
 									date: new Date(),
-									txnType: "customization",
+									txnType: mintType == "custom" ? "mintCustom" : "mintRandom",
 									txnValue: requiredFee,
 								},
 							});
@@ -118,7 +118,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 							data: {
 								hash,
 								date: new Date(),
-								txnType: "customization",
+								txnType: "mintCustom",
 								txnValue: requiredFee,
 								complete: false,
 								companionId: incompleteCompanion.id,

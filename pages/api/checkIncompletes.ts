@@ -75,7 +75,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 				const { hash, companionId } = transaction;
 				return await recheckMint(
 					hash,
-					transaction.txnType == "customization"
+					transaction.txnType == "mintCustom" || transaction.txnType == "mintRandom"
 						? web3.utils.toWei(priceCustomEth + "", "ether")
 						: web3.utils.toWei(priceEth * 1 + "", "ether"),
 					companionId
