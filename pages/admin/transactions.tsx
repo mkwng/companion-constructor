@@ -1,5 +1,5 @@
 import { Web3Provider } from "@ethersproject/providers";
-import { Coupon } from "@prisma/client";
+import { Coupon, Transactions } from "@prisma/client";
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
@@ -42,15 +42,44 @@ export default function WrapperHome() {
 	);
 }
 
+const TokenAssigner = ({ onSubmit }: { onSubmit: (input: number) => void }) => {
+	const [input, setInput] = useState("");
+	return (
+		<>
+			<form
+				className="flex"
+				onSubmit={(e) => {
+					e.preventDefault();
+					onSubmit(parseInt(input));
+				}}
+			>
+				<input
+					className="w-24"
+					type="text"
+					name="code"
+					placeholder="Token ID"
+					value={input}
+					onChange={(e) => setInput(e.target.value)}
+				/>
+				<div>
+					<Button className="text-xs" type="submit">
+						Assign TokenId
+					</Button>
+				</div>
+			</form>
+		</>
+	);
+};
+
 function CouponEditor() {
 	const web3React = useWeb3React();
 	const [web3, setWeb3] = useState<Web3>(null);
 	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
 	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
-	const { data, error, mutate } = useSWR(`/api/coupon`, fetcher);
-	const [input, setInput] = useState("");
+	const { data, error, mutate } = useSWR(`/api/transactions`, fetcher);
 
-	const { coupons }: { coupons: Coupon[] } = data ? data : { coupons: [] };
+	const { transactions }: { transactions: Transactions[] } = data ? data : { transactions: [] };
+	console.log(transactions[0]);
 
 	useEffect(() => {
 		if (web3React.active) {
@@ -109,51 +138,73 @@ function CouponEditor() {
 	}
 	return (
 		<>
-			<h1>Coupons</h1>
-			{/* A table of all coupons */}
+			<Button
+				onClick={() => {
+					fetch(`/api/checkIncompletes`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+					}).then((result) => {
+						alert("done?");
+						console.log(result);
+					});
+				}}
+			>
+				Update incompletes
+			</Button>
+			<h1>Transactions</h1>
 			<table className="w-full p-8 max-w-lg">
 				<thead>
 					<tr>
-						<th>Coupon</th>
-						<th>Used?</th>
+						<th>Hash</th>
+						<th>Time</th>
+						<th>Type</th>
+						<th>Value</th>
+						<th>CompanionId</th>
+						<th>Complete</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
-					{coupons?.map((coupon) => (
-						<tr key={coupon.code}>
-							<td>{coupon.code}</td>
-							<td>{coupon.used ? "used" : "unused"}</td>
+					{transactions?.map((txn) => (
+						<tr key={txn.hash}>
+							<td>{txn.hash}</td>
+							<td>{txn.date}</td>
+							<td>{txn.txnType}</td>
+							<td>{txn.txnValue}</td>
+							<td>{txn.companionId}</td>
+							<td>{txn.complete ? "true" : "false"}</td>
 							<td className="flex">
 								<div>
 									<Button
 										className="text-xs"
 										onClick={() => {
-											fetch(`/api/coupon/`, {
+											fetch(`/api/transactions/`, {
 												method: "PUT",
 												headers: {
 													"Content-Type": "application/json",
 												},
 												body: JSON.stringify({
-													code: coupon.code,
+													hash: txn.hash,
 												}),
 											}).then(() => mutate());
 										}}
 									>
-										Toggle used
+										Toggle complete
 									</Button>
 								</div>
 								<div>
 									<Button
 										className="text-xs"
 										onClick={() => {
-											fetch(`/api/coupon/`, {
+											fetch(`/api/transactions/`, {
 												method: "DELETE",
 												headers: {
 													"Content-Type": "application/json",
 												},
 												body: JSON.stringify({
-													code: coupon.code,
+													hash: txn.hash,
 												}),
 											}).then(() => mutate());
 										}}
@@ -161,54 +212,32 @@ function CouponEditor() {
 										Delete
 									</Button>
 								</div>
+								<div>
+									{txn.companionId && (
+										<TokenAssigner
+											onSubmit={(tokenId) => {
+												console.log(txn.companionId, tokenId);
+												fetch(`/api/assignTokenToCompanion`, {
+													method: "PUT",
+													headers: {
+														"Content-Type": "application/json",
+													},
+													body: JSON.stringify({
+														companionId: txn.companionId,
+														tokenId,
+													}),
+												}).then(async (result) => {
+													const resultData = await result.json();
+													alert(resultData.message);
+												});
+											}}
+										/>
+									)}
+								</div>
 							</td>
 						</tr>
 					))}
 				</tbody>
-				{/* Create coupon form */}
-				<tfoot>
-					<tr>
-						<td colSpan={3}>
-							<form
-								className="flex"
-								onSubmit={(e) => {
-									e.preventDefault();
-									let code: string | string[] = input;
-									// If there is a comma in code...
-									if (code.includes(",")) {
-										// Split the code into an array
-										code = code.split(",");
-									}
-									fetch(`/api/coupon/`, {
-										method: "POST",
-										headers: {
-											"Content-Type": "application/json",
-										},
-										body: JSON.stringify({
-											code,
-										}),
-									}).then(() => {
-										setInput("");
-										mutate();
-									});
-								}}
-							>
-								<input
-									type="text"
-									name="code"
-									placeholder="Coupon code"
-									value={input}
-									onChange={(e) => setInput(e.target.value)}
-								/>
-								<div>
-									<Button className="text-xs" type="submit">
-										Create coupon
-									</Button>
-								</div>
-							</form>
-						</td>
-					</tr>
-				</tfoot>
 			</table>
 		</>
 	);
