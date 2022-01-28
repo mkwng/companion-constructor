@@ -3,7 +3,7 @@ import { companionAddress, priceCustomEth, priceEth } from "../../components/con
 import { Companion } from "../../data/types";
 import { web3 } from "../../lib/web3";
 import { randomCompanion } from "../../data/random";
-import { createCompanion } from "../../data/operations";
+import { createCompanion, incrementCustomCounter } from "../../data/operations";
 import prisma from "../../lib/prisma";
 
 interface Transaction {
@@ -74,6 +74,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 									companion: randomCompanion(),
 								});
 							}
+							incrementCustomCounter();
 							const result = await query;
 							companionIds.push(result.tokenId);
 						} else {
@@ -99,6 +100,13 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 								},
 							});
 						}
+
+						prisma.counters.upsert({
+							where: { name: "total" },
+							create: { value: companionIds[companionIds.length - 1] },
+							data: { value: companionIds[companionIds.length - 1] },
+						});
+
 						return res.status(200).json({
 							companionIds,
 						});

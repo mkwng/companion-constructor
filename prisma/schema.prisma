@@ -10,6 +10,11 @@ generator client {
   previewFeatures = ["referentialIntegrity"]
 }
 
+model Counters {
+  name  String @id
+  value Int    @default(value: 0)
+}
+
 model Transactions {
   hash     String   @unique
   date     DateTime

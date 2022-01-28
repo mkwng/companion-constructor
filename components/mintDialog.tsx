@@ -11,6 +11,8 @@ import { Spinner } from "./icons/spinner";
 import ConfettiExplosion from "@reonomy/react-confetti-explosion";
 import { ConnectButton } from "./connectButton";
 import { toast } from "react-toastify";
+import useSWR from "swr";
+import { fetcher } from "../lib/swr";
 
 const loadingStrings = [
 	"Finalizing your purchase...",
@@ -92,13 +94,12 @@ export const MintDialog = ({
 	const [mintQty, setMintQty] = mintQtyState;
 	const [showFaq, setShowFaq] = useState(false);
 	const [showEmail, setShowEmail] = useState(false);
+	const { data, error } = useSWR("api/getCount", fetcher);
 
 	const bgColorKey = colorToKey(companion.properties.background, colors.background);
 	const buttonColor = bgColorKey === "red" || bgColorKey == "orange" ? "yellow" : "red";
 
-	const [loadingText, setLoadingText] = useState(
-		"Confirm the transaction with your wallet to continue..."
-	);
+	const [loadingText, setLoadingText] = useState("Confirm the transaction with your wallet to continue...");
 	const [success, setSuccess] = useState(false);
 
 	useEffect(() => {
@@ -118,6 +119,15 @@ export const MintDialog = ({
 			running = false;
 		};
 	}, [minting]);
+
+	useEffect(() => {
+		if (data?.custom >= 888) {
+			setMintType("random");
+		}
+	}, [data]);
+
+	const isSoldOutCustoms = data?.custom >= 887;
+	const isSoldOut = data?.total >= 8887;
 
 	return (
 		<div className="w-screen h-screen fixed z-50 inset-0 font-mono">
@@ -142,9 +152,7 @@ export const MintDialog = ({
 				<div>
 					{!success && (
 						<Button
-							className={`bg-ui-black-default text-default-white w-8 h-8 pl-0 pr-0 pt-0 pb-0 ${
-								minting ? "opacity-20" : ""
-							}`}
+							className={`bg-ui-black-default text-default-white w-8 h-8 pl-0 pr-0 pt-0 pb-0 ${minting ? "opacity-20" : ""}`}
 							onClick={minting ? () => {} : handleClose}
 						>
 							×
@@ -181,10 +189,7 @@ export const MintDialog = ({
 						{showEmail ? (
 							<div className="w-full h-full flex justify-center items-center">
 								<div className="top-4 left-4 absolute">
-									<Button
-										className="bg-ui-black-default text-default-white text-xs w-auto"
-										onClick={() => setShowEmail(false)}
-									>
+									<Button className="bg-ui-black-default text-default-white text-xs w-auto" onClick={() => setShowEmail(false)}>
 										Back
 									</Button>
 								</div>
@@ -270,9 +275,7 @@ export const MintDialog = ({
 					${
 						!minting &&
 						`left-0 bg-background-${
-							companion && mintType === "custom"
-								? colorToKey(companion?.properties.background, colors.background)
-								: "red"
+							companion && mintType === "custom" ? colorToKey(companion?.properties.background, colors.background) : "red"
 						}`
 					}
 					${minting && !success && "md:left-1/2 origin-center rounded-2xl overflow-hidden opacity-50"}
@@ -291,21 +294,14 @@ export const MintDialog = ({
 							{success ? null : (
 								<div className="absolute inset-0 z-40 opacity-0 hover:opacity-100 transition-opacity">
 									<div className={`absolute bottom-8 left-1/2 -translate-x-1/2`}>
-										<Button
-											className={`text-xs text-white border-transparent bg-ui-black-default`}
-											onClick={handleCustomize}
-										>
+										<Button className={`text-xs text-white border-transparent bg-ui-black-default`} onClick={handleCustomize}>
 											Continue customizing
 										</Button>
 									</div>
 								</div>
 							)}
 						</div>
-						<div
-							className={`h-full w-full aspect-square relative bg-default-red ${
-								mintType == "random" ? "" : "hidden"
-							}`}
-						>
+						<div className={`h-full w-full aspect-square relative bg-default-red ${mintType == "random" ? "" : "hidden"}`}>
 							<Image src="/box.png" alt="box" layout="fill" />
 						</div>
 					</div>
@@ -313,9 +309,7 @@ export const MintDialog = ({
 				{/************* /Companion Image *************/}
 				{success ? (
 					<>
-						<h1 className="font-display subpixel-antialiased text-7xl md:text-9xl text-center text-default-white">
-							Minted
-						</h1>
+						<h1 className="font-display subpixel-antialiased text-7xl md:text-9xl text-center text-default-white">Minted</h1>
 						<Button className="bg-ui-black-default text-default-white" onClick={handleClose}>
 							Back home
 						</Button>
@@ -329,10 +323,7 @@ export const MintDialog = ({
 								{/********************************************/}
 								<div className="md:overflow-y-scroll relative">
 									<div className="top-4 ml-4 hidden md:block sticky">
-										<Button
-											className="bg-ui-black-default text-default-white text-xs w-auto"
-											onClick={() => setShowFaq(false)}
-										>
+										<Button className="bg-ui-black-default text-default-white text-xs w-auto" onClick={() => setShowFaq(false)}>
 											Back
 										</Button>
 									</div>
@@ -351,10 +342,7 @@ export const MintDialog = ({
 										minting ? "opacity-0 pointer-events-none" : ""
 									}`}
 								>
-									<h1 className="font-display subpixel-antialiased text-9xl text-center text-ui-black-lighter">
-										Mint
-									</h1>
-
+									<h1 className="font-display subpixel-antialiased text-9xl text-center text-ui-black-lighter">Mint</h1>
 									<div className="flex rounded-full relative justify-items-stretch text-xs max-w-xs">
 										<div className="absolute w-full h-full z-0 rounded-full border-ui-black-lightest bg-ui-black-lightest bg-opacity-10 border-2"></div>
 										<Button
@@ -384,19 +372,16 @@ export const MintDialog = ({
 											Random
 										</Button>
 									</div>
-									<div
-										className={`px-8 max-w-xs text-center flex flex-col gap-2 justify-center items-center`}
-									>
+									<div className={`px-8 max-w-xs text-center flex flex-col gap-2 justify-center items-center`}>
+										{mintType === "custom" ? 887 - data?.custom : 8887 - data?.total} of{" "}
+										{mintType === "custom" ? "888" : "8888"} remain
 										{mintType === "custom" ? (
 											<>
 												{/********************************************/}
 												{/*************** Mint: Custom ***************/}
 												{/********************************************/}
 												<p>Whoa! This customized 1/1 NFT you created looks really dope. </p>
-												<p>
-													I just checked and it has a completely arbitrary* rarity score of
-													67/100.
-												</p>
+												<p>I just checked and it has a completely arbitrary* rarity score of 67/100.</p>
 												<p>
 													<a
 														className="text-ui-orange-default"
@@ -416,8 +401,8 @@ export const MintDialog = ({
 												{/*************** Mint: Random ***************/}
 												{/********************************************/}
 												<p>
-													Minting a random companion this way gives you the opportunity to
-													obtain ultra-rare attributes that can&apos;t obtained otherwise.{" "}
+													Minting a random companion this way gives you the opportunity to obtain ultra-rare attributes that
+													can&apos;t obtained otherwise.{" "}
 												</p>
 												<p>
 													<a
@@ -461,13 +446,12 @@ export const MintDialog = ({
 											</>
 										)}
 									</div>
-
 									<div className="mt-16 w-full sticky bottom-8 flex justify-center">
 										<div>
 											<Button
 												className="text-lg text-white bg-ui-orange-default"
 												// disabled={true}
-												disabled={mintQty > 8 || mintQty < 1}
+												disabled={isSoldOut || (mintType == "custom" && isSoldOutCustoms) || mintQty > 8 || mintQty < 1}
 												loading={minting}
 												onClick={() => {
 													handleMint({
@@ -479,7 +463,13 @@ export const MintDialog = ({
 											>
 												<span>Mint</span>
 												<span className="text-md px-2 py-0.5 text-white bg-ui-black-lightest bg-opacity-20 rounded-full">
-													{mintType === "custom" ? priceCustomEth : priceEth * mintQty}Ξ
+													{mintType === "custom"
+														? isSoldOutCustoms
+															? "Sold out"
+															: priceCustomEth + "Ξ"
+														: isSoldOut
+														? "Sold out"
+														: priceEth * mintQty + "Ξ"}
 												</span>
 											</Button>
 										</div>
