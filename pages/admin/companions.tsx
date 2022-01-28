@@ -112,7 +112,7 @@ function Companions() {
 				{data?.map((c) => (
 					<div key={c.id} className="border border-gray-100">
 						{/* eslint-disable */}
-						<img src={`https://companioninabox.art/api/companion.png?tokenId=${c.tokenId}&iteration=${c.iteration || 0}`} />
+						<img src={`https://companioninabox.art/api/companion.png?id=${c.tokenId}&iteration=${c.iteration || 0}`} />
 						{/* eslint-enable */}
 						<a href={`/admin/editor?admin=true&tokenId=${c.tokenId}`}>Edit #{c.tokenId}</a>
 					</div>
