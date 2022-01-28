@@ -52,3 +52,20 @@ export const updateCompanion = async ({
 		});
 	}
 };
+
+export const incrementCustomCounter = async () => {
+	const customs = await prisma.counters.findUnique({
+		where: { name: "custom" },
+	});
+	console.log(customs);
+	if (!customs) {
+		return await prisma.counters.create({
+			data: { name: "custom", value: 321 },
+		});
+	} else {
+		return await prisma.counters.update({
+			where: { name: "custom" },
+			data: { value: (customs?.value || 321) + 1 },
+		});
+	}
+};
