@@ -102,11 +102,18 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 							});
 						}
 
-						prisma.counters.upsert({
+						const currentCount = await prisma.counters.findUnique({
 							where: { name: "total" },
-							create: { value: companionIds[companionIds.length - 1] },
-							data: { value: companionIds[companionIds.length - 1] },
 						});
+						const latestMinted = companionIds[companionIds.length - 1];
+						if (latestMinted > currentCount.value) {
+							prisma.counters.update({
+								where: { name: "total" },
+								data: {
+									value: latestMinted,
+								},
+							});
+						}
 
 						return res.status(200).json({
 							companionIds,
