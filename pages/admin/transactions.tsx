@@ -205,7 +205,7 @@ function CouponEditor() {
 							</td>
 							<td>{txn.date}</td>
 							<td>{txn.txnType}</td>
-							<td>{txn.txnValue}</td>
+							<td>{parseInt(txn.txnValue) / 1000000000000000000}</td>
 							<td>{txn.companionId}</td>
 							<td>{txn.complete ? "true" : "false"}</td>
 							<td className="flex">
