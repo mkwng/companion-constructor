@@ -153,7 +153,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		if (!imgBuffer) {
 			imgBuffer = (
 				await axios({
-					url: "https://railway.companioninabox.art" + gottenPath,
+					url: "https://companioninabox.art" + gottenPath,
 					responseType: "arraybuffer",
 				})
 			).data as Buffer;
