@@ -112,6 +112,7 @@ function Companions() {
 	const companions = data?.filter((c) => {
 		return showNoToken ? true : !isNaN(parseFloat(c.tokenId));
 	});
+	let prevTokenId = companions[companions.length - 1].tokenId + 1;
 
 	return (
 		<>
@@ -125,14 +126,44 @@ function Companions() {
 				</Button>
 			</div>
 			<div className=" grid grid-cols-12">
-				{companions?.map((c) => (
-					<div key={c.id} className="border border-gray-100">
-						{/* eslint-disable */}
-						<img src={`https://companioninabox.art/api/companion.png?id=${c.tokenId}&iteration=${c.iteration || 0}`} />
-						{/* eslint-enable */}
-						<a href={`/admin/editor?admin=true&tokenId=${c.tokenId}`}>Edit #{c.tokenId}</a>
-					</div>
-				))}
+				{companions?.map((c) => {
+					let result;
+					if (c.tokenId == prevTokenId - 1 || showNoToken) {
+						result = (
+							<div key={c.id} className="border border-gray-100">
+								{/* eslint-disable */}
+								<img src={`https://companioninabox.art/api/companion.png?id=${c.tokenId}&iteration=${c.iteration || 0}`} />
+								{/* eslint-enable */}
+								<a href={`/admin/editor?admin=true&tokenId=${c.tokenId}`}>Edit #{c.tokenId}</a>
+							</div>
+						);
+					} else {
+						const missingNumbers = [];
+						for (let i = prevTokenId + 1; i > c.tokenId; i--) {
+							missingNumbers.push(i);
+						}
+						result = (
+							<>
+								{missingNumbers.map((n) => (
+									<div key={n}>
+										{/* eslint-disable */}
+										<img src={`https://companioninabox.art/box.png`} />
+										{/* eslint-enable */}
+										<a href={`/admin/editor?admin=true&tokenId=${n}`}>Edit #{n}</a>
+									</div>
+								))}
+								<div key={c.id} className="border border-gray-100">
+									{/* eslint-disable */}
+									<img src={`https://companioninabox.art/api/companion.png?id=${c.tokenId}&iteration=${c.iteration || 0}`} />
+									{/* eslint-enable */}
+									<a href={`/admin/editor?admin=true&tokenId=${c.tokenId}`}>Edit #{c.tokenId}</a>
+								</div>
+							</>
+						);
+					}
+					prevTokenId = c.tokenId || prevTokenId;
+					return result;
+				})}
 			</div>
 		</>
 	);
