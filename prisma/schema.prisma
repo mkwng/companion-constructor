@@ -16,11 +16,12 @@ model Counters {
 }
 
 model Transactions {
-  hash     String   @unique
-  date     DateTime
-  txnType  String
-  txnValue String
-  complete Boolean  @default(value: true)
+  hash       String   @unique
+  date       DateTime
+  txnType    String
+  txnValue   String
+  complete   Boolean  @default(value: true)
+  userWallet String?
 
   companionId Int?
   Companion   Companion? @relation(fields: [companionId], references: [id])

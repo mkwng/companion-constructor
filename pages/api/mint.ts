@@ -7,6 +7,7 @@ import { createCompanion, incrementCustomCounter } from "../../data/operations";
 import prisma from "../../lib/prisma";
 
 interface Transaction {
+	userWallet?: string;
 	hash: string;
 	mintType: "random" | "custom";
 	mintQty: number;
@@ -17,7 +18,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 	const { method } = req;
 	switch (method) {
 		case "POST":
-			const { hash, mintType, mintQty, companion } = req.body as Transaction;
+			const { userWallet, hash, mintType, mintQty, companion } = req.body as Transaction;
 
 			const hashUsed = await prisma.transactions.findUnique({
 				where: { hash },
@@ -41,7 +42,6 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 						return res.status(400).json({
 							error: "Not enough ETH sent",
 						});
-						return;
 					}
 					const receipt = await web3.eth.getTransactionReceipt(hash);
 					if (receipt.to.toLowerCase() !== companionAddress.toLowerCase()) {
@@ -86,6 +86,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 						if (!hashUsed) {
 							await prisma.transactions.create({
 								data: {
+									userWallet,
 									hash,
 									date: new Date(),
 									txnType: mintType == "custom" ? "mintCustom" : "mintRandom",
@@ -124,6 +125,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 						console.log(`Incomplete companion id = ${incompleteCompanion.id}`);
 						await prisma.transactions.create({
 							data: {
+								userWallet,
 								hash,
 								date: new Date(),
 								txnType: "mintCustom",

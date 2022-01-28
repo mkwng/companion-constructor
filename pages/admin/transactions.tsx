@@ -12,6 +12,13 @@ import { ownerAddress } from "../../components/contract";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { fetcher } from "../../lib/swr";
 
+const getTruncatedAddress = (address) => {
+	if (address && address.startsWith("0x")) {
+		return address.substr(0, 4) + "..." + address.substr(address.length - 4);
+	}
+	return address;
+};
+
 function getLibrary(provider) {
 	const library = new Web3Provider(provider);
 	return library;
@@ -157,6 +164,7 @@ function CouponEditor() {
 			<table className="w-full p-8 max-w-lg">
 				<thead>
 					<tr>
+						<th>User</th>
 						<th>Hash</th>
 						<th>Time</th>
 						<th>Type</th>
@@ -169,10 +177,35 @@ function CouponEditor() {
 				<tbody>
 					{transactions?.map((txn) => (
 						<tr key={txn.hash}>
-							<td>{txn.hash}</td>
+							<td>
+								{getTruncatedAddress(txn.userWallet)}{" "}
+								<a
+									href="#"
+									className="text-xs"
+									onClick={() => {
+										// Copy to clipboard
+										navigator.clipboard.writeText(txn.userWallet);
+									}}
+								>
+									Copy
+								</a>
+							</td>
+							<td>
+								{getTruncatedAddress(txn.hash)}{" "}
+								<a
+									href="#"
+									className="text-xs"
+									onClick={() => {
+										// Copy to clipboard
+										navigator.clipboard.writeText(txn.hash);
+									}}
+								>
+									Copy
+								</a>
+							</td>
 							<td>{txn.date}</td>
 							<td>{txn.txnType}</td>
-							<td>{txn.txnValue}</td>
+							<td>{parseInt(txn.txnValue) / 1000000000000000000}</td>
 							<td>{txn.companionId}</td>
 							<td>{txn.complete ? "true" : "false"}</td>
 							<td className="flex">
