@@ -200,7 +200,8 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 						image: `https://companioninabox.art/box.png`,
 						external_url: `https://companioninabox.art/`,
 						background_color: rgbToHex(colors.background.red),
-						description: "There seems to be an issue with this box. Contact @companioninabox.",
+						description:
+							"Your companion's still being packed and shipped. Please give up to 24 hours. Contact @companioninabox if there are any issues!.",
 					});
 				}
 				switch (req.query.format) {
