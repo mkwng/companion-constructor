@@ -1,12 +1,11 @@
 import { Web3Provider } from "@ethersproject/providers";
-import { Companion, Coupon, Transactions } from "@prisma/client";
+import { Companion } from "@prisma/client";
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import Web3 from "web3";
-import Button from "../../components/button";
 import { ConnectButton } from "../../components/connectButton";
 import { ownerAddress } from "../../components/contract";
 import useLocalStorage from "../../hooks/useLocalStorage";
@@ -37,55 +36,20 @@ const wcConnector = new WalletConnectConnector({
 });
 const injected = new InjectedConnector({ supportedChainIds: [1, 4] });
 
-function timeout(ms) {
-	return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export default function WrapperHome() {
 	return (
 		<Web3ReactProvider getLibrary={getLibrary}>
-			<CouponEditor />
+			<Companions />
 		</Web3ReactProvider>
 	);
 }
 
-const TokenAssigner = ({ onSubmit }: { onSubmit: (input: number) => void }) => {
-	const [input, setInput] = useState("");
-	return (
-		<>
-			<form
-				className="flex"
-				onSubmit={(e) => {
-					e.preventDefault();
-					onSubmit(parseInt(input));
-				}}
-			>
-				<input
-					className="w-24"
-					type="text"
-					name="code"
-					placeholder="Token ID"
-					value={input}
-					onChange={(e) => setInput(e.target.value)}
-				/>
-				<div>
-					<Button className="text-xs" type="submit">
-						Assign TokenId
-					</Button>
-				</div>
-			</form>
-		</>
-	);
-};
-
-function CouponEditor() {
+function Companions() {
 	const web3React = useWeb3React();
 	const [web3, setWeb3] = useState<Web3>(null);
 	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
 	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
 	const { data, error, mutate } = useSWR(`/api/companions`, fetcher);
-
-	const { companions }: { companions: Companion[] } = data ? data : { companions: [] };
 
 	useEffect(() => {
 		if (web3React.active) {
@@ -144,24 +108,8 @@ function CouponEditor() {
 	}
 	return (
 		<>
-			<Button
-				onClick={() => {
-					fetch(`/api/checkIncompletes`, {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-					}).then((result) => {
-						alert("done?");
-						console.log(result);
-					});
-				}}
-			>
-				Update incompletes
-			</Button>
-
 			<div className=" grid grid-cols-12">
-				{companions?.map((c) => (
+				{data?.map((c) => (
 					<div key={c.id} className="border border-gray-100">
 						{/* eslint-disable */}
 						<img src={`https://companioninabox.art/api/companion.png?tokenId=${c.tokenId}&iteration=${c.iteration || 0}`} />
