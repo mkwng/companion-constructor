@@ -6,6 +6,7 @@ import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import Web3 from "web3";
+import Button from "../../components/button";
 import { ConnectButton } from "../../components/connectButton";
 import { ownerAddress } from "../../components/contract";
 import useLocalStorage from "../../hooks/useLocalStorage";
@@ -50,6 +51,7 @@ function Companions() {
 	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
 	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
 	const { data, error, mutate } = useSWR(`/api/companions`, fetcher);
+	const [showNoToken, setShowNoToken] = useState(false);
 
 	useEffect(() => {
 		if (web3React.active) {
@@ -106,10 +108,24 @@ function Companions() {
 			</>
 		);
 	}
+
+	const companions = data?.filter((c) => {
+		return showNoToken ? true : !isNaN(parseFloat(c.tokenId));
+	});
+
 	return (
 		<>
+			<div className="flex">
+				<Button
+					onClick={() => {
+						setShowNoToken((prev) => !prev);
+					}}
+				>
+					Show no tokens: {showNoToken ? "true" : "false"}
+				</Button>
+			</div>
 			<div className=" grid grid-cols-12">
-				{data?.map((c) => (
+				{companions?.map((c) => (
 					<div key={c.id} className="border border-gray-100">
 						{/* eslint-disable */}
 						<img src={`https://companioninabox.art/api/companion.png?id=${c.tokenId}&iteration=${c.iteration || 0}`} />
