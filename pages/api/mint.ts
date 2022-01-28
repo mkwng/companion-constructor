@@ -65,13 +65,13 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 								} else {
 									query = createCompanion({
 										tokenId,
-										companion,
+										companion: { ...companion, name: "Custom Companion" },
 									});
 								}
 							} else {
 								query = createCompanion({
 									tokenId,
-									companion: randomCompanion(),
+									companion: { ...randomCompanion(), name: "Randomly Generated Companion" },
 								});
 							}
 							incrementCustomCounter();
@@ -119,7 +119,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 					console.log("Transaction not yet mined");
 					if (companion?.properties.background) {
 						const incompleteCompanion = await createCompanion({
-							companion,
+							companion: { ...companion, name: "Custom Companion" },
 						});
 						console.log(`Incomplete companion id = ${incompleteCompanion.id}`);
 						await prisma.transactions.create({
