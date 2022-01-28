@@ -6,7 +6,6 @@ export default async function transaction(req: NextApiRequest, res: NextApiRespo
 	switch (method) {
 		case "GET":
 			if (req.query.hash) {
-				// Check if coupon exists and has not been used
 				const txn = await prisma.transactions.findUnique({
 					where: {
 						hash: req.query.hash,
@@ -16,12 +15,14 @@ export default async function transaction(req: NextApiRequest, res: NextApiRespo
 					return res.status(400).json({ error: "Hash does not exist" });
 				}
 				return res.status(200).json({
-					message: "Coupon found",
+					message: "Transaction found",
 					transaction: txn,
 				});
 			} else {
 				// Get all coupons
-				const transactions = await prisma.transactions.findMany();
+				const transactions = await prisma.transactions.findMany({
+					where: { complete: false },
+				});
 				return res.status(200).json({
 					message: "transactions found",
 					transactions,
