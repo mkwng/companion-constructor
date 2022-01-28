@@ -159,6 +159,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			).data as Buffer;
 			imageCache.set(gottenPath, imgBuffer);
 		}
+		const metadata = await sharp(imgBuffer).metadata();
+		if (metadata.width !== w || metadata.height !== h) {
+			return sharp(imgBuffer).resize(w, h).toBuffer();
+		}
 		return sharp(imgBuffer).toBuffer();
 	});
 	const results = await Promise.all(imageBuffers);
