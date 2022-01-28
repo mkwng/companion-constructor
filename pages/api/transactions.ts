@@ -10,6 +10,9 @@ export default async function transaction(req: NextApiRequest, res: NextApiRespo
 					where: {
 						hash: req.query.hash,
 					},
+					orderBy: {
+						date: "desc",
+					},
 				});
 				if (!txn) {
 					return res.status(400).json({ error: "Hash does not exist" });
