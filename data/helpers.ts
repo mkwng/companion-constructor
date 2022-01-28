@@ -421,12 +421,12 @@ export const keysToCompanion = (companionQuery): Companion => {
 		},
 	};
 	for (const key in companionQuery) {
-		if (typeof companionQuery[key] !== "string") {
+		if (typeof companionQuery[key] !== "string" || key === "iteration") {
 			continue;
 		}
 		switch (key) {
 			case "tokenId":
-			case "iteration":
+				companion.tokenId = companionQuery.tokenId;
 				break;
 			case "name":
 				companion.name = companionQuery.name;
