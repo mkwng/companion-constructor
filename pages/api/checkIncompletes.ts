@@ -32,7 +32,7 @@ const recheckMint = async (hash, requiredFee, companionId) => {
 				} else {
 					query = createCompanion({
 						tokenId,
-						companion: randomCompanion(),
+						companion: { ...randomCompanion(), name: "Randomly Generated Companion" },
 					});
 				}
 				const result = await query;

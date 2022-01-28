@@ -65,13 +65,13 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 								} else {
 									query = createCompanion({
 										tokenId,
-										companion,
+										companion: { ...companion, name: "Custom Companion" },
 									});
 								}
 							} else {
 								query = createCompanion({
 									tokenId,
-									companion: randomCompanion(),
+									companion: { ...randomCompanion(), name: "Randomly Generated Companion" },
 								});
 							}
 							incrementCustomCounter();
