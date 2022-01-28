@@ -161,7 +161,7 @@ function CouponEditor() {
 			</Button>
 
 			<div className=" grid grid-cols-12">
-				{companions.map((c) => (
+				{companions?.map((c) => (
 					<div key={c.id} className="border border-gray-100">
 						{/* eslint-disable */}
 						<img src={`https://companioninabox.art/api/companion.png?tokenId=${c.tokenId}&iteration=${c.iteration || 0}`} />
