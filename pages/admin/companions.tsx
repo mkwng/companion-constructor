@@ -112,7 +112,7 @@ function Companions() {
 	const companions = data?.filter((c) => {
 		return showNoToken ? true : !isNaN(parseFloat(c.tokenId));
 	});
-	let prevTokenId = companions[companions.length - 1].tokenId + 1;
+	let prevTokenId = companions?.[companions?.length - 1]?.tokenId || 0 + 1;
 
 	return (
 		<>
