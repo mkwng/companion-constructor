@@ -10,9 +10,6 @@ export default async function transaction(req: NextApiRequest, res: NextApiRespo
 					where: {
 						hash: req.query.hash,
 					},
-					orderBy: {
-						date: "desc",
-					},
 				});
 				if (!txn) {
 					return res.status(400).json({ error: "Hash does not exist" });
@@ -25,6 +22,7 @@ export default async function transaction(req: NextApiRequest, res: NextApiRespo
 				// Get all coupons
 				const transactions = await prisma.transactions.findMany({
 					where: { complete: false },
+					orderBy: { date: "desc" },
 				});
 				return res.status(200).json({
 					message: "transactions found",
