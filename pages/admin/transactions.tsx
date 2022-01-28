@@ -177,8 +177,32 @@ function CouponEditor() {
 				<tbody>
 					{transactions?.map((txn) => (
 						<tr key={txn.hash}>
-							<td>{getTruncatedAddress(txn.userWallet)}</td>
-							<td>{getTruncatedAddress(txn.hash)}</td>
+							<td>
+								{getTruncatedAddress(txn.userWallet)}{" "}
+								<a
+									href="#"
+									className="text-xs"
+									onClick={() => {
+										// Copy to clipboard
+										navigator.clipboard.writeText(txn.userWallet);
+									}}
+								>
+									Copy
+								</a>
+							</td>
+							<td>
+								{getTruncatedAddress(txn.hash)}{" "}
+								<a
+									href="#"
+									className="text-xs"
+									onClick={() => {
+										// Copy to clipboard
+										navigator.clipboard.writeText(txn.hash);
+									}}
+								>
+									Copy
+								</a>
+							</td>
 							<td>{txn.date}</td>
 							<td>{txn.txnType}</td>
 							<td>{txn.txnValue}</td>
