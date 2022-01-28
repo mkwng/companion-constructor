@@ -132,11 +132,7 @@ export const getLayers = (companion: Companion) => {
 };
 
 let colorCount = 0;
-export const getColor = (
-	layer: Layer,
-	companion?: Companion,
-	selection?: AttributeSelection
-): RGBColor => {
+export const getColor = (layer: Layer, companion?: Companion, selection?: AttributeSelection): RGBColor => {
 	if (!("colorType" in layer)) {
 		throw new Error(`Can't get color for layer: ${layer.path}`);
 	}
@@ -152,12 +148,7 @@ export const getColor = (
 			if (!selection.color) {
 				throw new Error(`No colors were specified for layer: ${layer.path}`);
 			}
-			const temp =
-				selection.color[
-					selection.colorIndex || selection.colorIndex == 0
-						? selection.colorIndex
-						: colorCount++
-				];
+			const temp = selection.color[selection.colorIndex || selection.colorIndex == 0 ? selection.colorIndex : colorCount++];
 			if (colorCount >= selection.color.length) {
 				colorCount = 0;
 			}
@@ -176,9 +167,7 @@ export const getPath = (layer: Layer, pose?: Pose): string => {
 };
 
 export const colorsRequired = (attributeName: string, variantName: string): number => {
-	let attrMatch = selectableAttributesArray.find(
-		(attribute) => attribute.name === attributeName
-	);
+	let attrMatch = selectableAttributesArray.find((attribute) => attribute.name === attributeName);
 	let variantMatch = attrMatch.variants.find((variant) => variant.name === variantName);
 	return variantMatch?.layers.filter((layer) => {
 		if ("colorType" in layer) {
@@ -188,30 +177,20 @@ export const colorsRequired = (attributeName: string, variantName: string): numb
 	}).length;
 };
 
-export const colorToKey = (
-	color: RGBColor,
-	colorObject: { [key: string]: RGBColor }
-): string => {
+export const colorToKey = (color: RGBColor, colorObject: { [key: string]: RGBColor }): string => {
 	if (!color) {
 		console.error("Color is undefined");
 		return "";
 	}
 	for (const key in colorObject) {
-		if (
-			colorObject[key].r === color.r &&
-			colorObject[key].g === color.g &&
-			colorObject[key].b === color.b
-		) {
+		if (colorObject[key].r === color.r && colorObject[key].g === color.g && colorObject[key].b === color.b) {
 			return key;
 		}
 	}
 	return "";
 };
 
-const hasConflict = (
-	sourceRestriction: Restrictions,
-	companionRestrictions: Restrictions[]
-): boolean => {
+const hasConflict = (sourceRestriction: Restrictions, companionRestrictions: Restrictions[]): boolean => {
 	return companionRestrictions.some((cRestriction) => {
 		for (const rkey in cRestriction) {
 			if (sourceRestriction[rkey] && sourceRestriction[rkey] !== cRestriction[rkey]) {
@@ -222,10 +201,7 @@ const hasConflict = (
 	});
 };
 
-export const isCompatible = (
-	restrictions: Restrictions,
-	companionRestrictions: Restrictions[]
-): boolean => {
+export const isCompatible = (restrictions: Restrictions, companionRestrictions: Restrictions[]): boolean => {
 	if (!restrictions) {
 		return true;
 	}
@@ -294,9 +270,7 @@ export const flattenCompanion = (
 	}
 	for (const key in companion.attributes) {
 		const attribute = selectableAttributes[key];
-		const variant = attribute.variants.find(
-			(variant) => variant.name === companion.attributes[key].name
-		);
+		const variant = attribute.variants.find((variant) => variant.name === companion.attributes[key].name);
 		if (variant) {
 			flatCompanion[key] = variant.name;
 			let colorsString = "";
@@ -336,18 +310,13 @@ export const companionToKeys = (companion: Companion) => {
 			continue;
 		}
 		const attribute = selectableAttributes[key];
-		const variant = attribute.variants.find(
-			(variant) => variant.name === companion.attributes[key].name
-		);
+		const variant = attribute.variants.find((variant) => variant.name === companion.attributes[key].name);
 		if (variant) {
 			output[key] = variant.name;
 			let i = 0;
 			for (const layer of variant.layers) {
 				if ("colorType" in layer && layer.colorType === "clothing") {
-					output[`${key}Color${i + 1}`] = colorToKey(
-						companion.attributes[key].color[i],
-						colors.clothing
-					);
+					output[`${key}Color${i + 1}`] = colorToKey(companion.attributes[key].color[i], colors.clothing);
 					i++;
 				}
 			}
@@ -376,18 +345,13 @@ export const companionToUrl = (companion: Companion): string => {
 			continue;
 		}
 		const attribute = selectableAttributes[key];
-		const variant = attribute.variants.find(
-			(variant) => variant.name === companion.attributes[key].name
-		);
+		const variant = attribute.variants.find((variant) => variant.name === companion.attributes[key].name);
 		if (variant) {
 			path += `${key}=${variant.name}&`;
 			let i = 0;
 			for (const layer of variant.layers) {
 				if ("colorType" in layer && layer.colorType === "clothing") {
-					path += `${key}Color${i + 1}=${colorToKey(
-						companion.attributes[key].color[i],
-						colors.clothing
-					)}&`;
+					path += `${key}Color${i + 1}=${colorToKey(companion.attributes[key].color[i], colors.clothing)}&`;
 					i++;
 				}
 			}
@@ -461,8 +425,10 @@ export const keysToCompanion = (companionQuery): Companion => {
 			continue;
 		}
 		switch (key) {
-			case "name":
 			case "tokenId":
+			case "iteration":
+				break;
+			case "name":
 				companion.name = companionQuery.name;
 				break;
 			case "pose":
@@ -472,11 +438,7 @@ export const keysToCompanion = (companionQuery): Companion => {
 				companion.properties.pose = Number(companionQuery[key]);
 				break;
 			case "gender":
-				if (
-					companionQuery[key] !== "f" &&
-					companionQuery[key] !== "m" &&
-					companionQuery[key] !== "w"
-				) {
+				if (companionQuery[key] !== "f" && companionQuery[key] !== "m" && companionQuery[key] !== "w") {
 					throw new Error(`${key} not valid`);
 				}
 				companion.properties.gender = companionQuery[key] as "m" | "f" | "w";
@@ -498,9 +460,7 @@ export const keysToCompanion = (companionQuery): Companion => {
 				if (!(key in selectableAttributes)) {
 					throw new Error(`${key} not valid`);
 				}
-				const match = selectableAttributes[key].variants.find(
-					(variant) => variant.name === companionQuery[key]
-				);
+				const match = selectableAttributes[key].variants.find((variant) => variant.name === companionQuery[key]);
 				if (!match) {
 					throw new Error(`${key}: ${companionQuery[key]} not valid`);
 				}
@@ -589,11 +549,7 @@ export const drawLayer = async ({
 					l[2],
 				] as [LayerStaticWithData, AttributeSelection?, boolean?];
 			}
-			return [{ batch: newBatch, ...rest }, l[1], l[2]] as [
-				LayerStaticWithData,
-				AttributeSelection?,
-				boolean?
-			];
+			return [{ batch: newBatch, ...rest }, l[1], l[2]] as [LayerStaticWithData, AttributeSelection?, boolean?];
 		});
 
 		if (batchIndices.length) {
@@ -629,9 +585,7 @@ export const drawLayer = async ({
 			}
 		}
 		imageToDraw = color ? await replaceColor(layer.imgData, color) : layer.imgData;
-		imageToDraw = needsTranslation
-			? await translateImage(imageToDraw, companion.properties.pose)
-			: imageToDraw;
+		imageToDraw = needsTranslation ? await translateImage(imageToDraw, companion.properties.pose) : imageToDraw;
 	}
 	if (!imageToDraw) throw new Error("No image returned");
 	// Everything before this works fine
