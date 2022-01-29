@@ -24,8 +24,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	);
 
 	const { w, h } = {
-		w: req.query.size ? parseInt(req.query.size as string) || 1024 : 1024,
-		h: req.query.size ? parseInt(req.query.size as string) || 1024 : 1024,
+		w: req.query.size ? parseInt(req.query.size as string) || 512 : 512,
+		h: req.query.size ? parseInt(req.query.size as string) || 512 : 512,
 	};
 	const ratio = w / 2048;
 

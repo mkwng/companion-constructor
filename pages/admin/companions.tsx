@@ -135,7 +135,6 @@ function Companions() {
 			{prevTokenId && (
 				<div className=" grid grid-cols-12">
 					{companions?.map((c) => {
-						console.log(prevTokenId, c.tokenId);
 						let result;
 						if (c.tokenId == prevTokenId - 1 || showNoToken) {
 							result = (
