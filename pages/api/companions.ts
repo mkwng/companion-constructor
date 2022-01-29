@@ -7,6 +7,8 @@ export default async function apiCompanions(req, res) {
 			try {
 				const companions = await prisma.companion.findMany({
 					orderBy: { tokenId: "desc" },
+					take: 1000,
+					skip: req.query.skip || 0,
 				});
 				res.status(200).json(companions);
 			} catch (e) {
