@@ -119,7 +119,7 @@ function Companions() {
 	const companions: Companion[] = data?.filter((c) => {
 		return showNoToken ? true : !isNaN(parseFloat(c.tokenId));
 	});
-	let prevTokenId = companions ? companions[companions?.length - 1].tokenId + 1 : 0;
+	let prevTokenId = companions ? companions[0].tokenId + 1 : 0;
 
 	return (
 		<>
@@ -135,6 +135,7 @@ function Companions() {
 			{prevTokenId && (
 				<div className=" grid grid-cols-12">
 					{companions?.map((c) => {
+						console.log(prevTokenId, c.tokenId);
 						let result;
 						if (c.tokenId == prevTokenId - 1 || showNoToken) {
 							result = (
@@ -149,7 +150,7 @@ function Companions() {
 							);
 						} else {
 							const missingNumbers = [];
-							for (let i = prevTokenId + 1; i > c.tokenId; i--) {
+							for (let i = prevTokenId - 1; i > c.tokenId; i--) {
 								missingNumbers.push(i);
 							}
 							result = (
