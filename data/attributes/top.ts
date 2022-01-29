@@ -450,37 +450,6 @@ export const top: AttributeDictionary = {
 		},
 		{
 			attribute: "top",
-			name: "wifebeater",
-			restrictions: { gender: "m" },
-			layers: [
-				{
-					path: {
-						1: "/attributes/pose1/13-top/wifebeater_1-c_white.png",
-						2: "/attributes/pose2/05-tops/wifebeater_1-c_white-g_m.png",
-						3: "/attributes/pose3/03-top/wifebeater_1-c_white.png",
-					},
-					color: colors.clothing.white,
-				},
-				{
-					path: {
-						1: "/attributes/pose1/13-top/wifebeater_2-c_shadow.png",
-					},
-					color: colors.default.gray,
-					blendMode: "multiply",
-				},
-				{
-					path: {
-						1: "/attributes/pose1/13-top/wifebeater_3-c_outline.png",
-						2: "/attributes/pose2/05-tops/wifebeater_2-c_outline.png",
-						3: "/attributes/pose3/03-top/wifebeater_2-c_outline.png",
-					},
-					color: colors.default.black,
-				},
-			],
-		},
-
-		{
-			attribute: "top",
 			name: "buttonup",
 			restrictions: { gender: "m" },
 			layers: [
@@ -1086,7 +1055,6 @@ let topVariants = [
 	"schoolgirl",
 	"tattoos",
 	"tattooshirt",
-	"wifebeater",
 	"whitetanktop",
 	"buttonup",
 	"jacket",
