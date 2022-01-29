@@ -52,7 +52,9 @@ function Companions() {
 	const [web3, setWeb3] = useState<Web3>(null);
 	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
 	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
-	const { data, error, mutate } = useSWR(`/api/companions`, fetcher);
+	const [skip, setSkip] = useState<number>(0);
+	const [take, setTake] = useState<number>(144);
+	const { data, error, mutate } = useSWR(`/api/companions?skip=${skip}&take=${take}`, fetcher);
 	const [showNoToken, setShowNoToken] = useState(false);
 	const [baseUrl, setBaseUrl] = useState("companioninabox.art");
 
@@ -116,10 +118,53 @@ function Companions() {
 		);
 	}
 
-	const companions: Companion[] = data?.filter((c) => {
-		return showNoToken ? true : !isNaN(parseFloat(c.tokenId));
-	});
-	let prevTokenId = companions ? companions[0].tokenId + 1 : 0;
+	const Controls = () => {
+		return (
+			<>
+				<div>
+					<a
+						href="#"
+						onClick={() => {
+							setSkip((prev) => Math.max(prev - take, 0));
+						}}
+					>
+						←Prev
+					</a>{" "}
+					|{" "}
+					<a
+						href="#"
+						onClick={() => {
+							setSkip((prev) => prev + take);
+						}}
+					>
+						Next→
+					</a>
+				</div>
+
+				<div>
+					<a href="#" onClick={() => setTake(48)}>
+						48
+					</a>{" "}
+					|{" "}
+					<a href="#" onClick={() => setTake(144)}>
+						144
+					</a>{" "}
+					|{" "}
+					<a href="#" onClick={() => setTake(432)}>
+						432
+					</a>
+				</div>
+			</>
+		);
+	};
+
+	console.log(data);
+	const companions: Companion[] = data?.length
+		? data.filter((c) => {
+				return showNoToken ? true : !isNaN(parseFloat(c.tokenId));
+		  })
+		: [];
+	let prevTokenId = companions?.length ? companions[0].tokenId + 1 : 0;
 
 	return (
 		<>
@@ -132,6 +177,7 @@ function Companions() {
 					Show no tokens: {showNoToken ? "true" : "false"}
 				</Button>
 			</div>
+			<Controls />
 			{prevTokenId && (
 				<div className=" grid grid-cols-12">
 					{companions?.map((c) => {
@@ -183,6 +229,7 @@ function Companions() {
 					})}
 				</div>
 			)}
+			<Controls />
 		</>
 	);
 }
