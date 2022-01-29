@@ -3,6 +3,7 @@ import { Companion } from "@prisma/client";
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import Web3 from "web3";
@@ -46,6 +47,7 @@ export default function WrapperHome() {
 }
 
 function Companions() {
+	const router = useRouter();
 	const web3React = useWeb3React();
 	const [web3, setWeb3] = useState<Web3>(null);
 	const [latestOp, setLatestOp] = useLocalStorage("latest_op", "");
@@ -114,6 +116,8 @@ function Companions() {
 	});
 	let prevTokenId = companions ? companions[companions?.length - 1].tokenId + 1 : 0;
 
+	const baseUrl = router.query.url || "companioninabox.art";
+
 	return (
 		<>
 			<div className="flex">
@@ -133,7 +137,7 @@ function Companions() {
 							result = (
 								<div key={c.id} className="border border-gray-100 p-1">
 									{/* eslint-disable */}
-									<img src={`https://companioninabox.art/api/companion.png?id=${c.tokenId}&iteration=${c.iteration || 0}`} />
+									<img src={`https://${baseUrl}/api/companion.png?id=${c.tokenId}&iteration=${c.iteration || 0}`} />
 									{/* eslint-enable */}
 									<a href={`/admin/editor?admin=true&tokenId=${c.tokenId}`}>Edit #{c.tokenId}</a>
 									<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${c.tokenId}`}>etherscan</a>
@@ -149,7 +153,7 @@ function Companions() {
 									{missingNumbers.map((n) => (
 										<div key={n} className="border border-gray-100 p-1">
 											{/* eslint-disable */}
-											<img src={`https://companioninabox.art/box.png`} />
+											<img src={`https://${baseUrl}/box.png`} />
 											{/* eslint-enable */}
 											<a href={`/admin/editor?admin=true&tokenId=${n}`}>Edit #{n}</a>
 											<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${n}`}>etherscan</a>
@@ -157,7 +161,7 @@ function Companions() {
 									))}
 									<div key={c.id} className="border border-gray-100 p-1">
 										{/* eslint-disable */}
-										<img src={`https://companioninabox.art/api/companion.png?id=${c.tokenId}&iteration=${c.iteration || 0}`} />
+										<img src={`https://${baseUrl}/api/companion.png?id=${c.tokenId}&iteration=${c.iteration || 0}`} />
 										{/* eslint-enable */}
 										<a href={`/admin/editor?admin=true&tokenId=${c.tokenId}`}>Edit #{c.tokenId}</a>
 										<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${c.tokenId}`}>
