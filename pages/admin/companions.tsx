@@ -15,6 +15,7 @@ import { messageToSign } from "../../data/helpers";
 import { randomCompanion } from "../../data/random";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { fetcher } from "../../lib/swr";
+import { companionContract } from "../../lib/web3";
 
 const getTruncatedAddress = (address) => {
 	if (address && address.startsWith("0x")) {
@@ -218,6 +219,10 @@ function Companions() {
 									<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${c.tokenId}`}>etherscan</a>
 									<br />
 									<a href={`https://${baseUrl}/api/companion/${c.tokenId}`}>API</a>
+									<br />
+									<a href={`https://api.opensea.io/api/v1/asset/${companionContract}/${c.tokenId}/?force_update=true`}>
+										Force OpenSea Refresh
+									</a>
 								</div>
 							);
 						} else {
@@ -263,6 +268,10 @@ function Companions() {
 										</a>
 										<br />
 										<a href={`https://${baseUrl}/api/companion/${c.tokenId}`}>API</a>
+										<br />
+										<a href={`https://api.opensea.io/api/v1/asset/${companionContract}/${c.tokenId}/?force_update=true`}>
+											Force OpenSea Refresh
+										</a>
 									</div>
 								</>
 							);
