@@ -5,11 +5,14 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import useSWR from "swr";
 import Web3 from "web3";
 import Button from "../../components/button";
 import { ConnectButton } from "../../components/connectButton";
 import { ownerAddress } from "../../components/contract";
+import { messageToSign } from "../../data/helpers";
+import { randomCompanion } from "../../data/random";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { fetcher } from "../../lib/swr";
 
@@ -118,6 +121,28 @@ function Companions() {
 		);
 	}
 
+	const handleSave = async (tokenId) => {
+		const signature = await web3.eth.personal.sign(messageToSign + "\n\nUpdate companion", web3React.account, "test");
+		const result = await (
+			await fetch(`/api/companion/admin/${tokenId}`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					companion: randomCompanion(),
+					signature,
+				}),
+			})
+		).json();
+
+		if (result.error) {
+			toast.error("Tell Michael: " + result.error);
+		} else {
+			toast.success("Saved!");
+		}
+	};
+
 	const Controls = () => {
 		return (
 			<>
@@ -191,6 +216,8 @@ function Companions() {
 									<a href={`/admin/editor?admin=true&tokenId=${c.tokenId}`}>Edit #{c.tokenId}</a>
 									<br />
 									<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${c.tokenId}`}>etherscan</a>
+									<br />
+									<a href={`https://${baseUrl}/api/companion/${c.tokenId}`}>API</a>
 								</div>
 							);
 						} else {
@@ -208,6 +235,21 @@ function Companions() {
 											<a href={`/admin/editor?admin=true&tokenId=${n}`}>Edit #{n}</a>
 											<br />
 											<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${n}`}>etherscan</a>
+											<br />
+											<a href={`https://${baseUrl}/api/companion/${c.tokenId}`}>API</a>
+											<br />
+											<a
+												className="text-red-600"
+												href="#"
+												onClick={(e) => {
+													e.preventDefault();
+													if (confirm("Are you sure you want to insert a random companion here?")) {
+														handleSave(n);
+													}
+												}}
+											>
+												Insert random
+											</a>
 										</div>
 									))}
 									<div key={c.id} className="border border-gray-100 p-1">
@@ -219,6 +261,8 @@ function Companions() {
 										<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${c.tokenId}`}>
 											etherscan
 										</a>
+										<br />
+										<a href={`https://${baseUrl}/api/companion/${c.tokenId}`}>API</a>
 									</div>
 								</>
 							);
