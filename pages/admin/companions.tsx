@@ -109,7 +109,7 @@ function Companions() {
 		);
 	}
 
-	const companions = data?.filter((c) => {
+	const companions: Companion[] = data?.filter((c) => {
 		return showNoToken ? true : !isNaN(parseFloat(c.tokenId));
 	});
 	let prevTokenId = companions ? companions[companions?.length - 1].tokenId + 1 : 0;
@@ -131,11 +131,12 @@ function Companions() {
 						let result;
 						if (c.tokenId == prevTokenId - 1 || showNoToken) {
 							result = (
-								<div key={c.id} className="border border-gray-100">
+								<div key={c.id} className="border border-gray-100 p-1">
 									{/* eslint-disable */}
 									<img src={`https://companioninabox.art/api/companion.png?id=${c.tokenId}&iteration=${c.iteration || 0}`} />
 									{/* eslint-enable */}
 									<a href={`/admin/editor?admin=true&tokenId=${c.tokenId}`}>Edit #{c.tokenId}</a>
+									<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${c.tokenId}`}>etherscan</a>
 								</div>
 							);
 						} else {
@@ -146,18 +147,23 @@ function Companions() {
 							result = (
 								<>
 									{missingNumbers.map((n) => (
-										<div key={n}>
+										<div key={n} className="border border-gray-100 p-1">
 											{/* eslint-disable */}
 											<img src={`https://companioninabox.art/box.png`} />
 											{/* eslint-enable */}
 											<a href={`/admin/editor?admin=true&tokenId=${n}`}>Edit #{n}</a>
+											<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${n}`}>etherscan</a>
 										</div>
 									))}
-									<div key={c.id} className="border border-gray-100">
+									<div key={c.id} className="border border-gray-100 p-1">
 										{/* eslint-disable */}
 										<img src={`https://companioninabox.art/api/companion.png?id=${c.tokenId}&iteration=${c.iteration || 0}`} />
 										{/* eslint-enable */}
 										<a href={`/admin/editor?admin=true&tokenId=${c.tokenId}`}>Edit #{c.tokenId}</a>
+										<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${c.tokenId}`}>
+											etherscan
+										</a>
+										<span>{c.name}</span>
 									</div>
 								</>
 							);
