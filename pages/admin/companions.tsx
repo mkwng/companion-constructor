@@ -10,12 +10,11 @@ import useSWR from "swr";
 import Web3 from "web3";
 import Button from "../../components/button";
 import { ConnectButton } from "../../components/connectButton";
-import { ownerAddress } from "../../components/contract";
+import { companionAddress, ownerAddress } from "../../components/contract";
 import { messageToSign } from "../../data/helpers";
 import { randomCompanion } from "../../data/random";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { fetcher } from "../../lib/swr";
-import { companionContract } from "../../lib/web3";
 
 const getTruncatedAddress = (address) => {
 	if (address && address.startsWith("0x")) {
@@ -220,8 +219,8 @@ function Companions() {
 									<br />
 									<a href={`https://${baseUrl}/api/companion/${c.tokenId}`}>API</a>
 									<br />
-									<a href={`https://api.opensea.io/api/v1/asset/${companionContract}/${c.tokenId}/?force_update=true`}>
-										Force OpenSea Refresh
+									<a href={`https://api.opensea.io/api/v1/asset/${companionAddress}/${c.tokenId}/?force_update=true`}>
+										OpenSea Refresh
 									</a>
 								</div>
 							);
