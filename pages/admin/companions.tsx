@@ -219,7 +219,6 @@ function Companions() {
 										<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${c.tokenId}`}>
 											etherscan
 										</a>
-										<span>{c.name}</span>
 									</div>
 								</>
 							);
