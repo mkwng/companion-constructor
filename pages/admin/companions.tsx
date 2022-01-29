@@ -143,6 +143,7 @@ function Companions() {
 									<img src={`https://${baseUrl}/api/companion.png?id=${c.tokenId}&iteration=${c.iteration || 0}`} />
 									{/* eslint-enable */}
 									<a href={`/admin/editor?admin=true&tokenId=${c.tokenId}`}>Edit #{c.tokenId}</a>
+									<br />
 									<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${c.tokenId}`}>etherscan</a>
 								</div>
 							);
@@ -159,6 +160,7 @@ function Companions() {
 											<img src={`https://${baseUrl}/box.png`} />
 											{/* eslint-enable */}
 											<a href={`/admin/editor?admin=true&tokenId=${n}`}>Edit #{n}</a>
+											<br />
 											<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${n}`}>etherscan</a>
 										</div>
 									))}
@@ -167,6 +169,7 @@ function Companions() {
 										<img src={`https://${baseUrl}/api/companion.png?id=${c.tokenId}&iteration=${c.iteration || 0}`} />
 										{/* eslint-enable */}
 										<a href={`/admin/editor?admin=true&tokenId=${c.tokenId}`}>Edit #{c.tokenId}</a>
+										<br />
 										<a href={`https://etherscan.io/token/0x13bd2ac3779cbbcb2ac874c33f1145dd71ce41ee?a=${c.tokenId}`}>
 											etherscan
 										</a>
