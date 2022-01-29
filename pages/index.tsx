@@ -448,6 +448,7 @@ function Constructor() {
 							"Content-Type": "application/json",
 						},
 						body: JSON.stringify({
+							userWallet: web3React.account,
 							hash,
 							mintType,
 							mintQty: mintType === "random" ? mintQty : 1,
