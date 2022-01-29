@@ -268,7 +268,7 @@ function Companions() {
 										<br />
 										<a href={`https://${baseUrl}/api/companion/${c.tokenId}`}>API</a>
 										<br />
-										<a href={`https://api.opensea.io/api/v1/asset/${companionContract}/${c.tokenId}/?force_update=true`}>
+										<a href={`https://api.opensea.io/api/v1/asset/${companionAddress}/${c.tokenId}/?force_update=true`}>
 											Force OpenSea Refresh
 										</a>
 									</div>
