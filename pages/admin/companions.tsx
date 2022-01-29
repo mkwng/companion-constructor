@@ -54,6 +54,11 @@ function Companions() {
 	const [latestConnector, setLatestConnector] = useLocalStorage("latest_connector", "");
 	const { data, error, mutate } = useSWR(`/api/companions`, fetcher);
 	const [showNoToken, setShowNoToken] = useState(false);
+	const [baseUrl, setBaseUrl] = useState("companioninabox.art");
+
+	useEffect(() => {
+		setBaseUrl(Array.isArray(router.query.baseUrl) ? router.query.baseUrl[0] : router.query.baseUrl || "companioninabox.art");
+	}, [router.query.baseUrl]);
 
 	useEffect(() => {
 		if (web3React.active) {
@@ -115,8 +120,6 @@ function Companions() {
 		return showNoToken ? true : !isNaN(parseFloat(c.tokenId));
 	});
 	let prevTokenId = companions ? companions[companions?.length - 1].tokenId + 1 : 0;
-
-	const baseUrl = router.query.url || "companioninabox.art";
 
 	return (
 		<>
