@@ -6,6 +6,8 @@ import { randomCompanion } from "../../data/random";
 import { createCompanion, incrementCustomCounter } from "../../data/operations";
 import prisma from "../../lib/prisma";
 
+const customActive = false;
+
 interface Transaction {
 	userWallet?: string;
 	hash: string;
@@ -30,7 +32,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 			}
 
 			const requiredFee =
-				mintType == "custom"
+				mintType == "custom" && customActive
 					? web3.utils.toWei(priceCustomEth + "", "ether")
 					: web3.utils.toWei(priceEth * mintQty + "", "ether");
 
@@ -54,7 +56,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 						const tokenId = web3.utils.hexToNumber(receipt.logs[i].topics[3]);
 						if (!isNaN(tokenId)) {
 							let query;
-							if (mintType == "custom" && companion) {
+							if (mintType == "custom" && companion && customActive) {
 								// Todo: Check if there are any "mythic" variants applied...
 
 								if (hashUsed && hashUsed.companionId) {
@@ -89,7 +91,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 									userWallet,
 									hash,
 									date: new Date(),
-									txnType: mintType == "custom" ? "mintCustom" : "mintRandom",
+									txnType: mintType == "custom" && customActive ? "mintCustom" : "mintRandom",
 									txnValue: requiredFee,
 								},
 							});
@@ -125,7 +127,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 					}
 				} else {
 					console.log("Transaction not yet mined");
-					if (companion?.properties.background) {
+					if (companion?.properties.background && customActive) {
 						const incompleteCompanion = await createCompanion({
 							companion: { ...companion, name: "Custom Companion" },
 						});
