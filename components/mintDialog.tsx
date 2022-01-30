@@ -172,7 +172,7 @@ export const MintDialog = ({
 			<div
 				className={`
 					transition-all
-					w-full max-h-screen
+					w-full max-h-screen [-webkit-fill-available]
 					absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 md:aspect-[2/1] 
 					rounded-lg shadow-xl
 					shadow-ui-black-default 
