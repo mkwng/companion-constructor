@@ -86,6 +86,7 @@ function Constructor() {
 	const [showMinter, setShowMinter] = useState(false);
 	const [showStaker, setShowStaker] = useState(false);
 	const [showCheckout, setShowCheckout] = useState(false);
+	const [totalSupply, setTotalSupply] = useState(0);
 
 	const [transacting, setTransacting] = useState(false);
 	const [transactingMessage, setTransactingMessage] = useState("Confirm the transfer to continue...");
@@ -262,6 +263,29 @@ function Constructor() {
 		}
 	};
 	useEffect(retrieveCompanions, [companionContract, farmContract, web3React.account]);
+
+	const getSupply = () => {
+		if (!web3React.account || !companionContract) {
+			return;
+		}
+		let isRunning = true;
+		if (companionContract && companionContract.methods) {
+			load();
+			return () => {
+				isRunning = false;
+			};
+		}
+
+		async function load() {
+			const supply = await companionContract.methods.totalSupply().call();
+			if (!isRunning) {
+				return;
+			}
+			console.log(supply);
+			setTotalSupply(supply);
+		}
+	};
+	useEffect(getSupply, [web3React.account]);
 
 	/****************************************************************/
 	/********************** FETCHING FROM API ***********************/
@@ -758,6 +782,7 @@ function Constructor() {
 					handleMint={handleMint}
 					minting={transacting}
 					saleIsActive={true}
+					totalSupply={totalSupply}
 					account={web3React?.account}
 					handleConnectInjected={handleConnectInjected}
 					handleConnectWalletConnect={handleConnectWalletConnect}

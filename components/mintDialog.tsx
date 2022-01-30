@@ -74,6 +74,7 @@ export const MintDialog = ({
 	mintQtyState,
 	minting,
 	saleIsActive,
+	totalSupply,
 	account,
 	debug,
 }: {
@@ -87,6 +88,7 @@ export const MintDialog = ({
 	mintQtyState: [number, Dispatch<SetStateAction<number>>];
 	minting: boolean;
 	saleIsActive: boolean;
+	totalSupply: number;
 	account: string;
 	debug?: boolean;
 }) => {
@@ -127,7 +129,7 @@ export const MintDialog = ({
 	}, [data]);
 
 	const isSoldOutCustoms = data?.custom >= 887;
-	const isSoldOut = data?.total >= 8887;
+	const isSoldOut = totalSupply >= 8888;
 
 	return (
 		<div className="w-screen h-screen fixed z-50 inset-0 font-mono">
@@ -373,7 +375,7 @@ export const MintDialog = ({
 										</Button>
 									</div>
 									<div className={`px-8 max-w-xs text-center flex flex-col gap-2 justify-center items-center`}>
-										{mintType === "custom" ? 887 - data?.custom : 8887 - data?.total} of{" "}
+										{mintType === "custom" ? 887 - data?.custom : 8887 - totalSupply} of{" "}
 										{mintType === "custom" ? "888" : "8888"} remain
 										{mintType === "custom" ? (
 											<>
