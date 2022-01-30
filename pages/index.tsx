@@ -281,11 +281,10 @@ function Constructor() {
 			if (!isRunning) {
 				return;
 			}
-			console.log(supply);
 			setTotalSupply(supply);
 		}
 	};
-	useEffect(getSupply, [web3React.account]);
+	useEffect(getSupply, [web3React.account, companionContract, showMinter]);
 
 	/****************************************************************/
 	/********************** FETCHING FROM API ***********************/

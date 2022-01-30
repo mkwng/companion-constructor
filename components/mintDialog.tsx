@@ -375,7 +375,7 @@ export const MintDialog = ({
 										</Button>
 									</div>
 									<div className={`px-8 max-w-xs text-center flex flex-col gap-2 justify-center items-center`}>
-										{mintType === "custom" ? 887 - data?.custom : 8887 - data?.total} of{" "}
+										{mintType === "custom" ? 887 - data?.custom : 8887 - totalSupply} of{" "}
 										{mintType === "custom" ? "888" : "8888"} remain
 										{mintType === "custom" ? (
 											<>
