@@ -122,6 +122,7 @@ export const headwear: AttributeDictionary = {
 			name: "hijab",
 			restrictions: { headShape: "flat", profileShape: "flat", gender: "f" },
 			hides: ["hair"],
+			rarity: "oneofone",
 			layers: [
 				{
 					path: "/attributes/face/10-accessories/hijab_1-v_clothing-destination_over.png",
