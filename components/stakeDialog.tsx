@@ -5,11 +5,13 @@ import { Faq } from "./faq";
 const Approvals = ({
 	tokenIds,
 	handleApprove,
+	handleApproveAll,
 	onSuccess,
 	onFailure,
 }: {
 	tokenIds: number[];
 	handleApprove: (tokenId: number) => Promise<boolean>;
+	handleApproveAll: () => Promise<boolean>;
 	onSuccess: () => void;
 	onFailure: () => void;
 }) => {
@@ -25,8 +27,8 @@ const Approvals = ({
 	return (
 		<div className="flex flex-col gap-4">
 			<p>
-				You&apos;re about to be asked to approve us, the Companion Range, to be able to move
-				your Companions. This will cost gas.
+				You&apos;re about to be asked to approve the &apos;Farm&apos; contract to be able to move your Companions. This will
+				cost gas.
 			</p>
 			<p>(If you&apos;ve previously approved, clicking below should not cost any gas.)</p>
 			<div>
@@ -48,6 +50,24 @@ const Approvals = ({
 						{current + 1} of {tokenIds.length}
 					</span>
 				</Button>
+				<p className="mt-4">
+					<span className="text-default-red font-semibold">New!</span> You can also choose to{" "}
+					<a
+						className="underline"
+						href="#"
+						onClick={async () => {
+							setLoading(true);
+							const successfulApproval = await handleApproveAll();
+							setLoading(false);
+							if (successfulApproval) {
+								setCurrent(tokenIds.length);
+							}
+						}}
+					>
+						approve all
+					</a>{" "}
+					if you plan on staking more than one companion.
+				</p>
 			</div>
 		</div>
 	);
@@ -95,12 +115,14 @@ const StakeStep = ({
 export const StakeDialog = ({
 	handleClose,
 	handleApprove,
+	handleApproveAll,
 	handleStake,
 	onSuccess,
 	selectedCompanions,
 }: {
 	handleClose: () => void;
 	handleApprove: (tokenId: number) => Promise<boolean>;
+	handleApproveAll: () => Promise<boolean>;
 	handleStake: (tokenIds: number[]) => Promise<boolean>;
 	onSuccess: () => void;
 	selectedCompanions: number[];
@@ -111,20 +133,13 @@ export const StakeDialog = ({
 	return (
 		<>
 			<div className="w-screen h-screen fixed z-50 inset-0 font-mono">
-				<div
-					className="inset-0 w-full h-full bg-opacity-90 bg-ui-black-default cursor-pointer"
-					onClick={handleClose}
-				>
+				<div className="inset-0 w-full h-full bg-opacity-90 bg-ui-black-default cursor-pointer" onClick={handleClose}>
 					&nbsp;
 				</div>
 				<div className="w-full max-w-screen-xl max-h-screen overflow-y-scroll md:overflow-y-hidden absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg bg-default-white grid grid-cols-1 md:grid-cols-2 overflow-hidden md:aspect-[2/1] shadow-ui-black-default shadow-xl">
 					<div className={`aspect-1 relative`}>
-						<div
-							className={`h-full w-full bg-ui-black-lightest flex justify-center items-center`}
-						>
-							<span className="font-display subpixel-antialiased text-default-yellow animate-pulse text-9xl">
-								?
-							</span>
+						<div className={`h-full w-full bg-ui-black-lightest flex justify-center items-center`}>
+							<span className="font-display subpixel-antialiased text-default-yellow animate-pulse text-9xl">?</span>
 						</div>
 					</div>
 
@@ -146,19 +161,13 @@ export const StakeDialog = ({
 											×
 										</Button>
 									</div>
-									<h1 className="font-display text-9xl text-center text-ui-black-lighter">
-										Stake
-									</h1>
+									<h1 className="font-display text-9xl text-center text-ui-black-lighter">Stake</h1>
 
 									<div className="px-8 max-w-xs text-center flex flex-col gap-2 justify-center items-center">
 										<p>
-											Earn <strong>$COMPANIONSHIP</strong> by putting your companions out on the
-											pasture.{" "}
+											Earn <strong>$COMPANIONSHIP</strong> by putting your companions out on the pasture.{" "}
 										</p>
-										<p>
-											You can call them back to your wallet at any point. Every day they are
-											staked, you can earn.
-										</p>
+										<p>You can call them back to your wallet at any point. Every day they are staked, you can earn.</p>
 										<p>
 											<a
 												className="text-ui-orange-default"
@@ -199,6 +208,7 @@ export const StakeDialog = ({
 										<Approvals
 											tokenIds={selectedCompanions}
 											handleApprove={handleApprove}
+											handleApproveAll={handleApproveAll}
 											onSuccess={() => {
 												setStep("stake");
 											}}

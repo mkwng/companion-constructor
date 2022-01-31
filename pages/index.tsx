@@ -517,6 +517,16 @@ function Constructor() {
 			encodedData: companionContract.methods.approve(farmAddress, tokenId).encodeABI(),
 		});
 	};
+
+	const handleApproveAll = async (): Promise<boolean> => {
+		// Check if already approved
+		return await transactEth({
+			from: web3React.account,
+			to: companionAddress,
+			encodedData: companionContract.methods.setApprovalForAll(farmAddress, true).encodeABI(),
+		});
+	};
+
 	const handleStake = async (tokenIds: number[]): Promise<boolean> => {
 		return await transactEth({
 			from: web3React.account,
@@ -793,6 +803,7 @@ function Constructor() {
 						setShowStaker(false);
 					}}
 					handleApprove={handleApprove}
+					handleApproveAll={handleApproveAll}
 					handleStake={handleStake}
 					selectedCompanions={selectedCompanions}
 					onSuccess={() => {
