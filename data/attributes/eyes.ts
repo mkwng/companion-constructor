@@ -7,6 +7,23 @@ export const eyes: AttributeDictionary = {
 	variants: [
 		{
 			attribute: "eyes",
+			name: "visitor",
+			rarity: "oneofone",
+			layers: [
+				{
+					path: "/attributes/face/06-eyes/alien_1-c_outline.png",
+
+					color: colors.default.black,
+				},
+				{
+					path: "/attributes/face/06-eyes/alien_2-c_white.png",
+
+					color: colors.default.white,
+				},
+			],
+		},
+		{
+			attribute: "eyes",
 			name: "bags",
 			rarity: "uncommon",
 			layers: [
@@ -169,6 +186,7 @@ export const eyes: AttributeDictionary = {
 };
 
 let eyesVariants = [
+	"visitor",
 	"bags",
 	"closed",
 	"dart",

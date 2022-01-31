@@ -13,13 +13,7 @@ import { randomProperty } from "../data/random";
 import { Companion, Pose, Restrictions, RGBColor, Variant } from "../data/types";
 import Button from "./button";
 
-const OptionsContainer = ({
-	title,
-	children,
-}: {
-	title: string;
-	children: React.ReactNode;
-}) => {
+const OptionsContainer = ({ title, children }: { title: string; children: React.ReactNode }) => {
 	return (
 		<div className="mb-6 text-default-white">
 			<div className="px-4 w-full flex justify-between font-bold ">{title}</div>
@@ -59,10 +53,7 @@ const ColorSelector = ({
 
 	useEffect(() => {
 		scrollableArea.current.scrollTo({
-			left:
-				activeDiv.current.offsetLeft -
-				scrollableArea.current.offsetWidth / 2 +
-				activeDiv.current.offsetWidth / 2,
+			left: activeDiv.current.offsetLeft - scrollableArea.current.offsetWidth / 2 + activeDiv.current.offsetWidth / 2,
 		});
 	}, []);
 
@@ -90,11 +81,7 @@ const ColorSelector = ({
 					${moreRight ? "opacity-100" : "opacity-0"}`}
 				aria-hidden="true"
 			></div>
-			<div
-				ref={scrollableArea}
-				className="w-100 overflow-x-scroll scroll hide-scrollbar"
-				onScroll={checkMore}
-			>
+			<div ref={scrollableArea} className="w-100 overflow-x-scroll scroll hide-scrollbar" onScroll={checkMore}>
 				<div className="w-max flex">
 					<span className="w-4 h-4 inline-block" aria-hidden="true" ref={leftPlaceholder} />
 					{Object.keys(colors).map((color) => {
@@ -139,34 +126,23 @@ const AttributeSelector = ({
 	return (
 		<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-2 xl:grid-cols-3 gap-2 p-4">
 			{variants.map((variant) => {
+				const isHidden = (variant.rarity === "mythic" || variant.rarity == "oneofone") && !showRare;
 				return (
 					<div key={variant.name}>
 						<Button
-							onClick={
-								variant.rarity === "mythic" && !showRare
-									? () => {}
-									: () => onSelect(variant.name)
-							}
+							onClick={isHidden ? () => {} : () => onSelect(variant.name)}
 							// onClick={() => onSelect(variant.name)}
 							title={
-								variant.rarity === "mythic"
+								variant.rarity === "mythic" || variant.rarity == "oneofone"
 									? "You can only mint this attribute randomly"
 									: variant.name
 							}
 							className={`
 							px-4 py-2
-							${variant.rarity === "mythic" && !showRare ? "opacity-50 cursor-not-allowed" : ""} 
-							${
-								variant.name === active
-									? `border-hair-lightblue text-hair-lightblue`
-									: `text-default-white border-ui-black-lightest`
-							}`}
+							${isHidden ? "opacity-50 cursor-not-allowed" : ""} 
+							${variant.name === active ? `border-hair-lightblue text-hair-lightblue` : `text-default-white border-ui-black-lightest`}`}
 						>
-							<p className="text-center m-auto">
-								{variant.name !== active && variant.rarity === "mythic" && !showRare
-									? "???"
-									: variant.name}
-							</p>
+							<p className="text-center m-auto">{variant.name !== active && isHidden ? "???" : variant.name}</p>
 						</Button>
 					</div>
 				);
@@ -187,16 +163,11 @@ export default function Editor({
 }) {
 	const [expanded, setExpanded] = useState(true);
 	const [companion, setCompanion] = companionState;
-	const [viewing, setViewing] = useState<
-		"general" | "face" | "hair" | "clothing" | "accessories"
-	>("general");
+	const [viewing, setViewing] = useState<"general" | "face" | "hair" | "clothing" | "accessories">("general");
 	const scrollableCategoryRef = useRef<HTMLDivElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	const companionRestrictions = useMemo<Restrictions[]>(
-		() => getRestrictions(companion),
-		[companion]
-	);
+	const companionRestrictions = useMemo<Restrictions[]>(() => getRestrictions(companion), [companion]);
 	const hides = useMemo<Set<string>>(() => getAllHides(companion), [companion]);
 
 	useEffect(() => {
@@ -254,9 +225,7 @@ export default function Editor({
 						<span className={`${hides.has(attribute.name) ? "line-through" : ""}`}>
 							{`${attribute.name.charAt(0).toUpperCase()}${attribute.name.slice(1)}`}
 						</span>
-						{hides.has(attribute.name) ? (
-							<span className="font-normal ml-2">Hidden</span>
-						) : null}
+						{hides.has(attribute.name) ? <span className="font-normal ml-2">Hidden</span> : null}
 					</div>
 					{attribute.isOptional && companion.attributes[attribute.name]?.name && (
 						<div
@@ -315,18 +284,11 @@ export default function Editor({
 			/>
 			{colorsRequired(attribute.name, companion.attributes[attribute.name]?.name) ? (
 				<>
-					{[
-						...Array(
-							colorsRequired(attribute.name, companion.attributes[attribute.name]?.name)
-						),
-					].map((x, i) => (
+					{[...Array(colorsRequired(attribute.name, companion.attributes[attribute.name]?.name))].map((x, i) => (
 						<div key={`${attribute.name}-${i}`}>
 							<ColorSelector
 								colors={colors.clothing}
-								active={colorToKey(
-									companion.attributes[attribute.name]?.color[i],
-									colors.clothing
-								)}
+								active={colorToKey(companion.attributes[attribute.name]?.color[i], colors.clothing)}
 								onSelect={(selected) => {
 									let color = [...companion.attributes[attribute.name].color];
 									color[i] = colors.clothing[selected];
@@ -498,12 +460,7 @@ export default function Editor({
 	);
 
 	const ClothingOptions = () => (
-		<>
-			{selectables.filter(
-				(attribute) =>
-					attribute.key === "top" || attribute.key === "bottom" || attribute.key === "shoes"
-			)}
-		</>
+		<>{selectables.filter((attribute) => attribute.key === "top" || attribute.key === "bottom" || attribute.key === "shoes")}</>
 	);
 
 	const CategorySelector = () => {
@@ -539,10 +496,7 @@ export default function Editor({
 				className={`
 					${category === viewing ? "border-background-red" : "border-transparent text-default-white"}`}
 				onClick={() => {
-					sessionStorage.setItem(
-						"categoryPosition",
-						scrollableCategoryRef.current.scrollLeft + ""
-					);
+					sessionStorage.setItem("categoryPosition", scrollableCategoryRef.current.scrollLeft + "");
 					setViewing(category);
 				}}
 			>
@@ -580,11 +534,7 @@ export default function Editor({
 					`}
 					aria-hidden="true"
 				></div>
-				<div
-					ref={scrollableCategoryRef}
-					onScroll={checkMore}
-					className="w-full overflow-x-scroll hide-scrollbar"
-				>
+				<div ref={scrollableCategoryRef} onScroll={checkMore} className="w-full overflow-x-scroll hide-scrollbar">
 					<div className="w-max min-w-full flex justify-center relative">
 						<div className="absolute inset-0 h-full z-0 rounded-full border-ui-black-lightest border-2 bg-ui-black-default"></div>
 						<span className="w-2 h-4 inline-block" aria-hidden="true" ref={leftPlaceholder} />
@@ -614,14 +564,10 @@ export default function Editor({
 		<div
 			ref={containerRef}
 			className={`transition-all ${
-				expanded
-					? "pt-4 max-h-1/2-screen lg:max-h-screen h-1/2-screen lg:h-auto"
-					: "max-h-0 lg:max-h-full"
+				expanded ? "pt-4 max-h-1/2-screen lg:max-h-screen h-1/2-screen lg:h-auto" : "max-h-0 lg:max-h-full"
 			}`}
 		>
-			<div
-				className={`z-30 fixed lg:hidden bottom-0 w-full p-2 text-white bg-ui-black-default shadow-md`}
-			>
+			<div className={`z-30 fixed lg:hidden bottom-0 w-full p-2 text-white bg-ui-black-default shadow-md`}>
 				<button
 					className={`
 									relative w-full
