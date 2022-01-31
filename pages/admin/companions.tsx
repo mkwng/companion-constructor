@@ -16,6 +16,7 @@ import { messageToSign } from "../../data/helpers";
 import { randomCompanion } from "../../data/random";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { fetcher } from "../../lib/swr";
+import AdminMenu from "../../components/adminMenu";
 
 const getTruncatedAddress = (address) => {
 	if (address && address.startsWith("0x")) {
@@ -293,7 +294,8 @@ function Companions() {
 			<Head>
 				<title>[admin] Companions - Companion in a Box</title>
 			</Head>
-			<div className="flex">
+			<AdminMenu />
+			{/* <div className="flex">
 				<Button
 					onClick={() => {
 						setShowNoToken((prev) => !prev);
@@ -301,7 +303,7 @@ function Companions() {
 				>
 					Show no tokens: {showNoToken ? "true" : "false"}
 				</Button>
-			</div>
+			</div> */}
 			<Controls />
 			<div>
 				{selectedCompanions.length} selected |{" "}

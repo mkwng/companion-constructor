@@ -12,6 +12,7 @@ import { ConnectButton } from "../../components/connectButton";
 import { ownerAddress } from "../../components/contract";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { fetcher } from "../../lib/swr";
+import AdminMenu from "../../components/adminMenu";
 
 const getTruncatedAddress = (address) => {
 	if (address && address.startsWith("0x")) {
@@ -149,6 +150,7 @@ function CouponEditor() {
 			<Head>
 				<title>[admin] Transactions - Companion in a Box</title>
 			</Head>
+			<AdminMenu />
 			<Button
 				onClick={() => {
 					fetch(`/api/checkIncompletes`, {

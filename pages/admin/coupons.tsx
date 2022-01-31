@@ -12,6 +12,7 @@ import { ConnectButton } from "../../components/connectButton";
 import { ownerAddress } from "../../components/contract";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { fetcher } from "../../lib/swr";
+import AdminMenu from "../../components/adminMenu";
 
 function getLibrary(provider) {
 	const library = new Web3Provider(provider);
@@ -113,6 +114,7 @@ function CouponEditor() {
 			<Head>
 				<title>[admin] Coupons - Companion in a Box</title>
 			</Head>
+			<AdminMenu />
 			<h1>Coupons</h1>
 			{/* A table of all coupons */}
 			<table className="w-full p-8 max-w-lg">

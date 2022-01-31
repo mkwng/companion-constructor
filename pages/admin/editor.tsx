@@ -19,6 +19,7 @@ import { randomCompanion } from "../../data/random";
 import { Companion } from "../../data/types";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { fetcher } from "../../lib/swr";
+import AdminMenu from "../../components/adminMenu";
 
 function getLibrary(provider) {
 	const library = new Web3Provider(provider);
@@ -168,6 +169,7 @@ function CompanionDetails() {
 			<Head>
 				<title>[admin] Editor - Companion in a Box</title>
 			</Head>
+			<AdminMenu />
 			<div className="bg-ui-black-darker grid grid-cols-5 font-mono text-sm">
 				<div className="col-span-3 h-screen">
 					<div
