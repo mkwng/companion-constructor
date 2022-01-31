@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { Web3Provider } from "@ethersproject/providers";
 import { Coupon, Transactions } from "@prisma/client";
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
@@ -145,6 +146,9 @@ function CouponEditor() {
 	}
 	return (
 		<>
+			<Head>
+				<title>[admin] Transactions - Companion in a Box</title>
+			</Head>
 			<Button
 				onClick={() => {
 					fetch(`/api/checkIncompletes`, {

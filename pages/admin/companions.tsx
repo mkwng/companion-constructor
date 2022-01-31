@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { Web3Provider } from "@ethersproject/providers";
 import { Companion } from "@prisma/client";
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
@@ -289,6 +290,9 @@ function Companions() {
 
 	return (
 		<>
+			<Head>
+				<title>[admin] Companions - Companion in a Box</title>
+			</Head>
 			<div className="flex">
 				<Button
 					onClick={() => {

@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { Web3Provider } from "@ethersproject/providers";
 import { Coupon } from "@prisma/client";
 import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
@@ -109,6 +110,9 @@ function CouponEditor() {
 	}
 	return (
 		<>
+			<Head>
+				<title>[admin] Coupons - Companion in a Box</title>
+			</Head>
 			<h1>Coupons</h1>
 			{/* A table of all coupons */}
 			<table className="w-full p-8 max-w-lg">
