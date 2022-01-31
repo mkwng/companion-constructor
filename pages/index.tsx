@@ -605,6 +605,36 @@ function Constructor() {
 					</div>
 				</div>
 			) : null}
+
+			<div className="font-mono text-xs z-30 bottom-0 left-0 right-0 absolute p-2 bg-ui-black-darker text-default-yellow text-center flex justify-center items-center">
+				<div className="w-4 h-4"></div>
+				<div className="grow text-center">
+					Custom mints are{" "}
+					<a
+						className="underline"
+						href="https://twitter.com/companioninabox/status/1487864017792106496"
+						target="_blank"
+						rel="noreferrer"
+					>
+						SOLD OUT
+					</a>
+					.{" "}
+					<strong>
+						Only random companions are still available:{" "}
+						<a
+							className="underline"
+							href="#"
+							onClick={(e) => {
+								e.preventDefault();
+								setShowMinter(true);
+							}}
+						>
+							Mint now
+						</a>
+						!
+					</strong>
+				</div>
+			</div>
 			<div
 				ref={scrollableArea}
 				className={`
@@ -717,7 +747,7 @@ function Constructor() {
 														setCustomizing(false);
 													}}
 												>
-													Mint
+													Mint random
 												</Button>
 											</div>
 										)}

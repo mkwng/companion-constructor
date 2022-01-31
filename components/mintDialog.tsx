@@ -350,9 +350,10 @@ export const MintDialog = ({
 										<Button
 											disabled={mintType === "custom"}
 											className={
-												mintType === "custom"
+												(isSoldOutCustoms ? "line-through " : "") +
+												(mintType === "custom"
 													? "border-background-red bg-background-red text-white opacity-100"
-													: "border-transparent text-ui-black-lightest"
+													: "border-transparent text-ui-black-lightest")
 											}
 											onClick={() => {
 												setMintType("custom");

@@ -22,7 +22,7 @@ export const Playground = ({
 					</p>
 				</div>
 				<Button className="border-ui-black-lighter" onClick={handleCustomize}>
-					Customize
+					Preview customization
 				</Button>
 				<Button className="border-ui-black-lighter" onClick={handleRandomize}>
 					Randomize
