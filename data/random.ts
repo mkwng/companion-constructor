@@ -48,6 +48,8 @@ export const randomCompanion = (hideRare?: boolean): Companion => {
 			let quantity = variant.rarity
 				? (() => {
 						switch (variant.rarity) {
+							case "oneofone":
+								return 0;
 							case "mythic":
 								return hideRare ? 0 : 1;
 							case "rare":
