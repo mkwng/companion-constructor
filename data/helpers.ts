@@ -626,10 +626,10 @@ const getKeyType = (key: string) => {
 };
 
 export const rarityToCost = {
-	common: 500,
-	uncommon: 1000,
-	rare: 5000,
-	mythic: 10000,
+	common: 1000,
+	uncommon: 5000,
+	rare: 10000,
+	mythic: 20000,
 };
 
 const getKeyCost = (key: string, value: string) => {
@@ -637,13 +637,15 @@ const getKeyCost = (key: string, value: string) => {
 		case "name":
 			return 1;
 		case "property":
-			return 250;
+			return 500;
 		case "color":
-			return 100;
+			return 250;
 		case "attribute":
 			const match = selectableAttributes[key].variants.find((v) => v.name === value);
 			if (!match) throw new Error("Invalid attribute value");
 			return rarityToCost[match.rarity || "common"];
+		default:
+			return 100;
 	}
 };
 
