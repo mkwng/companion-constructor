@@ -117,6 +117,7 @@ export const StakeDialog = ({
 	handleApprove,
 	handleApproveAll,
 	handleStake,
+	checkApproved,
 	onSuccess,
 	selectedCompanions,
 }: {
@@ -124,6 +125,7 @@ export const StakeDialog = ({
 	handleApprove: (tokenId: number) => Promise<boolean>;
 	handleApproveAll: () => Promise<boolean>;
 	handleStake: (tokenIds: number[]) => Promise<boolean>;
+	checkApproved: (tokenId: number) => Promise<boolean>;
 	onSuccess: () => void;
 	selectedCompanions: number[];
 }) => {
@@ -183,8 +185,15 @@ export const StakeDialog = ({
 										<div className="mt-16 w-full sticky bottom-8">
 											<Button
 												className="text-lg text-white bg-ui-orange-default"
-												onClick={() => {
-													setStep("approvals");
+												onClick={async () => {
+													// Check if already approved.
+													for (let i = 0; i < selectedCompanions.length; i++) {
+														const approved = await checkApproved(selectedCompanions[i]);
+														if (!approved) {
+															setStep("approvals");
+														}
+													}
+													setStep("stake");
 												}}
 											>
 												<span>Stake</span>
