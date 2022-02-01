@@ -505,10 +505,16 @@ function Constructor() {
 			toast.error(error);
 		}
 	};
-	const handleApprove = async (tokenId: number): Promise<boolean> => {
-		// Check if already approved
+	const checkApproved = async (tokenId: number) => {
 		const approvedAddress = await companionContract.methods.getApproved(tokenId).call();
 		if (approvedAddress === farmAddress) {
+			return true;
+		}
+		return false;
+	};
+	const handleApprove = async (tokenId: number): Promise<boolean> => {
+		// Check if already approved
+		if (await checkApproved(tokenId)) {
 			return true;
 		}
 		return await transactEth({
@@ -519,7 +525,6 @@ function Constructor() {
 	};
 
 	const handleApproveAll = async (): Promise<boolean> => {
-		// Check if already approved
 		return await transactEth({
 			from: web3React.account,
 			to: companionAddress,
@@ -835,6 +840,7 @@ function Constructor() {
 					handleApprove={handleApprove}
 					handleApproveAll={handleApproveAll}
 					handleStake={handleStake}
+					checkApproved={checkApproved}
 					selectedCompanions={selectedCompanions}
 					onSuccess={() => {
 						setShowStaker(false);
