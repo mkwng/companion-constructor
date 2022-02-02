@@ -73,6 +73,18 @@ export const mask: AttributeDictionary = {
 				},
 			],
 		},
+		{
+			attribute: "mask",
+			name: "shl0ms",
+			rarity: "oneofone",
+			hides: ["bodyBack", "neck", "face", "blemish", "eyes", "brows", "mouth", "facialhair", "nose", "bodyFront"],
+			layers: [
+				{
+					path: { 2: "/attributes/special/shl0ms.png" },
+					blendMode: "destination-over",
+				},
+			],
+		},
 	],
 };
 

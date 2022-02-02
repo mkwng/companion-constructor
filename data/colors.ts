@@ -68,7 +68,7 @@ export const colors: {
 		blue: { r: 85, g: 107, b: 121 },
 	},
 	default: {
-		black: { r: 25, g: 35, b: 11 },
+		black: { r: 21, g: 19, b: 11 },
 		white: { r: 248, g: 241, b: 230 },
 		red: { r: 250, g: 97, b: 91 },
 		yellow: { r: 247, g: 211, b: 115 },
