@@ -507,7 +507,7 @@ function Constructor() {
 	};
 	const checkApproved = async (tokenId: number) => {
 		const approvedAll = await companionContract.methods.isApprovedForAll(web3React.account, farmAddress).call();
-		if (!approvedAll) {
+		if (approvedAll) {
 			return true;
 		}
 		const approvedAddress = await companionContract.methods.getApproved(tokenId).call();
