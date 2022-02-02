@@ -191,6 +191,7 @@ export const StakeDialog = ({
 														const approved = await checkApproved(selectedCompanions[i]);
 														if (!approved) {
 															setStep("approvals");
+															return;
 														}
 													}
 													setStep("stake");
