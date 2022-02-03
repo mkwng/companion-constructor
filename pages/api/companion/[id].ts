@@ -12,7 +12,6 @@ import { companionContract, web3 } from "../../../lib/web3";
 const isRevealed = true;
 
 interface UpdateCompanion {
-	uneditedCompanion?: Companion;
 	companion?: Companion;
 	hash?: string;
 	type?: "fillEmpty" | "customize";
@@ -100,7 +99,7 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 				}
 			} else if (req.body.type === "customize") {
 				try {
-					const { uneditedCompanion, companion, hash, signature, address, coupon } = req.body as UpdateCompanion;
+					const { companion, hash, signature, address, coupon } = req.body as UpdateCompanion;
 
 					if (coupon) {
 						const couponResult = await prisma.coupon.findUnique({
@@ -117,6 +116,13 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 							data: { used: true },
 						});
 					}
+
+					const prismaResponse: PrismaCompanion = (
+						await prisma.companion.findFirst({
+							where: { tokenId: parseInt(tokenId) },
+						})
+					);
+					const uneditedCompanion =  keysToCompanion(apiToKeys(prismaResponse));
 					const differences = getDifferences(uneditedCompanion, companion);
 					const balance = coupon ? 0 : differences.reduce((acc, cur) => acc + cur.cost, 0);
 
