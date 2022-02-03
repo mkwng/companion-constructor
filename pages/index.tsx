@@ -387,7 +387,6 @@ function Constructor() {
 				hash: currHash,
 				type: "customize",
 				companion,
-				uneditedCompanion,
 				signature,
 				coupon,
 				address: web3React.account,
