@@ -8,7 +8,7 @@ export const eyes: AttributeDictionary = {
 		{
 			attribute: "eyes",
 			name: "visitor",
-			rarity: "oneofone",
+			rarity: "mythic",
 			layers: [
 				{
 					path: "/attributes/face/06-eyes/alien_1-c_outline.png",
