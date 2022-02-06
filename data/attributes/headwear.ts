@@ -59,6 +59,7 @@ export const headwear: AttributeDictionary = {
 		{
 			attribute: "headwear",
 			name: "goggles",
+			rarity: "rare",
 			layers: [
 				{
 					path: "/attributes/face/10-accessories/goggles_1-v_clothing.png",
@@ -78,6 +79,7 @@ export const headwear: AttributeDictionary = {
 		{
 			attribute: "headwear",
 			name: "halo",
+			rarity: "rare",
 			layers: [
 				{
 					path: "/attributes/face/10-accessories/halo-c_yellow.png",
@@ -144,6 +146,7 @@ export const headwear: AttributeDictionary = {
 		{
 			attribute: "headwear",
 			name: "horns",
+			rarity: "rare",
 			layers: [
 				{
 					path: "/attributes/face/10-accessories/horns_1-c_white.png",
@@ -159,6 +162,7 @@ export const headwear: AttributeDictionary = {
 		{
 			attribute: "headwear",
 			name: "ranger",
+			rarity: "uncommon",
 			restrictions: { headShape: "flat" },
 			layers: [
 				{
@@ -179,6 +183,7 @@ export const headwear: AttributeDictionary = {
 		{
 			attribute: "headwear",
 			name: "turban",
+			rarity: "uncommon",
 			restrictions: { headShape: "flat", gender: "m" },
 			hides: ["hair"],
 			layers: [
@@ -202,6 +207,7 @@ export const headwear: AttributeDictionary = {
 		{
 			attribute: "headwear",
 			name: "bucket",
+			rarity: "uncommon",
 			restrictions: { headShape: "flat" },
 			layers: [
 				{
@@ -238,6 +244,7 @@ export const headwear: AttributeDictionary = {
 		{
 			attribute: "headwear",
 			name: "cat",
+			rarity: "rare",
 			layers: [
 				{
 					path: "/attributes/face/10-accessories/cat_1.png",
