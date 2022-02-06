@@ -255,6 +255,7 @@ export const headwear: AttributeDictionary = {
 let headwearVariants = [
 	"beanie",
 	"cap",
+	"earphones",
 	"goggles",
 	"halo",
 	"headphones",
