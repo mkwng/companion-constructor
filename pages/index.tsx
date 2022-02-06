@@ -546,7 +546,7 @@ function Constructor() {
 		return await transactEth({
 			from: web3React.account,
 			to: farmAddress,
-			encodedData: farmContract.methods.withdraw(tokenIds).encodeABI(),
+			encodedData: farmContract.methods.claimRewards(tokenIds).encodeABI(),
 		});
 	};
 	const handleUnstake = async (tokenIds: number[]): Promise<boolean> => {
