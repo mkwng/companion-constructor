@@ -129,6 +129,8 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 					// It should be impossible to have changes that cost more than a mythic unless someone added a mythic
 					if (costOfChanges >= rarityToCost.mythic) {
 						throw new Error("Invalid items were added to companion");
+					} else if (costOfChanges === 0) {
+						throw new Error("Companion has no changes!");
 					}
 
 					const balance = coupon ? 0 : costOfChanges;
