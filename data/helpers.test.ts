@@ -174,4 +174,58 @@ describe("getDifferences", () => {
       }
     ])
   });
+
+  it("calculates pose costs correctly", async () => {
+    let newCompanion = JSON.parse(JSON.stringify(oldCompanion));
+    newCompanion.properties.pose = 3;
+
+    let differences = getDifferences(oldCompanion, newCompanion)
+    expect(differences).toEqual(
+      [{
+        "cost": 500,
+        "curr": 3,
+        "key": "pose",
+        "prev": 2,
+        "type": "property"
+      }])
+
+    newCompanion.properties.pose = 4;
+
+    differences = getDifferences(oldCompanion, newCompanion)
+    expect(differences).toEqual(
+      [{
+        "cost": 500000,
+        "curr": 4,
+        "key": "pose",
+        "prev": 2,
+        "type": "property"
+      }])
+  });
+
+  it("calculates gender costs correctly", async () => {
+    let newCompanion = JSON.parse(JSON.stringify(oldCompanion));
+    newCompanion.properties.gender = "f";
+
+    let differences = getDifferences(oldCompanion, newCompanion)
+    expect(differences).toEqual(
+      [{
+        "cost": 500,
+        "curr": "f",
+        "key": "gender",
+        "prev": "m",
+        "type": "property"
+      }])
+
+    newCompanion.properties.gender = "w";
+
+    differences = getDifferences(oldCompanion, newCompanion)
+    expect(differences).toEqual(
+      [{
+        "cost": 500000,
+        "curr": "w",
+        "key": "gender",
+        "prev": "m",
+        "type": "property"
+      }])
+  });
 })

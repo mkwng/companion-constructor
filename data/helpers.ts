@@ -6,10 +6,12 @@ import {
 	AttributeSelection,
 	AttributeType,
 	Companion,
+	GenderValue,
 	Layer,
 	LayerStaticWithData,
 	LayerWithData,
 	Pose,
+	Property,
 	Rarity,
 	Restrictions,
 	RGBColor,
@@ -639,7 +641,14 @@ const getKeyCost = (key: string, value: string) => {
 		case "name":
 			return 1;
 		case "property":
-			return 500;
+			switch (key) {
+				case Property.Pose:
+					return parseInt(value) === Pose.Headdown ? rarityToCost.mythic : 500;
+				case Property.Gender:
+					return value === GenderValue.W ? rarityToCost.mythic : 500;
+				default:
+					return 500;
+			}
 		case "color":
 			return 250;
 		case "attribute":

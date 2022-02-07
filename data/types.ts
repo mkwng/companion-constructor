@@ -19,6 +19,16 @@ export enum Pose {
 	Headdown,
 }
 
+export enum Property {
+	Gender = "gender",
+	Pose = "pose",
+	Skin = "skin",
+	Hair = "hair",
+	Background = "background"
+}
+
+export type PropertyType = `${Property}`
+
 export type AttributeType =
 	| "background"
 	| "bodyBack"
@@ -41,7 +51,13 @@ export type AttributeType =
 	| "shoes"
 	| "accessory";
 
-type Gender = "m" | "f" | "w";
+// TODO:: GenderValue is named inconsistently for now because we have to rename Gender to GenderType
+export enum GenderValue {
+	M = "m",
+	F = "f",
+	W = "w"
+}
+type Gender = `${GenderValue}`;
 type HeadShape = "big" | "flat";
 type ProfileShape = "flat" | "encroached";
 export type Rarity = "common" | "uncommon" | "rare" | "mythic" | "oneofone";
