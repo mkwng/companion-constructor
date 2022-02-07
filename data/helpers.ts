@@ -17,6 +17,7 @@ import {
 	RGBColor,
 	Variant,
 } from "./types";
+// @ts-ignore -- .prisma/client is only generated after running migrations
 import { Companion as PrismaCompanion } from ".prisma/client";
 import _ from "lodash";
 
