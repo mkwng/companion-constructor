@@ -2,7 +2,7 @@ import { Companion as PrismaCompanion } from ".prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ownerAddress } from "../../../components/contract";
 import { colors, rgbToHex } from "../../../data/colors";
-import { apiToKeys, getDifferences, keysToCompanion, messageToSign, zeroPad } from "../../../data/helpers";
+import { apiToKeys, getDifferences, keysToCompanion, messageToSign, rarityToCost, zeroPad } from "../../../data/helpers";
 import { updateCompanion } from "../../../data/operations";
 import { randomCompanion } from "../../../data/random";
 import { Companion } from "../../../data/types";
@@ -122,10 +122,16 @@ export default async function apiCompanions(req: NextApiRequest, res: NextApiRes
 							where: { tokenId: parseInt(tokenId) },
 						})
 					);
+
 					const uneditedCompanion =  keysToCompanion(apiToKeys(prismaResponse));
 					const differences = getDifferences(uneditedCompanion, companion);
-					const balance = coupon ? 0 : differences.reduce((acc, cur) => acc + cur.cost, 0);
+					const costOfChanges = differences.reduce((acc, cur) => acc + cur.cost, 0);
+					// It should be impossible to have changes that cost more than a mythic unless someone added a mythic
+					if (costOfChanges >= rarityToCost.mythic) {
+						throw new Error("Invalid items were added to companion");
+					}
 
+					const balance = coupon ? 0 : costOfChanges;
 					if (balance > 0) {
 						let hashUsed;
 						try {

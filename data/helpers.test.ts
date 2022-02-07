@@ -129,4 +129,49 @@ describe("getDifferences", () => {
       }
     ])
   });
+  it("calculates mythic and oneofone costs properly", async () => {
+    let newCompanion = JSON.parse(JSON.stringify(oldCompanion));
+    newCompanion.attributes.top.name = "tattooshirt";
+    newCompanion.attributes.headwear = {
+      name: "hijab",
+      color: [
+        {
+          "r": 163,
+          "g": 192,
+          "b": 191
+        }
+      ]
+    }
+    let differences = getDifferences(oldCompanion, newCompanion)
+    expect(differences).toEqual([
+      {
+        cost: 500000,
+        prev: 'earphones',
+        curr: 'hijab',
+        key: 'headwear',
+        type: 'attribute'
+      },
+      {
+        "cost": 250,
+        "curr": "lightblue",
+        "key": "headwearColor1",
+        "prev": "",
+        "type": "color",
+      },
+      {
+        cost: 500000,
+        prev: 'buttonup',
+        curr: 'tattooshirt',
+        key: 'top',
+        type: 'attribute'
+      },
+      {
+        cost: 0,
+        prev: 'lightblue',
+        curr: '',
+        key: 'topColor1',
+        type: 'color'
+      }
+    ])
+  });
 })

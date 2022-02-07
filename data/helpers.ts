@@ -629,7 +629,9 @@ export const rarityToCost = {
 	common: 1000,
 	uncommon: 5000,
 	rare: 10000,
-	mythic: 20000,
+	// It should not be possible to buy mythics or oneofone items
+	mythic: 500000,
+	oneofone: 500000,
 };
 
 const getKeyCost = (key: string, value: string) => {
