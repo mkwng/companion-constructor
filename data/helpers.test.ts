@@ -129,4 +129,103 @@ describe("getDifferences", () => {
       }
     ])
   });
+  it("calculates mythic and oneofone costs properly", async () => {
+    let newCompanion = JSON.parse(JSON.stringify(oldCompanion));
+    newCompanion.attributes.top.name = "tattooshirt";
+    newCompanion.attributes.headwear = {
+      name: "hijab",
+      color: [
+        {
+          "r": 163,
+          "g": 192,
+          "b": 191
+        }
+      ]
+    }
+    let differences = getDifferences(oldCompanion, newCompanion)
+    expect(differences).toEqual([
+      {
+        cost: 500000,
+        prev: 'earphones',
+        curr: 'hijab',
+        key: 'headwear',
+        type: 'attribute'
+      },
+      {
+        "cost": 250,
+        "curr": "lightblue",
+        "key": "headwearColor1",
+        "prev": "",
+        "type": "color",
+      },
+      {
+        cost: 500000,
+        prev: 'buttonup',
+        curr: 'tattooshirt',
+        key: 'top',
+        type: 'attribute'
+      },
+      {
+        cost: 0,
+        prev: 'lightblue',
+        curr: '',
+        key: 'topColor1',
+        type: 'color'
+      }
+    ])
+  });
+
+  it("calculates pose costs correctly", async () => {
+    let newCompanion = JSON.parse(JSON.stringify(oldCompanion));
+    newCompanion.properties.pose = 3;
+
+    let differences = getDifferences(oldCompanion, newCompanion)
+    expect(differences).toEqual(
+      [{
+        "cost": 500,
+        "curr": 3,
+        "key": "pose",
+        "prev": 2,
+        "type": "property"
+      }])
+
+    newCompanion.properties.pose = 4;
+
+    differences = getDifferences(oldCompanion, newCompanion)
+    expect(differences).toEqual(
+      [{
+        "cost": 500000,
+        "curr": 4,
+        "key": "pose",
+        "prev": 2,
+        "type": "property"
+      }])
+  });
+
+  it("calculates gender costs correctly", async () => {
+    let newCompanion = JSON.parse(JSON.stringify(oldCompanion));
+    newCompanion.properties.gender = "f";
+
+    let differences = getDifferences(oldCompanion, newCompanion)
+    expect(differences).toEqual(
+      [{
+        "cost": 500,
+        "curr": "f",
+        "key": "gender",
+        "prev": "m",
+        "type": "property"
+      }])
+
+    newCompanion.properties.gender = "w";
+
+    differences = getDifferences(oldCompanion, newCompanion)
+    expect(differences).toEqual(
+      [{
+        "cost": 500000,
+        "curr": "w",
+        "key": "gender",
+        "prev": "m",
+        "type": "property"
+      }])
+  });
 })

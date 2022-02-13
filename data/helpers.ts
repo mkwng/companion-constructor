@@ -6,15 +6,18 @@ import {
 	AttributeSelection,
 	AttributeType,
 	Companion,
+	GenderValue,
 	Layer,
 	LayerStaticWithData,
 	LayerWithData,
 	Pose,
+	Property,
 	Rarity,
 	Restrictions,
 	RGBColor,
 	Variant,
 } from "./types";
+// @ts-ignore -- .prisma/client is only generated after running migrations
 import { Companion as PrismaCompanion } from ".prisma/client";
 import _ from "lodash";
 
@@ -629,7 +632,9 @@ export const rarityToCost = {
 	common: 1000,
 	uncommon: 5000,
 	rare: 10000,
-	mythic: 20000,
+	// It should not be possible to buy mythics or oneofone items
+	mythic: 500000,
+	oneofone: 500000,
 };
 
 const getKeyCost = (key: string, value: string) => {
@@ -637,7 +642,14 @@ const getKeyCost = (key: string, value: string) => {
 		case "name":
 			return 1;
 		case "property":
-			return 500;
+			switch (key) {
+				case Property.Pose:
+					return parseInt(value) === Pose.Headdown ? rarityToCost.mythic : 500;
+				case Property.Gender:
+					return value === GenderValue.W ? rarityToCost.mythic : 500;
+				default:
+					return 500;
+			}
 		case "color":
 			return 250;
 		case "attribute":
