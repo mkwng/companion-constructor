@@ -5,7 +5,8 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "next lint",
+		"test": "jest"
 	},
 	"dependencies": {
 		"@ethersproject/providers": "^5.5.1",
@@ -43,7 +44,9 @@
 		"@types/react": "^17.0.34",
 		"eslint": "7",
 		"eslint-config-next": "12.0.2",
+		"jest": "^27.5.0",
 		"prisma": "3.4.2",
+		"ts-jest": "^27.0.5",
 		"typescript": "^4.4.4"
 	},
 	"version": "0.0.0"

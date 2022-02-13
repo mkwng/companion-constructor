@@ -419,7 +419,6 @@ function Constructor() {
 						from,
 						to,
 						data: encodedData,
-						nonce: (await web3.eth.getTransactionCount(web3React.account, "latest")) + "",
 						value: value ? (value.substring(0, 2) === "0x" ? value : "0x" + value) : undefined,
 					},
 				],
