@@ -2,15 +2,28 @@
 
 ### Dev process
 
+#### DB Setup
+Using Planetscale DB:
 - `pscale auth login`
 - `pscale connect companions initial-setup --port 3309`
 - `pscale connect companions shadow --port 3310`
-- Optional: `yarn prisma studio`
+
+Using docker-compose to run mysql locally:
+- `docker-compose up -d`
+
+#### Dev Setup
 - `yarn dev`
+- Optional: `yarn prisma studio`
 
 ### Updating the schema
 
 - Migration: `yarn prisma migrate dev`
+  - docker-compose: 
+    ```
+    export DATABASE_URL=mysql://companions:companions@localhost:3306/companions
+    export SHADOW_DATABASE_URL=mysql://companions:companions@localhost:3307/companions
+    yarn prisma migrate dev
+    ```
 - Deploy request: `pscale deploy-request create companions initial-setup`
 - Approve on planetscale.com
 
