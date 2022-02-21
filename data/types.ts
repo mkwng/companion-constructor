@@ -12,6 +12,13 @@ import { NoseVariant } from "./attributes/nose";
 import { ShoesVariant } from "./attributes/shoes";
 import { TopVariant } from "./attributes/top";
 
+export enum ColorCategory {
+	Background = "backgroundColor",
+	Clothing = "clothingColor",
+	Hair = "hairColor",
+	Skin = "skinColor",
+}
+
 export enum Pose {
 	Lookback = 1,
 	Laydown,

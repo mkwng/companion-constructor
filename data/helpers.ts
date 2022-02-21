@@ -4,7 +4,7 @@ import { companionExample } from "./example";
 import { poses } from "./poses";
 import {
 	AttributeSelection,
-	AttributeType,
+	AttributeType, ColorCategory,
 	Companion,
 	GenderValue,
 	Layer,
@@ -614,10 +614,12 @@ const getKeyType = (key: string) => {
 			return "name";
 		case "pose":
 		case "gender":
-		case "skinColor":
-		case "hairColor":
-		case "backgroundColor":
+		case ColorCategory.Skin:
+		case ColorCategory.Hair:
+		case ColorCategory.Background:
 			return "property";
+		case ColorCategory.Clothing:
+			return "color";
 		default:
 			if (key.match(colorRegEx)) {
 				return "color";
@@ -637,7 +639,7 @@ export const rarityToCost = {
 	oneofone: 500000,
 };
 
-const getKeyCost = (key: string, value: string) => {
+export const getKeyCost = (key: string, value: string) => {
 	switch (getKeyType(key)) {
 		case "name":
 			return 1;

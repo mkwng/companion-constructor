@@ -5,12 +5,13 @@ import {
 	colorsRequired,
 	colorToKey,
 	getAllHides,
+	getKeyCost,
 	getRestrictions,
 	isCompatible,
 	// sortVariants,
 } from "../data/helpers";
 import { randomProperty } from "../data/random";
-import { Companion, Pose, Restrictions, RGBColor, Variant } from "../data/types";
+import {ColorCategory, Companion, Pose, Property, Restrictions, RGBColor, Variant} from "../data/types";
 import Button from "./button";
 
 const OptionsContainer = ({ title, children }: { title: string; children: React.ReactNode }) => {
@@ -26,10 +27,12 @@ const ColorSelector = ({
 	colors,
 	active,
 	onSelect,
+	colorCategory
 }: {
 	colors: { [key: string]: RGBColor };
 	active?: string;
 	onSelect: (color: string) => void;
+	colorCategory: ColorCategory;
 }) => {
 	const leftPlaceholder = useRef<HTMLDivElement>(null);
 	const rightPlaceholder = useRef<HTMLDivElement>(null);
@@ -61,6 +64,8 @@ const ColorSelector = ({
 		checkMore();
 	}, [colors]);
 
+	const companionshipCost = getKeyCost(colorCategory, "")
+
 	return (
 		<div className="w-100 relative">
 			<div
@@ -91,6 +96,7 @@ const ColorSelector = ({
 								ref={color === active ? activeDiv : null}
 								key={color}
 								onClick={() => onSelect(color)}
+								title={ `${color} - ${companionshipCost.toLocaleString()} $COMPANIONSHIP` }
 								className="w-8 h-8 inline-block rounded-full m-2 cursor-pointer hover:opacity-90 border-2 border-ui-black-darker"
 								style={{
 									backgroundColor: rgb,
@@ -116,6 +122,7 @@ const AttributeSelector = ({
 	variants:
 		| Variant[]
 		| {
+				attribute: string;
 				name: string | number;
 				rarity?: string;
 		  }[];
@@ -127,6 +134,7 @@ const AttributeSelector = ({
 		<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-2 xl:grid-cols-3 gap-2 p-4">
 			{variants.map((variant) => {
 				const isHidden = (variant.rarity === "mythic" || variant.rarity == "oneofone") && !showRare;
+				const companionshipCost = getKeyCost(variant.attribute, variant.name)
 				return (
 					<div key={variant.name}>
 						<Button
@@ -135,7 +143,7 @@ const AttributeSelector = ({
 							title={
 								variant.rarity === "mythic" || variant.rarity == "oneofone"
 									? "You can only mint this attribute randomly"
-									: variant.name
+									: `${variant.name} - ${companionshipCost.toLocaleString()} $COMPANIONSHIP`
 							}
 							className={`
 							px-4 py-2
@@ -288,6 +296,7 @@ export default function Editor({
 						<div key={`${attribute.name}-${i}`}>
 							<ColorSelector
 								colors={colors.clothing}
+								colorCategory={ColorCategory.Clothing}
 								active={colorToKey(companion.attributes[attribute.name]?.color[i], colors.clothing)}
 								onSelect={(selected) => {
 									let color = [...companion.attributes[attribute.name].color];
@@ -322,7 +331,7 @@ export default function Editor({
 			<OptionsContainer title="Pose">
 				<AttributeSelector
 					showRare={showRare}
-					variants={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4, rarity: "mythic" }]}
+					variants={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4, rarity: "mythic" }].map(p => ({...p, attribute: Property.Pose}))}
 					active={companion.properties.pose}
 					onSelect={(pose) => {
 						if (uneditedCompanionState && !uneditedCompanionState[0]) {
@@ -344,6 +353,7 @@ export default function Editor({
 			<OptionsContainer title="Background">
 				<ColorSelector
 					colors={colors.background}
+					colorCategory={ColorCategory.Background}
 					active={colorToKey(companion.properties.background, colors.background)}
 					onSelect={(color) => {
 						if (uneditedCompanionState && !uneditedCompanionState[0]) {
@@ -365,6 +375,7 @@ export default function Editor({
 			<OptionsContainer title="Skin">
 				<ColorSelector
 					colors={colors.skin}
+					colorCategory={ColorCategory.Skin}
 					active={colorToKey(companion.properties.skin, colors.skin)}
 					onSelect={(color) => {
 						if (uneditedCompanionState && !uneditedCompanionState[0]) {
@@ -390,7 +401,7 @@ export default function Editor({
 			<OptionsContainer title="Shape">
 				<AttributeSelector
 					showRare={showRare}
-					variants={[{ name: "m" }, { name: "f" }, { name: "w", rarity: "mythic" }]}
+					variants={[{ name: "m" }, { name: "f" }, { name: "w", rarity: "mythic" }].map(p => ({...p, attribute: Property.Gender}))}
 					active={companion.properties.gender}
 					onSelect={(gender) => {
 						if (uneditedCompanionState && !uneditedCompanionState[0]) {
@@ -426,6 +437,7 @@ export default function Editor({
 			<OptionsContainer title="Color">
 				<ColorSelector
 					colors={colors.hair}
+					colorCategory={ColorCategory.Hair}
 					active={colorToKey(companion.properties.hair, colors.hair)}
 					onSelect={(color) => {
 						if (uneditedCompanionState && !uneditedCompanionState[0]) {
