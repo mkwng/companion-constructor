@@ -70,7 +70,16 @@ export enum GenderValue {
 type Gender = `${GenderValue}`;
 type HeadShape = "big" | "flat";
 type ProfileShape = "flat" | "encroached";
-export type Rarity = "common" | "uncommon" | "rare" | "mythic" | "oneofone";
+
+// TODO:: RarityValue is named inconsistently for now because we have to rename Rarity to RarityType
+export enum RarityValue {
+	Common = "common",
+	Uncommon = "uncommon",
+	Rare = "rare",
+	Mythic = "mythic",
+	OneofOne = "oneofone",
+}
+export type Rarity = `${RarityValue}`
 
 export interface Variant {
 	attribute?: AttributeType;

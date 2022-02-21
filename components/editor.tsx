@@ -1,18 +1,29 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
-import { selectableAttributesArray } from "../data/attributes";
-import { colors } from "../data/colors";
-import {
-	colorsRequired,
-	colorToKey,
-	getAllHides,
-	getKeyCost,
-	getRestrictions,
-	isCompatible,
-	// sortVariants,
-} from "../data/helpers";
-import { randomProperty } from "../data/random";
-import {ColorCategory, Companion, Pose, Property, Restrictions, RGBColor, Variant} from "../data/types";
+import {Dispatch, SetStateAction, useEffect, useMemo, useRef, useState} from "react";
+import {selectableAttributesArray} from "../data/attributes";
+import {colors} from "../data/colors";
+import {colorsRequired, colorToKey, getAllHides, getKeyCost, getRestrictions, isCompatible,} from "../data/helpers";
+import {randomProperty} from "../data/random";
+import {ColorCategory, Companion, Pose, Property, RarityValue, Restrictions, RGBColor, Variant} from "../data/types";
 import Button from "./button";
+
+const getAttributeButtonStyles = (isActive: boolean, isHidden: boolean, rarity?: RarityValue): string => {
+	if (isActive) {
+		return "border-hair-lightblue text-hair-lightblue";
+	}
+
+	if (isHidden) {
+		return "opacity-50 cursor-not-allowed text-default-white border-ui-black-lightest";
+	}
+
+	if (rarity === RarityValue.Uncommon) {
+		return "border-hair-green/30";
+	}
+
+	if (rarity === RarityValue.Rare) {
+		return "border-hair-yellow/30";
+	}
+	return "text-default-white border-ui-black-lightest";
+}
 
 const OptionsContainer = ({ title, children }: { title: string; children: React.ReactNode }) => {
 	return (
@@ -124,7 +135,7 @@ const AttributeSelector = ({
 		| {
 				attribute: string;
 				name: string | number;
-				rarity?: string;
+				rarity?: RarityValue;
 		  }[];
 	active?: string | number;
 	onSelect: (variant: string | number) => void;
@@ -133,7 +144,7 @@ const AttributeSelector = ({
 	return (
 		<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-2 xl:grid-cols-3 gap-2 p-4">
 			{variants.map((variant) => {
-				const isHidden = (variant.rarity === "mythic" || variant.rarity == "oneofone") && !showRare;
+				const isHidden = (variant.rarity === RarityValue.Mythic || variant.rarity == RarityValue.OneofOne) && !showRare;
 				const companionshipCost = getKeyCost(variant.attribute, variant.name)
 				return (
 					<div key={variant.name}>
@@ -141,14 +152,14 @@ const AttributeSelector = ({
 							onClick={isHidden ? () => {} : () => onSelect(variant.name)}
 							// onClick={() => onSelect(variant.name)}
 							title={
-								variant.rarity === "mythic" || variant.rarity == "oneofone"
+								isHidden
 									? "You can only mint this attribute randomly"
 									: `${variant.name} - ${companionshipCost.toLocaleString()} $COMPANIONSHIP`
 							}
 							className={`
 							px-4 py-2
-							${isHidden ? "opacity-50 cursor-not-allowed" : ""} 
-							${variant.name === active ? `border-hair-lightblue text-hair-lightblue` : `text-default-white border-ui-black-lightest`}`}
+							${getAttributeButtonStyles(variant.name === active, isHidden, variant.rarity)}
+							`}
 						>
 							<p className="text-center m-auto">{variant.name !== active && isHidden ? "???" : variant.name}</p>
 						</Button>
@@ -331,7 +342,7 @@ export default function Editor({
 			<OptionsContainer title="Pose">
 				<AttributeSelector
 					showRare={showRare}
-					variants={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4, rarity: "mythic" }].map(p => ({...p, attribute: Property.Pose}))}
+					variants={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4, rarity: RarityValue.Mythic }].map(p => ({...p, attribute: Property.Pose}))}
 					active={companion.properties.pose}
 					onSelect={(pose) => {
 						if (uneditedCompanionState && !uneditedCompanionState[0]) {
@@ -401,7 +412,7 @@ export default function Editor({
 			<OptionsContainer title="Shape">
 				<AttributeSelector
 					showRare={showRare}
-					variants={[{ name: "m" }, { name: "f" }, { name: "w", rarity: "mythic" }].map(p => ({...p, attribute: Property.Gender}))}
+					variants={[{ name: "m" }, { name: "f" }, { name: "w", rarity: RarityValue.Mythic }].map(p => ({...p, attribute: Property.Gender}))}
 					active={companion.properties.gender}
 					onSelect={(gender) => {
 						if (uneditedCompanionState && !uneditedCompanionState[0]) {
@@ -537,11 +548,11 @@ export default function Editor({
 				></div>
 				<div
 					className={`
-						pointer-events-none 
-						z-10 
-						transition-opacity duration-300 
-						absolute right-0 w-16 h-full 
-						bg-gradient-to-l from-ui-black-default  
+						pointer-events-none
+						z-10
+						transition-opacity duration-300
+						absolute right-0 w-16 h-full
+						bg-gradient-to-l from-ui-black-default
 						${moreRight ? "opacity-100" : "opacity-0"}
 					`}
 					aria-hidden="true"
