@@ -206,6 +206,26 @@ export const Faq = ({ section }: { section?: "general" | "customizing" | "stakin
 							as long as the internet.
 						</p>
 					</Question>
+					<Question q="How much $COMPANIONSHIP does it cost to customize my companion?">
+						<p className="font-semibold">Colors:</p>
+						<ul className="list-disc list-inside leading-6">
+							<li>Clothing: 250 $COMPANIONSHIP</li>
+							<li>Background/skin/hair: 500 $COMPANIONSHIP</li>
+						</ul>
+						<p className="font-semibold">Attributes:</p>
+						<ul className="list-disc list-inside leading-6">
+							<li>Pose/Gender: 500 $COMPANIONSHIP</li>
+							<li>Hair/face/clothing/accessories:
+								<ul className="list-disc list-inside pl-8">
+									<li>Common: 1,000 $COMPANIONSHIP</li>
+									<li>Uncommon: 5,000 $COMPANIONSHIP</li>
+									<li>Rare: 10,000 $COMPANIONSHIP</li>
+								</ul>
+							</li>
+						</ul>
+
+
+					</Question>
 				</>
 			)}
 			{currentSection === "staking" && (
