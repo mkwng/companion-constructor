@@ -38,7 +38,7 @@ model Coupon {
 
 model Companion {
   id        Int      @id @default(autoincrement())
-  tokenId   Int?
+  tokenId   Int? @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String?
