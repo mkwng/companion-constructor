@@ -36,27 +36,30 @@ export enum Property {
 
 export type PropertyType = `${Property}`
 
-export type AttributeType =
-	| "background"
-	| "bodyBack"
-	| "neck"
-	| "face"
-	| "blemish"
-	| "outline"
-	| "hair"
-	| "eyes"
-	| "brows"
-	| "mouth"
-	| "facialhair"
-	| "eyewear"
-	| "headwear"
-	| "nose"
-	| "bodyFront"
-	| "top"
-	| "bottom"
-	| "mask"
-	| "shoes"
-	| "accessory";
+export enum Attribute {
+ Background = "background",
+ BodyBack = "bodyBack",
+ Neck = "neck",
+ Face = "face",
+ Blemish = "blemish",
+ Outline = "outline",
+ Hair = "hair",
+ Eyes = "eyes",
+ Brows = "brows",
+ Mouth = "mouth",
+ FacialHair = "facialhair",
+ Eyewear = "eyewear",
+ Headwear = "headwear",
+ Nose = "nose",
+ BodyFront = "bodyFront",
+ Top = "top",
+ Bottom = "bottom",
+ Mask = "mask",
+ Shoes = "shoes",
+ Accessory = "accessory",
+}
+
+export type AttributeType = `${Attribute}`
 
 // TODO:: GenderValue is named inconsistently for now because we have to rename Gender to GenderType
 export enum GenderValue {
