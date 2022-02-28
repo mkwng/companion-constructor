@@ -38,7 +38,7 @@ model Coupon {
 
 model Companion {
   id        Int      @id @default(autoincrement())
-  tokenId   Int? @unique
+  tokenId   Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String?
@@ -77,4 +77,6 @@ model Companion {
 
   iteration    Int?           @default(value: 0)
   Transactions Transactions[]
+
+  @@index([tokenId])
 }
