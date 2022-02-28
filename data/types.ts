@@ -12,6 +12,13 @@ import { NoseVariant } from "./attributes/nose";
 import { ShoesVariant } from "./attributes/shoes";
 import { TopVariant } from "./attributes/top";
 
+export enum ColorCategory {
+	Background = "backgroundColor",
+	Clothing = "clothingColor",
+	Hair = "hairColor",
+	Skin = "skinColor",
+}
+
 export enum Pose {
 	Lookback = 1,
 	Laydown,
@@ -29,27 +36,30 @@ export enum Property {
 
 export type PropertyType = `${Property}`
 
-export type AttributeType =
-	| "background"
-	| "bodyBack"
-	| "neck"
-	| "face"
-	| "blemish"
-	| "outline"
-	| "hair"
-	| "eyes"
-	| "brows"
-	| "mouth"
-	| "facialhair"
-	| "eyewear"
-	| "headwear"
-	| "nose"
-	| "bodyFront"
-	| "top"
-	| "bottom"
-	| "mask"
-	| "shoes"
-	| "accessory";
+export enum Attribute {
+ Background = "background",
+ BodyBack = "bodyBack",
+ Neck = "neck",
+ Face = "face",
+ Blemish = "blemish",
+ Outline = "outline",
+ Hair = "hair",
+ Eyes = "eyes",
+ Brows = "brows",
+ Mouth = "mouth",
+ FacialHair = "facialhair",
+ Eyewear = "eyewear",
+ Headwear = "headwear",
+ Nose = "nose",
+ BodyFront = "bodyFront",
+ Top = "top",
+ Bottom = "bottom",
+ Mask = "mask",
+ Shoes = "shoes",
+ Accessory = "accessory",
+}
+
+export type AttributeType = `${Attribute}`
 
 // TODO:: GenderValue is named inconsistently for now because we have to rename Gender to GenderType
 export enum GenderValue {
@@ -60,7 +70,16 @@ export enum GenderValue {
 type Gender = `${GenderValue}`;
 type HeadShape = "big" | "flat";
 type ProfileShape = "flat" | "encroached";
-export type Rarity = "common" | "uncommon" | "rare" | "mythic" | "oneofone";
+
+// TODO:: RarityValue is named inconsistently for now because we have to rename Rarity to RarityType
+export enum RarityValue {
+	Common = "common",
+	Uncommon = "uncommon",
+	Rare = "rare",
+	Mythic = "mythic",
+	OneofOne = "oneofone",
+}
+export type Rarity = `${RarityValue}`
 
 export interface Variant {
 	attribute?: AttributeType;
