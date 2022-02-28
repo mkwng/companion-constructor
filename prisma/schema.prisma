@@ -77,4 +77,6 @@ model Companion {
 
   iteration    Int?           @default(value: 0)
   Transactions Transactions[]
+
+  @@index([tokenId])
 }
