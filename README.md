@@ -1,3 +1,7 @@
+https://user-images.githubusercontent.com/1319241/229913289-9ed93727-f1ba-4ad5-a0f6-eb8a2d7f7bcf.mp4
+
+This code powers [Companion-in-a-Box](https://companioninabox.art)
+
 ## Playbooks
 
 ### Dev process
