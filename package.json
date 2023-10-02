@@ -6,7 +6,8 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"test": "jest"
+		"test": "jest",
+		"postinstall": "prisma generate"
 	},
 	"dependencies": {
 		"@ethersproject/providers": "^5.5.1",
