@@ -10,7 +10,7 @@
 	},
 	"dependencies": {
 		"@ethersproject/providers": "^5.5.1",
-		"@prisma/client": "3.4.2",
+		"@prisma/client": "5.3.1",
 		"@reonomy/react-confetti-explosion": "^1.0.3",
 		"@tailwindcss/aspect-ratio": "^0.4.0",
 		"@tailwindcss/forms": "^0.4.0",
@@ -45,7 +45,7 @@
 		"eslint": "7",
 		"eslint-config-next": "12.0.2",
 		"jest": "^27.5.0",
-		"prisma": "3.4.2",
+		"prisma": "5.3.1",
 		"ts-jest": "^27.0.5",
 		"typescript": "^4.4.4"
 	},
