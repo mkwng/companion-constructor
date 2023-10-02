@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../lib/prisma";
 
 export default async function coupon(req: NextApiRequest, res: NextApiResponse) {
+	return res.status(500).json({ error: "coupons disabled" });
 	const { method } = req;
 	switch (method) {
 		case "GET":
