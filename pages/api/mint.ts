@@ -54,7 +54,7 @@ export default async function sign(req: NextApiRequest, res: NextApiResponse) {
 					const companionIds = [];
 					for (let i = 0; i < receipt.logs.length; i++) {
 						const tokenId = web3.utils.hexToNumber(receipt.logs[i].topics[3]);
-						if (!isNaN(tokenId)) {
+						if (typeof tokenId === 'number' && !isNaN(tokenId)) {
 							let query;
 							if (mintType == "custom" && companion && customActive) {
 								// Todo: Check if there are any "mythic" variants applied...

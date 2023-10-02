@@ -22,7 +22,7 @@ const recheckMint = async (hash, requiredFee, companionId) => {
 		const companionIds = [];
 		for (let i = 0; i < receipt.logs.length; i++) {
 			const tokenId = web3.utils.hexToNumber(receipt.logs[i].topics[3]);
-			if (!isNaN(tokenId)) {
+			if (typeof tokenId === 'number' && !isNaN(tokenId)) {
 				let query;
 				if (companionId) {
 					query = prisma.companion.update({
